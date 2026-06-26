@@ -1,0 +1,1185 @@
+:root {
+  --ink: #fff9ec;
+  --night: #07090d;
+  --night-2: #10141d;
+  --panel: rgba(12, 15, 22, 0.76);
+  --panel-strong: rgba(10, 12, 18, 0.92);
+  --glass: rgba(255, 255, 255, 0.1);
+  --line: rgba(255, 255, 255, 0.16);
+  --line-strong: rgba(255, 255, 255, 0.28);
+  --muted: rgba(255, 249, 236, 0.72);
+  --teal: #26f0d0;
+  --aqua: #37a7ff;
+  --coral: #ff5a7a;
+  --pink: #ff2fd5;
+  --gold: #f8c45c;
+  --lime: #b9ff7a;
+  --road: #151a1f;
+  --road-2: #22272d;
+  --shadow: 0 26px 70px rgba(0, 0, 0, 0.35);
+  color: var(--ink);
+  background: var(--night);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+  line-height: 1.45;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(7, 9, 13, 0.22), #07090d 740px),
+    linear-gradient(90deg, rgba(38, 240, 208, 0.12), transparent 26%, rgba(255, 90, 122, 0.13)),
+    url("./assets/miami-race-night.jpg") center top / min(1800px, 170vw) auto no-repeat,
+    #07090d;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.dashboard {
+  width: min(1420px, 100%);
+  margin: 0 auto;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(255, 47, 213, 0.12), transparent 30%),
+    rgba(8, 10, 15, 0.72);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(22px) saturate(1.3);
+}
+
+.brand-lockup,
+.miami-tag,
+.live-status,
+.top-actions,
+.section-title,
+.panel-heading,
+.leader-name,
+.ghost-button,
+.wallet-button,
+.icon-link {
+  display: flex;
+  align-items: center;
+}
+
+.brand-lockup {
+  gap: 10px;
+  min-width: 0;
+  font-weight: 950;
+}
+
+.brand-lockup svg {
+  color: var(--gold);
+  filter: drop-shadow(0 0 14px rgba(248, 196, 92, 0.62));
+}
+
+.brand-lockup span {
+  overflow: hidden;
+  font-size: clamp(1.08rem, 2vw, 1.45rem);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.miami-tag {
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 47, 213, 0.36);
+  border-radius: 8px;
+  color: #ffd8fa;
+  background: rgba(255, 47, 213, 0.12);
+  font-size: 0.86rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.miami-tag svg {
+  color: var(--pink);
+}
+
+.live-status {
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 11px;
+  border: 1px solid rgba(38, 240, 208, 0.34);
+  border-radius: 8px;
+  background: rgba(38, 240, 208, 0.12);
+  color: #d9fff8;
+  font-size: 0.88rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.status-light {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 4px rgba(38, 240, 208, 0.18), 0 0 18px var(--teal);
+}
+
+.divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.top-actions {
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.ghost-button,
+.wallet-button,
+.camera-row button,
+.icon-link,
+.icon-button {
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.ghost-button,
+.wallet-button {
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
+.ghost-button {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.ghost-button svg {
+  color: var(--teal);
+}
+
+.wallet-button {
+  border-color: rgba(248, 196, 92, 0.52);
+  background: linear-gradient(135deg, #f6bd55, #f26963 54%, #ff2fd5);
+  color: #12070d;
+  box-shadow: 0 0 26px rgba(255, 90, 122, 0.28);
+}
+
+.hero-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  min-height: 390px;
+  margin-bottom: 18px;
+  padding: clamp(22px, 4vw, 44px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(5, 6, 10, 0.9) 0%, rgba(5, 6, 10, 0.68) 45%, rgba(5, 6, 10, 0.18) 100%),
+    linear-gradient(180deg, rgba(255, 90, 122, 0.12), rgba(38, 240, 208, 0.1)),
+    url("./assets/miami-race-night.jpg") center / cover no-repeat;
+  box-shadow: var(--shadow);
+}
+
+.hero-panel::before {
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--teal), var(--gold), var(--coral), var(--pink));
+  content: "";
+}
+
+.hero-panel::after {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(transparent 0 82%, rgba(255, 255, 255, 0.09) 83%, transparent 84%),
+    linear-gradient(90deg, transparent 0 83%, rgba(255, 255, 255, 0.08) 84%, transparent 85%);
+  background-size: 100% 34px, 78px 100%;
+  mix-blend-mode: screen;
+  opacity: 0.32;
+  pointer-events: none;
+  content: "";
+}
+
+.hero-copy,
+.countdown {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--teal);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 0 16px rgba(38, 240, 208, 0.5);
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 820px;
+  margin-bottom: 14px;
+  font-size: clamp(3rem, 7.3vw, 7.4rem);
+  line-height: 0.86;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-shadow: 0 14px 34px rgba(0, 0, 0, 0.52);
+}
+
+.race-copy {
+  max-width: 760px;
+  margin-bottom: 18px;
+  color: rgba(255, 249, 236, 0.84);
+  font-size: clamp(1rem, 1.5vw, 1.18rem);
+  overflow-wrap: anywhere;
+}
+
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 820px;
+}
+
+.hero-badges span {
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(10, 12, 18, 0.58);
+  color: #fff9ec;
+  font-size: 0.82rem;
+  font-weight: 850;
+  backdrop-filter: blur(12px);
+}
+
+.hero-badges span:nth-child(1) {
+  border-color: rgba(248, 196, 92, 0.44);
+  color: #ffe4a3;
+}
+
+.hero-badges span:nth-child(2) {
+  border-color: rgba(38, 240, 208, 0.38);
+  color: #c9fff6;
+}
+
+.hero-badges span:nth-child(3) {
+  border-color: rgba(255, 90, 122, 0.42);
+  color: #ffd1d9;
+}
+
+.countdown {
+  display: grid;
+  gap: 11px;
+  min-width: 316px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(7, 9, 13, 0.58);
+  backdrop-filter: blur(16px);
+}
+
+.countdown > span {
+  color: rgba(255, 249, 236, 0.78);
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(82px, 1fr));
+  gap: 8px;
+}
+
+.time-tile {
+  display: grid;
+  gap: 4px;
+  min-height: 84px;
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
+    rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.time-tile strong {
+  font-size: clamp(1.9rem, 4vw, 2.65rem);
+  line-height: 1;
+}
+
+.time-tile small {
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+}
+
+.track-section {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.camera-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.camera-row span {
+  color: rgba(255, 249, 236, 0.7);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.camera-row button {
+  min-width: 120px;
+  min-height: 40px;
+  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.camera-row button.is-active {
+  border-color: rgba(38, 240, 208, 0.62);
+  background: linear-gradient(135deg, rgba(38, 240, 208, 0.25), rgba(55, 167, 255, 0.14));
+  color: #e8fffb;
+  box-shadow: 0 0 24px rgba(38, 240, 208, 0.22);
+}
+
+.race-track {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 12% 50%, rgba(38, 240, 208, 0.16), transparent 28%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(180deg, #0b1118, var(--road) 42%, var(--road-2));
+  background-size: auto, 86px 100%, auto;
+  box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.race-track::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent),
+    radial-gradient(circle at 80% 12%, rgba(255, 90, 122, 0.2), transparent 22%);
+  opacity: 0.8;
+  pointer-events: none;
+  content: "";
+}
+
+.race-track--cinema {
+  background:
+    linear-gradient(180deg, rgba(255, 205, 119, 0.22) 0, rgba(38, 240, 208, 0.12) 27%, transparent 28%),
+    linear-gradient(90deg, rgba(255, 47, 213, 0.16), transparent 38%, rgba(38, 240, 208, 0.14)),
+    linear-gradient(180deg, #080b10, #151a1f);
+}
+
+.track-lane {
+  position: relative;
+  min-height: 92px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 54%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.015));
+}
+
+.track-lane:nth-child(odd) {
+  background:
+    linear-gradient(90deg, rgba(38, 240, 208, 0.07), transparent 54%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+}
+
+.track-lane:last-child {
+  border-bottom: 0;
+}
+
+.race-track--cinema .track-lane {
+  min-height: 76px;
+}
+
+.lane-label {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 14px;
+  display: grid;
+  grid-template-columns: 44px minmax(132px, 230px) 100px;
+  gap: 8px;
+  align-items: center;
+  transform: translateY(-50%);
+}
+
+.race-track--cinema .lane-label {
+  top: 10px;
+  transform: none;
+}
+
+.lane-label span,
+.lane-label strong,
+.lane-label em {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 7px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 249, 236, 0.94);
+  color: #11151b;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.lane-label span {
+  justify-content: center;
+  color: #053b34;
+  font-weight: 950;
+}
+
+.lane-label strong {
+  font-size: 0.95rem;
+}
+
+.lane-label em {
+  justify-content: center;
+  color: #123e5a;
+  font-size: 0.84rem;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.finish-line {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  right: 18px;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(var(--teal), var(--gold), var(--coral));
+  box-shadow:
+    -10px 0 0 rgba(38, 240, 208, 0.16),
+    10px 0 0 rgba(255, 90, 122, 0.18),
+    0 0 24px rgba(255, 90, 122, 0.62);
+}
+
+.finish-line span {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: rgba(7, 9, 13, 0.78);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(90deg);
+  transform-origin: top right;
+  white-space: nowrap;
+}
+
+.race-track--cinema .finish-line {
+  opacity: 0;
+}
+
+.racer-marker {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  width: 154px;
+  height: 62px;
+  transform: translate(-50%, -50%);
+  transition: left 780ms cubic-bezier(0.2, 0.82, 0.22, 1);
+}
+
+.racer-marker--cinema {
+  transform: translate(-50%, -36%) scale(1.16);
+}
+
+.speed-trail {
+  position: absolute;
+  top: 36px;
+  left: -6px;
+  width: 58px;
+  height: 8px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), var(--car-color));
+  filter: blur(1px);
+  opacity: 0.82;
+}
+
+.lambo {
+  position: absolute;
+  inset: 0;
+  animation: road-glide 740ms ease-in-out infinite alternate;
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.48));
+}
+
+.lambo-body,
+.lambo-cabin,
+.lambo-hood,
+.lambo-wing,
+.lambo-light,
+.lambo-wheel {
+  position: absolute;
+  display: block;
+}
+
+.lambo-body {
+  left: 22px;
+  top: 27px;
+  width: 112px;
+  height: 25px;
+  border-radius: 8px 18px 12px 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 48%),
+    var(--car-color);
+  box-shadow:
+    inset -16px -8px 0 rgba(0, 0, 0, 0.16),
+    0 0 20px color-mix(in srgb, var(--car-color) 58%, transparent);
+  transform: skewX(-14deg);
+}
+
+.lambo-hood {
+  left: 92px;
+  top: 21px;
+  width: 44px;
+  height: 18px;
+  border-radius: 4px 20px 8px 3px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 50%),
+    var(--car-color);
+  transform: skewX(-22deg);
+}
+
+.lambo-cabin {
+  left: 56px;
+  top: 13px;
+  width: 42px;
+  height: 24px;
+  border-radius: 16px 13px 5px 5px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(47, 64, 82, 0.84) 42%, rgba(7, 9, 13, 0.95));
+  border: 2px solid color-mix(in srgb, var(--car-color) 58%, #ffffff);
+  transform: skewX(-12deg);
+}
+
+.lambo-wing {
+  left: 16px;
+  top: 24px;
+  width: 35px;
+  height: 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--car-color) 75%, #090b10);
+  transform: skewX(-18deg);
+}
+
+.lambo-light--front {
+  left: 126px;
+  top: 33px;
+  width: 18px;
+  height: 6px;
+  border-radius: 999px;
+  background: #eaffff;
+  box-shadow: 0 0 18px #dff, 18px 0 28px rgba(38, 240, 208, 0.35);
+}
+
+.lambo-light--rear {
+  left: 20px;
+  top: 34px;
+  width: 13px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--coral);
+  box-shadow: 0 0 14px var(--coral);
+}
+
+.lambo-wheel {
+  top: 45px;
+  width: 22px;
+  height: 22px;
+  border: 4px solid #080a0f;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f6f1de 0 18%, #56606a 20% 33%, #080a0f 35%);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.16);
+}
+
+.lambo-wheel--rear {
+  left: 35px;
+}
+
+.lambo-wheel--front {
+  left: 108px;
+}
+
+.racer-marker .avatar {
+  position: absolute;
+  z-index: 6;
+  top: 4px;
+  left: 69px;
+  width: 38px;
+  height: 38px;
+  border-color: rgba(255, 249, 236, 0.82);
+  box-shadow: 0 0 18px rgba(255, 249, 236, 0.18);
+}
+
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 249, 236, 0.52);
+  border-radius: 50%;
+  color: #fff9ec;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.32), transparent),
+    var(--avatar-color);
+  font-size: 0.76rem;
+  font-weight: 950;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.leader-panel,
+.panel {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
+    var(--panel);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.leader-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 18px;
+  padding: 24px 16px 16px;
+  border-color: rgba(248, 196, 92, 0.34);
+  background:
+    linear-gradient(90deg, rgba(248, 196, 92, 0.16), transparent 56%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
+    rgba(10, 12, 18, 0.78);
+}
+
+.panel-tab {
+  position: absolute;
+  top: -11px;
+  left: 14px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: #fff9ec;
+  color: #151017;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.leader-name {
+  gap: 11px;
+  min-width: 0;
+}
+
+.leader-name strong,
+.kol-meta strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leader-name span,
+.kol-meta span {
+  color: var(--teal);
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.leader-name strong {
+  font-size: 1.28rem;
+}
+
+.ticker-value {
+  padding: 9px 12px;
+  border: 1px solid rgba(248, 196, 92, 0.42);
+  border-radius: 8px;
+  background: rgba(248, 196, 92, 0.14);
+  color: #ffe4a3;
+  font-size: 1.18rem;
+  font-weight: 950;
+  box-shadow: inset 0 0 18px rgba(248, 196, 92, 0.08);
+}
+
+.icon-link {
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 11px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1.14fr 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.panel {
+  padding: 28px 14px 14px;
+}
+
+.panel-heading {
+  gap: 8px;
+  margin-bottom: 13px;
+  color: #dffff9;
+}
+
+.panel-heading svg {
+  color: var(--gold);
+}
+
+.stats-panel .panel-heading svg {
+  color: var(--coral);
+}
+
+.panel-heading h2 {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.split-list,
+.stat-stack,
+.race-list {
+  display: grid;
+  gap: 8px;
+}
+
+.fee-sources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.fee-sources span {
+  min-width: 0;
+  padding: 9px;
+  overflow: hidden;
+  border: 1px solid rgba(38, 240, 208, 0.25);
+  border-radius: 8px;
+  background: rgba(38, 240, 208, 0.1);
+  color: #cefff7;
+  font-size: 0.84rem;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.split-row,
+.metric,
+.race-chip {
+  display: grid;
+  align-items: center;
+  min-height: 44px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.065);
+}
+
+.split-row {
+  grid-template-columns: minmax(0, 1fr) 48px 98px;
+  gap: 10px;
+}
+
+.split-row span,
+.split-row em {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.split-row strong {
+  color: var(--coral);
+  text-align: right;
+}
+
+.split-row em {
+  color: #fff9ec;
+  font-style: normal;
+  font-weight: 950;
+  text-align: right;
+}
+
+.metric {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.metric strong,
+.race-chip strong {
+  color: var(--gold);
+}
+
+.race-chip {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.race-chip--live {
+  border-color: rgba(38, 240, 208, 0.34);
+  background: rgba(38, 240, 208, 0.1);
+}
+
+.leaderboard-section {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #fff9ec;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 1.24rem;
+}
+
+.section-title svg {
+  color: var(--gold);
+  filter: drop-shadow(0 0 12px rgba(248, 196, 92, 0.42));
+}
+
+.leaderboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 44px 42px minmax(0, 1fr) 88px 98px 38px;
+  gap: 10px;
+  align-items: center;
+  min-height: 66px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04)),
+    rgba(10, 12, 18, 0.7);
+  backdrop-filter: blur(12px);
+}
+
+.rank {
+  color: var(--gold);
+  font-weight: 950;
+}
+
+.kol-meta {
+  min-width: 0;
+}
+
+.record {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+  color: rgba(255, 249, 236, 0.78);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.record span {
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cap {
+  color: #fff9ec;
+  font-weight: 950;
+  text-align: right;
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@keyframes road-glide {
+  from {
+    transform: translateY(1px) rotate(-1deg);
+  }
+
+  to {
+    transform: translateY(-2px) rotate(1deg);
+  }
+}
+
+@media (max-width: 1120px) {
+  .topbar,
+  .hero-panel,
+  .leader-panel,
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .miami-tag,
+  .live-status,
+  .top-actions,
+  .countdown,
+  .ticker-value,
+  .icon-link {
+    justify-self: start;
+  }
+
+  .hero-panel {
+    min-height: 500px;
+    align-items: end;
+    background-position: center;
+  }
+
+  .leaderboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    background-size: auto 760px, auto, min(1400px, 250vw) auto, auto;
+  }
+
+  .app-shell {
+    padding: 12px;
+  }
+
+  .topbar {
+    padding: 12px;
+  }
+
+  .brand-lockup span {
+    white-space: normal;
+  }
+
+  .top-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .ghost-button,
+  .wallet-button {
+    flex: 1 1 146px;
+    justify-content: center;
+  }
+
+  .miami-tag,
+  .live-status {
+    flex-wrap: wrap;
+  }
+
+  .hero-panel {
+    min-height: 560px;
+    padding: 18px;
+    background-position: 63% center;
+  }
+
+  .hero-badges {
+    gap: 6px;
+  }
+
+  .hero-badges span {
+    padding: 7px 9px;
+    font-size: 0.78rem;
+  }
+
+  .countdown {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .time-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .time-tile {
+    min-height: 70px;
+    padding: 8px;
+  }
+
+  .camera-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .camera-row span {
+    grid-column: 1 / -1;
+  }
+
+  .camera-row button {
+    min-width: 0;
+  }
+
+  .track-lane {
+    min-height: 106px;
+  }
+
+  .race-track--cinema .track-lane {
+    min-height: 84px;
+  }
+
+  .lane-label {
+    top: 10px;
+    left: 10px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    width: calc(100% - 74px);
+    transform: none;
+  }
+
+  .lane-label span,
+  .lane-label strong {
+    min-height: 34px;
+  }
+
+  .lane-label em {
+    display: none;
+  }
+
+  .racer-marker {
+    top: 68%;
+    width: 118px;
+    transform: translate(-50%, -50%) scale(0.78);
+  }
+
+  .racer-marker--cinema {
+    transform: translate(-50%, -36%) scale(0.8);
+  }
+
+  .finish-line {
+    right: 12px;
+  }
+
+  .finish-line span {
+    display: none;
+  }
+
+  .leader-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .fee-sources {
+    grid-template-columns: 1fr;
+  }
+
+  .split-row {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+
+  .split-row em {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .leaderboard-row {
+    grid-template-columns: 38px 40px minmax(0, 1fr) 36px;
+  }
+
+  .record {
+    grid-column: 3;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+
+  .cap {
+    display: none;
+  }
+
+  .leaderboard-row .icon-button {
+    grid-column: 4;
+    grid-row: 1 / 3;
+  }
+}
+
+@media (max-width: 460px) {
+  h1 {
+    font-size: clamp(2.4rem, 14vw, 3.7rem);
+  }
+
+  .hero-panel {
+    min-height: 610px;
+  }
+
+  .time-tile strong {
+    font-size: 1.75rem;
+  }
+}
