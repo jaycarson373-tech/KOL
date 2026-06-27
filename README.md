@@ -29,6 +29,26 @@ market cap while keeping Helius wired for Solana token metadata lookups.
 
 The current UI uses a professional race-dashboard theme with Lambo-style KOL racers.
 
+## Railway Worker
+
+Run `supabase/schema.sql` in Supabase, then seed the current placeholder KOLs
+and races with:
+
+```bash
+npm run seed:worker
+```
+
+Railway should run `npm run worker` with the variables from `.env.example`.
+Use `WORKER_MODE=daemon` for polling or `WORKER_MODE=cron` for one tick per
+Railway cron run. Payout execution is disabled by default; set
+`PAYOUT_EXECUTION_ENABLED=true` only after reward wallets are funded and private
+keys are configured on Railway.
+
+The worker snapshots race market caps, determines winners, snapshots holder
+balances with Helius, builds payout plans, and can execute the `$KOL` split:
+50% winner KOL holders, 20% `$KOL` holders, 15% buyback/burn wallet, and 15%
+finals vault.
+
 ## Prize Split
 
 - 50% to holders of the winning KOL from the race interval
