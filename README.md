@@ -1,6 +1,6 @@
 # KOL King of Liquidity
 
-A Miami race-night KOL tournament dashboard for `$KOL`.
+A polished KOL tournament dashboard for `$KOL`.
 
 ## Run locally
 
@@ -27,7 +27,7 @@ Market-cap ranking uses local placeholder caps by default. When
 `VITE_ENABLE_LIVE_MARKET_CAPS=true`, the app checks Dexscreener by token CA for
 market cap while keeping Helius wired for Solana token metadata lookups.
 
-The current UI uses a luxury Miami Grand Prix theme with Lambo-style KOL racers.
+The current UI uses a professional race-dashboard theme with Lambo-style KOL racers.
 
 ## Prize Split
 

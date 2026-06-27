@@ -90,17 +90,17 @@ function App() {
             <CircleDollarSign size={22} aria-hidden="true" />
             <span>KOL King of Liquidity</span>
           </div>
-          <div className="miami-tag">
+          <div className="context-tag">
             <Sparkles size={15} aria-hidden="true" />
-            Miami Race Night
+            Tournament Dashboard
           </div>
           <div className="live-status" aria-label="Tournament status">
             <span className="status-light" />
             <strong>{entrants.length}</strong>
-            <span>on the strip</span>
+            <span>active racers</span>
             <span className="divider" />
             <strong>{kols.length}</strong>
-            <span>VIP field</span>
+            <span>total KOLs</span>
           </div>
           <div className="top-actions">
             <button type="button" className="ghost-button">
@@ -117,11 +117,11 @@ function App() {
         <section className="hero-panel" aria-labelledby="race-title">
           <div className="hero-copy">
             <p className="eyebrow">{activeRace.label}</p>
-            <h1 id="race-title">$KOL Grand Prix</h1>
+            <h1 id="race-title">$KOL Liquidity Grand Prix</h1>
             <p className="race-copy">
-              KOLs line up on the Miami strip. Market cap pushes each Lambo down
-              the boulevard while interval fees feed holders, buybacks, burns,
-              and the finals vault.
+              KOLs race by live market cap. Each interval routes protocol fees
+              into winner-holder rewards, $KOL holder airdrops, buybacks, burns,
+              and the grand finals vault.
             </p>
             <div className="hero-badges" aria-label="Prize split highlights">
               <span>50% winner holders</span>
@@ -150,7 +150,7 @@ function App() {
               aria-pressed={camera === "top"}
               onClick={() => setCamera("top")}
             >
-              Boulevard
+              Track
             </button>
             <button
               className={camera === "cinema" ? "is-active" : ""}
@@ -158,7 +158,7 @@ function App() {
               aria-pressed={camera === "cinema"}
               onClick={() => setCamera("cinema")}
             >
-              Marina
+              Side View
             </button>
           </div>
 
@@ -334,7 +334,7 @@ function PayoutPanel({
 
   return (
     <section className="panel payout-panel" aria-labelledby="payout-title">
-      <span className="panel-tab">VIP Fee Pool</span>
+      <span className="panel-tab">Prize Pool</span>
       <div className="panel-heading">
         <Radio size={17} aria-hidden="true" />
         <h2 id="payout-title">{formatSol(pot)}</h2>
@@ -359,10 +359,10 @@ function PayoutPanel({
 function StatsPanel() {
   return (
     <section className="panel stats-panel" aria-labelledby="stats-title">
-      <span className="panel-tab">Club Stats</span>
+      <span className="panel-tab">Protocol Stats</span>
       <div className="panel-heading">
         <Flame size={17} aria-hidden="true" />
-        <h2 id="stats-title">Live Flex</h2>
+        <h2 id="stats-title">Live Metrics</h2>
       </div>
       <div className="stat-stack">
         <Metric label="$KOL burned" value={formatNumber(tournamentStats.totalKolBurned)} />
