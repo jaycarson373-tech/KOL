@@ -997,17 +997,21 @@ function RacerMarker({
         <strong>{entrant.symbol}</strong>
         <em>{formatPercentChange(entrant.percentChange)}</em>
       </span>
-      <span className="lambo" aria-hidden="true">
-        <span className="lambo-body" />
-        <span className="lambo-cabin" />
-        <span className="lambo-hood" />
-        <span className="lambo-wing" />
-        <span className="lambo-light lambo-light--front" />
-        <span className="lambo-light lambo-light--rear" />
-        <span className="lambo-wheel lambo-wheel--front" />
-        <span className="lambo-wheel lambo-wheel--rear" />
+      <span className="race-car" aria-hidden="true">
+        <span className="race-car-shadow" />
+        <span className="race-car-trail-light" />
+        <span className="race-car-wing race-car-wing--rear" />
+        <span className="race-car-wing race-car-wing--front" />
+        <span className="race-car-body" />
+        <span className="race-car-nose" />
+        <span className="race-car-cockpit">
+          <Avatar entrant={entrant} />
+        </span>
+        <span className="race-car-halo" />
+        <span className="race-car-number">{entrant.carNumber ?? entrant.rank}</span>
+        <span className="race-car-wheel race-car-wheel--rear" />
+        <span className="race-car-wheel race-car-wheel--front" />
       </span>
-      <Avatar entrant={entrant} />
     </div>
   );
 }

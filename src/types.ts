@@ -19,6 +19,7 @@ export interface KolProfile {
   contractAddress?: string;
   marketUrl?: string;
   terminalUrl?: string;
+  carNumber?: string;
   wins: number;
   losses: number;
   seed: number;

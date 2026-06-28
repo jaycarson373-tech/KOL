@@ -1707,7 +1707,7 @@ h1 {
   font-style: normal;
 }
 
-.lambo {
+.race-car {
   position: absolute;
   inset: 0;
   animation: road-glide 760ms ease-in-out infinite alternate;
@@ -1716,7 +1716,7 @@ h1 {
     drop-shadow(0 0 14px color-mix(in srgb, var(--car-color) 34%, transparent));
 }
 
-.racer-marker.is-leader .lambo {
+.racer-marker.is-leader .race-car {
   filter:
     drop-shadow(0 16px 18px rgba(0, 0, 0, 0.58))
     drop-shadow(0 0 20px rgba(255, 213, 112, 0.68));
@@ -1751,111 +1751,182 @@ h1 {
   font-weight: 800;
 }
 
-.lambo-body,
-.lambo-cabin,
-.lambo-hood,
-.lambo-wing,
-.lambo-light,
-.lambo-wheel {
+.race-car-shadow,
+.race-car-trail-light,
+.race-car-body,
+.race-car-nose,
+.race-car-wing,
+.race-car-cockpit,
+.race-car-halo,
+.race-car-number,
+.race-car-wheel {
   position: absolute;
   display: block;
 }
 
-.lambo-body {
+.race-car-shadow {
   left: 22px;
-  top: 30px;
-  width: 138px;
-  height: 25px;
-  border-radius: 7px 24px 12px 9px;
+  right: 8px;
+  bottom: 9px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.42);
+  filter: blur(7px);
+}
+
+.race-car-trail-light {
+  left: 2px;
+  top: 39px;
+  width: 76px;
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--car-color) 56%, #ffffff));
+  box-shadow: 0 0 18px color-mix(in srgb, var(--car-color) 46%, transparent);
+}
+
+.race-car-body {
+  left: 34px;
+  top: 31px;
+  width: 112px;
+  height: 21px;
+  border-radius: 18px 30px 16px 16px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 46%),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.22), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.38), transparent 44%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.3), transparent 18%, transparent 70%, rgba(255, 255, 255, 0.16)),
     var(--car-color);
   box-shadow:
-    inset -20px -8px 0 rgba(0, 0, 0, 0.22),
-    0 0 20px color-mix(in srgb, var(--car-color) 48%, transparent);
-  transform: skewX(-14deg);
+    inset -18px -8px 0 rgba(0, 0, 0, 0.22),
+    inset 18px 5px 0 rgba(255, 255, 255, 0.08),
+    0 0 22px color-mix(in srgb, var(--car-color) 46%, transparent);
+  transform: skewX(-10deg);
 }
 
-.lambo-hood {
-  left: 111px;
-  top: 23px;
-  width: 56px;
-  height: 18px;
-  border-radius: 4px 22px 8px 3px;
+.race-car-body::after {
+  position: absolute;
+  right: 15px;
+  bottom: 4px;
+  left: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.32);
+  content: "";
+  opacity: 0.5;
+}
+
+.race-car-nose {
+  left: 120px;
+  top: 35px;
+  width: 60px;
+  height: 13px;
+  border-radius: 5px 32px 12px 4px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 50%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.26), transparent 48%),
     var(--car-color);
-  transform: skewX(-22deg);
-}
-
-.lambo-cabin {
-  left: 66px;
-  top: 13px;
-  width: 50px;
-  height: 25px;
-  border: 2px solid color-mix(in srgb, var(--car-color) 48%, #ffffff);
-  border-radius: 16px 13px 5px 5px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(60, 62, 64, 0.82) 42%, rgba(7, 7, 8, 0.95));
-  transform: skewX(-12deg);
-}
-
-.lambo-wing {
-  left: 16px;
-  top: 25px;
-  width: 42px;
-  height: 8px;
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--car-color) 70%, #080808);
+  box-shadow: inset -11px -5px 0 rgba(0, 0, 0, 0.18);
   transform: skewX(-18deg);
 }
 
-.lambo-light--front {
-  left: 154px;
-  top: 35px;
-  width: 18px;
-  height: 6px;
-  border-radius: 999px;
-  background: #f4ffff;
-  box-shadow: 10px 0 18px rgba(35, 211, 189, 0.28);
+.race-car-wing {
+  height: 8px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--car-color) 74%, #050505);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--car-color) 24%, transparent);
 }
 
-.lambo-light--rear {
-  left: 20px;
-  top: 36px;
-  width: 13px;
-  height: 5px;
-  border-radius: 999px;
-  background: var(--coral);
+.race-car-wing--rear {
+  left: 15px;
+  top: 26px;
+  width: 48px;
+  transform: skewX(-16deg);
 }
 
-.lambo-wheel {
-  top: 49px;
-  width: 23px;
-  height: 23px;
-  border: 4px solid #060607;
+.race-car-wing--front {
+  left: 151px;
+  top: 31px;
+  width: 34px;
+  transform: skewX(-20deg);
+}
+
+.race-car-cockpit {
+  z-index: 4;
+  left: 75px;
+  top: 5px;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 2px solid rgba(255, 213, 112, 0.72);
   border-radius: 50%;
-  background: radial-gradient(circle, #efe7d6 0 18%, #5d6265 20% 33%, #060607 35%);
-  box-shadow: 0 0 0 2px rgba(248, 243, 234, 0.12);
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.28), transparent 32%),
+    #090909;
+  box-shadow:
+    0 0 0 4px rgba(0, 0, 0, 0.42),
+    0 0 18px rgba(255, 213, 112, 0.24);
 }
 
-.lambo-wheel--rear {
-  left: 37px;
+.race-car-cockpit .avatar {
+  width: 38px;
+  height: 38px;
+  border-width: 1px;
+  box-shadow: none;
 }
 
-.lambo-wheel--front {
-  left: 133px;
+.race-car-halo {
+  z-index: 3;
+  left: 68px;
+  top: 15px;
+  width: 58px;
+  height: 29px;
+  border: 3px solid rgba(12, 12, 12, 0.86);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.22);
 }
 
-.racer-marker .avatar {
-  position: absolute;
-  z-index: 6;
-  top: 4px;
-  left: 84px;
-  width: 42px;
-  height: 42px;
-  border-color: rgba(248, 243, 234, 0.8);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+.race-car-number {
+  z-index: 5;
+  left: 48px;
+  top: 33px;
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 18px;
+  padding-inline: 6px;
+  border: 1px solid rgba(255, 247, 219, 0.54);
+  border-radius: 999px;
+  background: rgba(5, 5, 5, 0.62);
+  color: #fff7db;
+  font-family: var(--number-font);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.race-car-wheel {
+  z-index: 5;
+  top: 45px;
+  width: 27px;
+  height: 27px;
+  border: 5px solid #050505;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #f3d995 0 13%, #343434 15% 31%, #050505 33%),
+    #050505;
+  box-shadow:
+    0 0 0 2px rgba(255, 247, 219, 0.12),
+    0 0 14px rgba(0, 0, 0, 0.48);
+}
+
+.race-car-wheel--rear {
+  left: 38px;
+}
+
+.race-car-wheel--front {
+  left: 139px;
+}
+
+.race-car-cockpit .avatar img {
+  object-fit: cover;
 }
 
 .live-sidebar {
@@ -2171,7 +2242,9 @@ h1 {
 
   .racer-callout {
     top: -18px;
-    left: 54px;
+    right: -2px;
+    left: auto;
+    gap: 5px;
     font-size: 0.6rem;
   }
 
