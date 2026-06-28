@@ -306,7 +306,7 @@ function HeroSection({
   race: RaceInterval;
   splitAmounts: ReturnType<typeof getSplitAmounts>;
 }) {
-  const leader = entrants[0];
+  const leader = entrants.find((entrant) => entrant.isLeader);
   const racePot = getRacePot(race);
 
   return (
@@ -397,14 +397,14 @@ function CurrentRaceSummary({
   race: RaceInterval;
   splitAmounts: ReturnType<typeof getSplitAmounts>;
 }) {
-  const winner = entrants[0];
+  const winner = entrants.find((entrant) => entrant.isLeader);
   const totalMarketCap = entrants.reduce((total, entrant) => total + entrant.marketCapUsd, 0);
   const racePot = getRacePot(race);
 
   return (
     <div className="race-summary-grid" aria-label="Homepage race overview">
       <div className="dashboard-card standings-card">
-        <span className="card-label">{isLiveRaceActive ? "Current Leader" : "Track Status"}</span>
+        <span className="card-label">{isLiveRaceActive && winner ? "Current Leader" : "Track Status"}</span>
         {winner ? (
           <>
             <div className="leader-feature">
@@ -425,7 +425,7 @@ function CurrentRaceSummary({
         ) : (
           <div className="summary-metric">
             <span>Status</span>
-            <strong>Next race begins soon</strong>
+            <strong>{isLiveRaceActive ? "No leader yet" : "Next race begins soon"}</strong>
           </div>
         )}
       </div>
@@ -496,7 +496,8 @@ function KingOfHillBanner({
   isLiveRaceActive: boolean;
   race: RaceInterval;
 }) {
-  const king = entrants[0];
+  const king = entrants.find((entrant) => entrant.isLeader);
+  const pole = king ?? entrants[0];
   const hasKing = Boolean(isLiveRaceActive && king);
 
   return (
@@ -515,12 +516,12 @@ function KingOfHillBanner({
             : "Once market caps move, the leading KOL gets the live crown."}
         </em>
       </div>
-      {king ? (
+      {pole ? (
         <div className="king-hill-chip">
-          <Avatar entrant={king} />
+          <Avatar entrant={pole} />
           <div>
             <span>{hasKing ? "Current king" : "Pole position"}</span>
-            <strong>{king.symbol}</strong>
+            <strong>{pole.symbol}</strong>
           </div>
         </div>
       ) : null}
@@ -940,7 +941,7 @@ function KingOfHillPanel({
   entrants: RaceEntrant[];
   isLiveRaceActive: boolean;
 }) {
-  const king = entrants[0];
+  const king = entrants.find((entrant) => entrant.isLeader);
   const hasKing = Boolean(isLiveRaceActive && king);
 
   return (
@@ -985,6 +986,7 @@ function RaceTrack({
           <div className={`track-lane ${entrant.isLeader ? "is-leader" : ""}`} key={entrant.id}>
             <div className="lane-label">
               <span className="lane-rank">#{entrant.rank}</span>
+              <Avatar entrant={entrant} />
               <div className="lane-kol">
                 <strong>{entrant.name}</strong>
                 <span>{entrant.symbol}</span>
@@ -998,7 +1000,9 @@ function RaceTrack({
                 <strong>{formatPercentChange(entrant.percentChange)}</strong>
               </div>
             </div>
-            <RacerMarker entrant={entrant} camera={camera} />
+            <div className="lane-runway" aria-hidden="true">
+              <RacerMarker entrant={entrant} camera={camera} />
+            </div>
           </div>
         ))
       ) : (

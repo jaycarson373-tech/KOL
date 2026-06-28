@@ -853,7 +853,7 @@ h1 {
   background-position: center;
   background-size: cover;
   content: "";
-  opacity: var(--section-bg-opacity, 0.55);
+  opacity: var(--section-bg-opacity, 0.85);
   mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
 }
 
@@ -861,25 +861,25 @@ h1 {
 .reward-pots-section,
 #how-it-works {
   --section-bg: url("./assets/league-atmosphere.jpg");
-  --section-bg-opacity: 0.44;
+  --section-bg-opacity: 0.85;
 }
 
 .bracket-section,
 #standings {
   --section-bg: url("./assets/bracket-atmosphere.jpg");
-  --section-bg-opacity: 0.52;
+  --section-bg-opacity: 0.85;
 }
 
 #schedule,
 #kols {
   --section-bg: url("./assets/league-atmosphere.jpg");
-  --section-bg-opacity: 0.5;
+  --section-bg-opacity: 0.85;
 }
 
 #resources,
 .faq-section {
   --section-bg: url("./assets/finals-atmosphere.jpg");
-  --section-bg-opacity: 0.5;
+  --section-bg-opacity: 0.85;
 }
 
 .dashboard-card {
@@ -1863,7 +1863,7 @@ h1 {
   height: 70px;
   transform: translate(-50%, -50%);
   transition: left 780ms cubic-bezier(0.2, 0.82, 0.22, 1);
-  opacity: 0.88;
+  opacity: 0.85;
 }
 
 .racer-marker.is-leader {
@@ -2243,7 +2243,7 @@ body {
     url("./assets/kol-cinematic-benchmark.jpg") center 3% / min(1540px, 128vw) auto no-repeat,
     url("./assets/bracket-atmosphere.jpg") center 45% / min(1640px, 126vw) auto no-repeat,
     url("./assets/finals-atmosphere.jpg") center bottom / min(1600px, 124vw) auto no-repeat;
-  opacity: 0.88;
+  opacity: 0.85;
 }
 
 .site-shell::after {
@@ -2321,7 +2321,7 @@ body {
     linear-gradient(90deg, rgba(3, 3, 3, 0.92) 0%, rgba(3, 3, 3, 0.72) 48%, rgba(3, 3, 3, 0.9) 100%),
     radial-gradient(circle at 28% 42%, rgba(255, 174, 23, 0.22), transparent 27rem),
     url("./assets/kol-cinematic-benchmark.jpg") center top / cover no-repeat;
-  opacity: 0.52;
+  opacity: 0.85;
   mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
 }
 
@@ -2647,25 +2647,25 @@ body {
 .reward-pots-section,
 #how-it-works {
   --section-bg: url("./assets/kol-cinematic-benchmark.jpg");
-  --section-bg-opacity: 0.5;
+  --section-bg-opacity: 0.85;
 }
 
 .bracket-section,
 #standings {
   --section-bg: url("./assets/bracket-atmosphere.jpg");
-  --section-bg-opacity: 0.6;
+  --section-bg-opacity: 0.85;
 }
 
 #schedule,
 #kols {
   --section-bg: url("./assets/league-atmosphere.jpg");
-  --section-bg-opacity: 0.58;
+  --section-bg-opacity: 0.85;
 }
 
 #resources,
 .faq-section {
   --section-bg: url("./assets/finals-atmosphere.jpg");
-  --section-bg-opacity: 0.58;
+  --section-bg-opacity: 0.85;
 }
 
 .step-card,
@@ -2842,6 +2842,300 @@ body {
 
 .live-titlebar h1 {
   font-family: var(--headline-font);
+}
+
+.race-track {
+  --drive-start: clamp(360px, 32vw, 430px);
+  --drive-end: 62px;
+  background:
+    radial-gradient(circle at 74% 6%, rgba(255, 194, 67, 0.3), transparent 24%),
+    linear-gradient(90deg, rgba(255, 194, 67, 0.14) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 194, 67, 0.11) 0 1px, transparent 1px 24%),
+    repeating-linear-gradient(180deg, rgba(255, 246, 218, 0.045) 0 1px, transparent 1px 26px),
+    linear-gradient(180deg, rgba(24, 20, 14, 0.98), rgba(5, 5, 5, 0.98) 84%);
+  background-size: auto, 92px 100%, 100% 25%, auto, auto;
+}
+
+.track-section .race-track {
+  min-height: 548px;
+}
+
+.track-lane {
+  min-height: 126px;
+  background:
+    linear-gradient(90deg, rgba(255, 194, 67, 0.08), transparent 35%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 45%, rgba(0, 0, 0, 0.18)),
+    rgba(255, 221, 151, 0.024);
+}
+
+.track-lane::before {
+  right: var(--drive-end);
+  left: var(--drive-start);
+  bottom: 28px;
+  height: 2px;
+  background:
+    linear-gradient(90deg, rgba(255, 194, 67, 0.78), rgba(255, 194, 67, 0.16) 36%, transparent),
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(255, 246, 218, 0.22) 28px 31px);
+}
+
+.lane-runway {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  right: var(--drive-end);
+  bottom: 0;
+  left: var(--drive-start);
+  pointer-events: none;
+}
+
+.start-line {
+  left: var(--drive-start);
+}
+
+.finish-line {
+  right: var(--drive-end);
+}
+
+.lane-label {
+  top: 14px;
+  right: auto;
+  left: 16px;
+  width: calc(var(--drive-start) - 38px);
+  grid-template-columns: 42px 40px minmax(0, 1fr) minmax(72px, 86px);
+  grid-template-areas:
+    "rank avatar kol change"
+    "rank avatar stat change";
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid rgba(255, 194, 67, 0.25);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 0% 50%, rgba(255, 194, 67, 0.16), transparent 65%),
+    linear-gradient(90deg, rgba(255, 174, 23, 0.12), rgba(0, 0, 0, 0.72)),
+    rgba(2, 2, 2, 0.8);
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 246, 218, 0.08);
+}
+
+.lane-label .avatar {
+  grid-area: avatar;
+  width: 38px;
+  height: 38px;
+  align-self: center;
+  border-color: rgba(255, 194, 67, 0.58);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--avatar-color) 34%, transparent);
+}
+
+.lane-rank {
+  grid-area: rank;
+  min-height: 78px;
+  border-color: rgba(255, 194, 67, 0.28);
+  color: #ffe681;
+  font-size: 1.2rem;
+}
+
+.lane-kol {
+  grid-area: kol;
+}
+
+.lane-stat {
+  grid-area: stat;
+}
+
+.lane-change {
+  grid-area: change;
+  align-self: stretch;
+}
+
+.lane-rank,
+.lane-kol,
+.lane-stat,
+.lane-change {
+  border-radius: 7px;
+  background:
+    linear-gradient(180deg, rgba(255, 174, 23, 0.08), rgba(0, 0, 0, 0.24)),
+    rgba(3, 3, 3, 0.72);
+}
+
+.lane-kol strong {
+  font-size: 0.86rem;
+}
+
+.lane-stat strong,
+.lane-change strong {
+  font-size: 0.72rem;
+}
+
+.racer-marker {
+  top: 55%;
+  width: 248px;
+  height: 88px;
+  transform: translate(-8%, -50%);
+  opacity: 0.98;
+}
+
+.racer-marker--cinema {
+  transform: translate(-8%, -40%) scale(1.08);
+}
+
+.speed-trail {
+  top: 48px;
+  left: -260px;
+  width: 310px;
+  height: 7px;
+  background:
+    linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--car-color) 16%, transparent) 34%, color-mix(in srgb, var(--car-color) 72%, #fff4a8) 86%, rgba(255, 255, 255, 0.5)),
+    linear-gradient(90deg, transparent, rgba(255, 246, 218, 0.26));
+  filter: blur(0.35px);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--car-color) 36%, transparent),
+    0 0 38px color-mix(in srgb, var(--car-color) 18%, transparent);
+}
+
+.racer-marker.is-leader .speed-trail {
+  width: 360px;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 174, 23, 0.24) 35%, #ffe078 88%, rgba(255, 255, 255, 0.78)),
+    linear-gradient(90deg, transparent, rgba(255, 246, 218, 0.32));
+  box-shadow:
+    0 0 20px rgba(255, 194, 67, 0.52),
+    0 0 58px rgba(255, 174, 23, 0.28);
+}
+
+.racer-callout {
+  display: none;
+}
+
+.race-car {
+  animation-duration: 920ms;
+  filter:
+    drop-shadow(0 20px 18px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 18px color-mix(in srgb, var(--car-color) 42%, transparent));
+}
+
+.race-car-shadow {
+  left: 36px;
+  right: 16px;
+  bottom: 9px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.58);
+  filter: blur(9px);
+}
+
+.race-car-trail-light {
+  left: 6px;
+  top: 45px;
+  width: 112px;
+  height: 9px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--car-color) 74%, #ffffff));
+  box-shadow: 0 0 26px color-mix(in srgb, var(--car-color) 58%, transparent);
+}
+
+.race-car-body {
+  left: 52px;
+  top: 37px;
+  width: 142px;
+  height: 22px;
+  border-radius: 16px 40px 18px 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.44), transparent 38%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.45), transparent 22%, rgba(255, 255, 255, 0.2) 58%, rgba(0, 0, 0, 0.32)),
+    var(--car-color);
+  box-shadow:
+    inset -28px -9px 0 rgba(0, 0, 0, 0.26),
+    inset 24px 4px 0 rgba(255, 255, 255, 0.1),
+    0 0 28px color-mix(in srgb, var(--car-color) 46%, transparent);
+  clip-path: polygon(0 24%, 71% 0, 100% 35%, 94% 84%, 17% 100%, 0 70%);
+  transform: skewX(-8deg);
+}
+
+.race-car-body::after {
+  right: 20px;
+  bottom: 5px;
+  left: 24px;
+}
+
+.race-car-nose {
+  left: 176px;
+  top: 41px;
+  width: 72px;
+  height: 12px;
+  border-radius: 2px 34px 12px 2px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.32), transparent 48%),
+    color-mix(in srgb, var(--car-color) 92%, #ffd56a);
+  clip-path: polygon(0 12%, 100% 36%, 92% 78%, 0 100%);
+}
+
+.race-car-wing {
+  height: 8px;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent),
+    color-mix(in srgb, var(--car-color) 76%, #050505);
+}
+
+.race-car-wing--rear {
+  left: 24px;
+  top: 33px;
+  width: 68px;
+}
+
+.race-car-wing--front {
+  left: 203px;
+  top: 38px;
+  width: 48px;
+}
+
+.race-car-cockpit {
+  left: 112px;
+  top: 7px;
+  width: 54px;
+  height: 54px;
+  border-color: rgba(255, 224, 120, 0.88);
+  box-shadow:
+    0 0 0 5px rgba(0, 0, 0, 0.5),
+    0 0 24px color-mix(in srgb, var(--car-color) 44%, rgba(255, 194, 67, 0.4));
+}
+
+.race-car-cockpit .avatar {
+  width: 45px;
+  height: 45px;
+}
+
+.race-car-halo {
+  left: 104px;
+  top: 18px;
+  width: 68px;
+  height: 34px;
+  border-width: 4px;
+}
+
+.race-car-number {
+  left: 72px;
+  top: 38px;
+  height: 20px;
+  border-color: rgba(255, 230, 129, 0.78);
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.race-car-wheel {
+  top: 53px;
+  width: 30px;
+  height: 30px;
+  border-width: 6px;
+  box-shadow:
+    0 0 0 2px rgba(255, 246, 218, 0.16),
+    0 0 16px rgba(0, 0, 0, 0.62);
+}
+
+.race-car-wheel--rear {
+  left: 62px;
+}
+
+.race-car-wheel--front {
+  left: 188px;
 }
 
 @keyframes road-glide {
@@ -3101,7 +3395,12 @@ body {
   }
 
   .track-section .race-track {
-    min-height: 480px;
+    min-height: 640px;
+  }
+
+  .race-track {
+    --drive-start: 64px;
+    --drive-end: 22px;
   }
 
   .bracket-column:not(:last-child)::after {
@@ -3139,19 +3438,52 @@ body {
   }
 
   .track-lane {
-    min-height: 128px;
+    min-height: 158px;
   }
 
   .lane-label {
     top: 10px;
     right: 14px;
     left: 54px;
-    grid-template-columns: 38px minmax(0, 1fr) minmax(74px, 92px);
+    width: auto;
+    grid-template-columns: 34px 32px minmax(0, 1fr) minmax(66px, 76px);
+    grid-template-areas:
+      "rank avatar kol change"
+      "rank avatar stat change";
+    padding: 6px;
+  }
+
+  .lane-label .avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .lane-rank {
+    min-height: 72px;
+    font-size: 0.86rem;
+  }
+
+  .lane-kol strong,
+  .lane-stat strong,
+  .lane-change strong {
+    font-size: 0.68rem;
+  }
+
+  .lane-kol span,
+  .lane-stat span {
+    font-size: 0.56rem;
+  }
+
+  .lane-runway {
+    left: var(--drive-start);
+    right: var(--drive-end);
     width: auto;
   }
 
   .lane-stat {
-    display: none;
+    display: grid;
+    min-height: 32px;
+    padding: 4px 7px;
   }
 
   .lane-change {
@@ -3163,21 +3495,21 @@ body {
   }
 
   .racer-marker {
-    top: 76%;
-    width: 126px;
-    transform: translate(-50%, -50%) scale(0.8);
+    top: 88%;
+    width: 176px;
+    transform: translate(-10%, -50%) scale(0.68);
   }
 
   .racer-marker--cinema {
-    transform: translate(-50%, -36%) scale(0.82);
+    transform: translate(-10%, -38%) scale(0.7);
   }
 
   .start-line {
-    left: 30px;
+    left: var(--drive-start);
   }
 
   .finish-line {
-    right: 12px;
+    right: var(--drive-end);
   }
 
   .start-line span,
@@ -3186,11 +3518,7 @@ body {
   }
 
   .racer-callout {
-    top: -18px;
-    right: -2px;
-    left: auto;
-    gap: 5px;
-    font-size: 0.6rem;
+    display: none;
   }
 
   .kol-os {
@@ -3211,6 +3539,8 @@ body {
 
 @media (max-width: 460px) {
   .brand-lockup strong {
+    font-size: 1rem;
+    line-height: 1;
     white-space: normal;
   }
 

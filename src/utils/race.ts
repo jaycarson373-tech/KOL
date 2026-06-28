@@ -88,7 +88,7 @@ export const buildEntrants = (
   return selected
     .map((entrant) => {
       const normalized = allCarsAtStart || spread === 0 ? 0 : (entrant.percentChange - min) / spread;
-      const progress = allCarsAtStart ? 12 : 14 + normalized * 74;
+      const progress = allCarsAtStart ? 0 : 8 + normalized * 84;
       const rank = rankById.get(entrant.id) ?? 0;
 
       return {
