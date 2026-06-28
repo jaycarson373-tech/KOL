@@ -10,7 +10,8 @@
     "typecheck:worker": "tsc -p tsconfig.worker.json --noEmit",
     "worker": "tsx worker/index.ts",
     "worker:tick": "tsx worker/tick.ts",
-    "seed:worker": "tsx scripts/seed-worker.ts"
+    "seed:worker": "tsx scripts/seed-worker.ts",
+    "launch:test-race": "tsx scripts/launch-test-race.ts"
   },
   "dependencies": {
     "@solana/web3.js": "^1.98.4",
