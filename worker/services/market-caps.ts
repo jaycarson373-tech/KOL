@@ -170,6 +170,17 @@ export async function getMarketCapSnapshot(kols: Kol[], race: RaceIntervalRecord
 
 export function getWinnerFromSnapshot(race: RaceIntervalRecord, snapshot: RaceSnapshot): string | null {
   return race.entrantIds
-    .map((id) => ({ id, marketCap: snapshot[id]?.marketCapUsd ?? 0 }))
-    .sort((left, right) => right.marketCap - left.marketCap)[0]?.id ?? null;
+    .map((id) => {
+      const startMarketCap = race.snapshotStart?.[id]?.marketCapUsd ?? 0;
+      const endMarketCap = snapshot[id]?.marketCapUsd ?? 0;
+      const percentChange =
+        startMarketCap > 0 ? ((endMarketCap - startMarketCap) / startMarketCap) * 100 : 0;
+
+      return { id, endMarketCap, percentChange };
+    })
+    .sort(
+      (left, right) =>
+        right.percentChange - left.percentChange ||
+        right.endMarketCap - left.endMarketCap,
+    )[0]?.id ?? null;
 }

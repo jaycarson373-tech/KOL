@@ -25,6 +25,12 @@ export const formatSol = (value: number) =>
     maximumFractionDigits: 1,
   }).format(value)} SOL`;
 
+export const formatPercentChange = (value: number) =>
+  `${value > 0 ? "+" : ""}${new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)}%`;
+
 export const getInitials = (name: string) =>
   name
     .split(" ")
@@ -36,33 +42,63 @@ export const getInitials = (name: string) =>
 export const buildEntrants = (
   race: RaceInterval,
   profiles: KolProfile[],
-  liveCaps: Record<string, number>,
+  isLiveRaceActive: boolean,
 ): RaceEntrant[] => {
   const selected = race.entrants
     .map((id) => profiles.find((profile) => profile.id === id))
     .filter((profile): profile is KolProfile => Boolean(profile))
-    .map((profile) => ({
-      ...profile,
-      marketCapUsd: liveCaps[profile.id] ?? profile.marketCapUsd,
-    }));
-
-  const max = Math.max(...selected.map((profile) => profile.marketCapUsd), 1);
-  const min = Math.min(...selected.map((profile) => profile.marketCapUsd), max);
-  const spread = Math.max(max - min, 1);
-
-  return selected
     .map((profile) => {
-      const normalized = (profile.marketCapUsd - min) / spread;
-      const progress = 42 + normalized * 40;
+      const startMarketCapUsd =
+        race.snapshotStart?.[profile.id]?.marketCapUsd ?? profile.marketCapUsd;
+      const marketCapUsd =
+        race.liveMarketCaps?.[profile.id]?.marketCapUsd ??
+        race.snapshotEnd?.[profile.id]?.marketCapUsd ??
+        startMarketCapUsd;
+      const percentChange =
+        isLiveRaceActive && startMarketCapUsd > 0
+          ? ((marketCapUsd - startMarketCapUsd) / startMarketCapUsd) * 100
+          : 0;
 
       return {
         ...profile,
-        progress: Number(progress.toFixed(2)),
+        startMarketCapUsd,
+        marketCapUsd,
+        percentChange: Number(percentChange.toFixed(4)),
+        progress: 12,
         rank: 0,
+        isLeader: false,
+      };
+    });
+
+  const ranked = selected
+    .slice()
+    .sort(
+      (a, b) =>
+        b.percentChange - a.percentChange ||
+        b.marketCapUsd - a.marketCapUsd ||
+        a.seed - b.seed,
+    );
+  const rankById = new Map(ranked.map((entrant, index) => [entrant.id, index + 1]));
+  const changes = selected.map((entrant) => entrant.percentChange);
+  const max = Math.max(...changes, 0);
+  const min = Math.min(...changes, 0);
+  const allCarsAtStart = !isLiveRaceActive || changes.every((change) => change === 0);
+  const spread = Math.max(max - min, 0);
+
+  return selected
+    .map((entrant) => {
+      const normalized = allCarsAtStart || spread === 0 ? 0 : (entrant.percentChange - min) / spread;
+      const progress = allCarsAtStart ? 12 : 14 + normalized * 74;
+      const rank = rankById.get(entrant.id) ?? 0;
+
+      return {
+        ...entrant,
+        progress: Number(progress.toFixed(2)),
+        rank,
+        isLeader: isLiveRaceActive && !allCarsAtStart && rank === 1,
       };
     })
-    .sort((a, b) => b.marketCapUsd - a.marketCapUsd)
-    .map((entrant, index) => ({ ...entrant, rank: index + 1 }));
+    .sort((a, b) => a.rank - b.rank);
 };
 
 export const getRacePot = (race: RaceInterval) =>

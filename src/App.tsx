@@ -21,13 +21,14 @@ import {
 import {
   activeRace,
   kols,
-  upcomingRaces,
+  upcomingRaces as fallbackUpcomingRaces,
 } from "./data/kols";
-import { fetchLiveMarketCaps } from "./services/marketData";
+import { fetchCurrentRaceFeed, type RaceFeed } from "./services/raceFeed";
 import type { KolProfile, RaceEntrant, RaceInterval } from "./types";
 import {
   buildEntrants,
   formatCompactUsd,
+  formatPercentChange,
   formatSol,
   getCountdownParts,
   getInitials,
@@ -46,7 +47,7 @@ interface LeagueKol extends KolProfile {
 }
 
 const resources = [
-  ["Live Race", "/live", Radio],
+  ["Live Race", "/track", Radio],
   ["Standings", "#standings", Trophy],
   ["Bracket", "#bracket", Route],
   ["Schedule", "#schedule", CalendarDays],
@@ -57,6 +58,20 @@ const resources = [
   ["Telegram", "#", Zap],
   ["FAQ", "#faq", HelpCircle],
 ] as const;
+
+const fallbackRaceFeed: RaceFeed = {
+  race: {
+    ...activeRace,
+    status: "queued",
+    snapshotStart: null,
+    snapshotEnd: null,
+    liveMarketCaps: null,
+  },
+  kols,
+  upcomingRaces: fallbackUpcomingRaces,
+  isLiveRaceActive: false,
+  isConfigured: false,
+};
 
 const faqs = [
   [
@@ -77,7 +92,7 @@ const faqs = [
   ],
   [
     "What is the tournament format?",
-    "Round of 32 has eight 4-KOL races. Elite 8 has two 4-KOL races. The Grand Final is a 1v1 for the crown.",
+    "Round 1 has eight 4-KOL races at 8 hours each. Elite 8 has two 4-KOL races at 10 hours each. The Grand Final is a 20-hour 1v1.",
   ],
   [
     "When are payouts?",
@@ -91,13 +106,22 @@ const faqs = [
 
 function App() {
   const [camera, setCamera] = useState<CameraMode>("top");
-  const countdownEndsAt = useMemo(() => getCountdownTarget(activeRace.endsAt), []);
+  const [raceFeed, setRaceFeed] = useState<RaceFeed>(fallbackRaceFeed);
+  const currentRace = raceFeed.race ?? fallbackRaceFeed.race!;
+  const raceProfiles = raceFeed.kols.length > 0 ? raceFeed.kols : fallbackRaceFeed.kols;
+  const currentUpcomingRaces =
+    raceFeed.upcomingRaces.length > 0 ? raceFeed.upcomingRaces : fallbackRaceFeed.upcomingRaces;
+  const isLiveRaceActive = raceFeed.isLiveRaceActive && currentRace.status === "live";
+  const countdownEndsAt = useMemo(
+    () => getCountdownTarget(currentRace, isLiveRaceActive),
+    [currentRace.endsAt, currentRace.id, currentRace.startsAt, isLiveRaceActive],
+  );
   const [countdown, setCountdown] = useState(() =>
     getCountdownParts(countdownEndsAt),
   );
-  const [liveCaps, setLiveCaps] = useState<Record<string, number>>({});
 
   useEffect(() => {
+    setCountdown(getCountdownParts(countdownEndsAt));
     const interval = window.setInterval(() => {
       setCountdown(getCountdownParts(countdownEndsAt));
     }, 1000);
@@ -107,30 +131,42 @@ function App() {
 
   useEffect(() => {
     let isMounted = true;
+    let interval: number | undefined;
 
-    fetchLiveMarketCaps(kols)
-      .then((caps) => {
-        if (isMounted) {
-          setLiveCaps(caps);
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          setLiveCaps({});
-        }
-      });
+    const loadRaceFeed = () => {
+      fetchCurrentRaceFeed()
+        .then((feed) => {
+          if (isMounted && feed?.race) {
+            setRaceFeed(feed);
+          }
+        })
+        .catch(() => {
+          if (isMounted) {
+            setRaceFeed(fallbackRaceFeed);
+          }
+        });
+    };
+
+    loadRaceFeed();
+    interval = window.setInterval(loadRaceFeed, 30_000);
 
     return () => {
       isMounted = false;
+      if (interval) {
+        window.clearInterval(interval);
+      }
     };
   }, []);
 
   const entrants = useMemo(
-    () => buildEntrants(activeRace, kols, liveCaps),
-    [liveCaps],
+    () => buildEntrants(currentRace, raceProfiles, isLiveRaceActive),
+    [currentRace, isLiveRaceActive, raceProfiles],
   );
-  const splitAmounts = getSplitAmounts(activeRace);
-  const field = useMemo(() => buildLeagueField(liveCaps), [liveCaps]);
+  const splitAmounts = getSplitAmounts(currentRace);
+  const field = useMemo(
+    () => buildLeagueField(raceProfiles, currentRace, entrants),
+    [currentRace, entrants, raceProfiles],
+  );
   const standings = field.slice().sort((a, b) => {
     const winDiff = b.wins - a.wins;
     if (winDiff !== 0) {
@@ -141,13 +177,15 @@ function App() {
   });
   const currentPath = window.location.pathname;
 
-  if (currentPath === "/live" || currentPath === "/race") {
+  if (currentPath === "/live" || currentPath === "/race" || currentPath === "/track") {
     return (
       <LiveRacePage
         camera={camera}
         countdown={countdown}
         entrants={entrants}
         field={field}
+        isLiveRaceActive={isLiveRaceActive}
+        race={currentRace}
         setCamera={setCamera}
         splitAmounts={splitAmounts}
       />
@@ -158,9 +196,25 @@ function App() {
     <>
       <main className="site-shell">
         <SiteHeader />
-        <HeroSection countdown={countdown} entrants={entrants} splitAmounts={splitAmounts} />
-        <TrackSection entrants={entrants} countdown={countdown} />
-        <CurrentRaceSummary entrants={entrants} splitAmounts={splitAmounts} />
+        <HeroSection
+          countdown={countdown}
+          entrants={entrants}
+          isLiveRaceActive={isLiveRaceActive}
+          race={currentRace}
+          splitAmounts={splitAmounts}
+        />
+        <TrackSection
+          countdown={countdown}
+          entrants={entrants}
+          isLiveRaceActive={isLiveRaceActive}
+          race={currentRace}
+        />
+        <CurrentRaceSummary
+          entrants={entrants}
+          isLiveRaceActive={isLiveRaceActive}
+          race={currentRace}
+          splitAmounts={splitAmounts}
+        />
         <section className="content-section reward-pots-section" aria-labelledby="rewards-title">
           <SectionHeading
             eyebrow="Reward Pots"
@@ -172,7 +226,7 @@ function App() {
         <HowItWorks />
         <TournamentBracket />
         <Standings standings={standings} />
-        <RaceSchedule />
+        <RaceSchedule currentRace={currentRace} upcomingRaces={currentUpcomingRaces} />
         <KolGrid field={field} />
         <Resources />
         <FinalCinematic />
@@ -198,7 +252,7 @@ function SiteHeader() {
         <a href="#schedule">Schedule</a>
         <a href="#kols">KOLs</a>
       </nav>
-      <a className="nav-live" href="/live">
+      <a className="nav-live" href="/track">
         <Radio size={16} aria-hidden="true" />
         The Track
       </a>
@@ -209,21 +263,25 @@ function SiteHeader() {
 function HeroSection({
   countdown,
   entrants,
+  isLiveRaceActive,
+  race,
   splitAmounts,
 }: {
   countdown: ReturnType<typeof getCountdownParts>;
   entrants: RaceEntrant[];
+  isLiveRaceActive: boolean;
+  race: RaceInterval;
   splitAmounts: ReturnType<typeof getSplitAmounts>;
 }) {
   const leader = entrants[0];
-  const racePot = getRacePot(activeRace);
+  const racePot = getRacePot(race);
 
   return (
     <section className="hero-section" aria-labelledby="hero-title">
       <div className="hero-content">
         <p className="eyebrow">Season One · Live Tournament</p>
         <h1 id="hero-title">KING OF LIQUIDITY</h1>
-        <p className="hero-kicker">32 KOLs. One Tournament. One Crown. One King of Liquidity.</p>
+        <p className="hero-kicker">32 KOLs. One tournament. One crown.</p>
         <p className="hero-copy">
           Four KOLs enter The Track. Market cap performance decides who
           advances. Every race pays holders.
@@ -243,19 +301,19 @@ function HeroSection({
       <aside className="hero-broadcast" aria-label="Current tournament snapshot">
         <div className="broadcast-status">
           <span className="status-light" />
-          Track feed live
+          {isLiveRaceActive ? "Track feed live" : "Next race begins soon"}
         </div>
         <div className="hero-race-card">
-          <span>{activeRace.label}</span>
-          <strong>{entrants.map((entrant) => entrant.symbol).join("  ·  ")}</strong>
+          <span>{race.label}</span>
+          <strong>{entrants.length > 0 ? entrants.map((entrant) => entrant.symbol).join("  ·  ") : "Awaiting racers"}</strong>
         </div>
         <div className="hero-intel-grid">
-          <MiniPot label="Current leader" value={leader.symbol} />
+          <MiniPot label="Current leader" value={isLiveRaceActive && leader ? leader.symbol : "Parked"} />
           <MiniPot label="Race pot" value={formatSol(racePot)} />
           <MiniPot label="Winner holders" value={formatSol(splitAmounts.winnerHolders)} />
           <MiniPot label="Burn + vault" value={formatSol(splitAmounts.buybackBurn + splitAmounts.finalsVault)} />
         </div>
-        <Countdown countdown={countdown} label="Next snapshot" />
+        <Countdown countdown={countdown} label={isLiveRaceActive ? "Next snapshot" : "Race opens"} />
       </aside>
     </section>
   );
@@ -264,54 +322,78 @@ function HeroSection({
 function TrackSection({
   entrants,
   countdown,
+  isLiveRaceActive,
+  race,
 }: {
   entrants: RaceEntrant[];
   countdown: ReturnType<typeof getCountdownParts>;
+  isLiveRaceActive: boolean;
+  race: RaceInterval;
 }) {
   return (
     <section className="track-section" id="track" aria-labelledby="track-title">
       <div className="track-header">
         <div>
           <p className="eyebrow">The Track</p>
-          <h2 id="track-title">Live tournament race</h2>
+          <h2 id="track-title">{isLiveRaceActive ? "Live tournament race" : "Next race begins soon"}</h2>
+          <p className="track-subtitle">{race.label}</p>
         </div>
         <div className="track-header-actions">
-          <Countdown countdown={countdown} label="Race closes" />
-          <a className="primary-cta" href="/live">
+          <Countdown countdown={countdown} label={isLiveRaceActive ? "Race closes" : "Race opens"} />
+          <a className="primary-cta" href="/track">
             <Radio size={18} aria-hidden="true" />
             Fullscreen
           </a>
         </div>
       </div>
-      <RaceTrack entrants={entrants} camera="top" />
-      {activeRace.status === "final" ? <RaceResult entrants={entrants} /> : null}
+      <RaceTrack entrants={entrants} camera="top" isLiveRaceActive={isLiveRaceActive} />
+      {race.status === "final" ? <RaceResult entrants={entrants} race={race} /> : null}
     </section>
   );
 }
 
 function CurrentRaceSummary({
   entrants,
+  isLiveRaceActive,
+  race,
   splitAmounts,
 }: {
   entrants: RaceEntrant[];
+  isLiveRaceActive: boolean;
+  race: RaceInterval;
   splitAmounts: ReturnType<typeof getSplitAmounts>;
 }) {
   const winner = entrants[0];
   const totalMarketCap = entrants.reduce((total, entrant) => total + entrant.marketCapUsd, 0);
-  const racePot = getRacePot(activeRace);
+  const racePot = getRacePot(race);
 
   return (
     <section className="race-summary-grid" aria-label="Homepage race overview">
       <div className="dashboard-card standings-card">
-        <span className="card-label">Current Leader</span>
-        <div className="leader-feature">
-          <Avatar entrant={winner} />
-          <div>
-            <strong>{winner.name}</strong>
-            <span>{winner.symbol} · {getPerformanceGain(winner).toFixed(1)}%</span>
+        <span className="card-label">{isLiveRaceActive ? "Current Leader" : "Track Status"}</span>
+        {winner ? (
+          <>
+            <div className="leader-feature">
+              <Avatar entrant={winner} />
+              <div>
+                <strong>{isLiveRaceActive ? winner.name : "Next race begins soon"}</strong>
+                <span>
+                  {isLiveRaceActive
+                    ? `${winner.symbol} · ${formatPercentChange(winner.percentChange)}`
+                    : "Cars parked at the start line"}
+                </span>
+              </div>
+            </div>
+            <div className="leader-number">
+              {isLiveRaceActive ? formatCompactUsd(winner.marketCapUsd) : "Parked"}
+            </div>
+          </>
+        ) : (
+          <div className="summary-metric">
+            <span>Status</span>
+            <strong>Next race begins soon</strong>
           </div>
-        </div>
-        <div className="leader-number">{formatCompactUsd(winner.marketCapUsd)}</div>
+        )}
       </div>
 
       <div className="dashboard-card stat-stack-card">
@@ -356,13 +438,17 @@ function SummaryMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function RaceResult({ entrants }: { entrants: RaceEntrant[] }) {
+function RaceResult({ entrants, race }: { entrants: RaceEntrant[]; race: RaceInterval }) {
   const winner = entrants[0];
+  if (!winner) {
+    return null;
+  }
+
   return (
     <div className="race-result">
       <span>Winner</span>
       <strong>{winner.name}</strong>
-      <em>{getPerformanceGain(winner).toFixed(1)}% · {formatSol(getRacePot(activeRace) * prizeSplit.winnerHolders)} paid to winner holders</em>
+      <em>{formatPercentChange(winner.percentChange)} · {formatSol(getRacePot(race) * prizeSplit.winnerHolders)} paid to winner holders</em>
     </div>
   );
 }
@@ -423,7 +509,7 @@ function HowItWorks() {
 function TournamentBracket() {
   const rounds = [
     {
-      label: "Round of 32",
+      label: "Round 1",
       detail: "8 races · 4 KOLs each · 8 hours",
       matches: ["R32 Race 1", "R32 Race 2", "R32 Race 3", "R32 Race 4", "R32 Race 5", "R32 Race 6", "R32 Race 7", "R32 Race 8"],
     },
@@ -525,8 +611,14 @@ function Standings({ standings }: { standings: LeagueKol[] }) {
   );
 }
 
-function RaceSchedule() {
-  const schedule = buildSchedule();
+function RaceSchedule({
+  currentRace,
+  upcomingRaces,
+}: {
+  currentRace: RaceInterval;
+  upcomingRaces: RaceInterval[];
+}) {
+  const schedule = buildSchedule(currentRace, upcomingRaces);
 
   return (
     <section className="content-section" id="schedule" aria-labelledby="schedule-title">
@@ -668,6 +760,8 @@ function LiveRacePage({
   countdown,
   entrants,
   field,
+  isLiveRaceActive,
+  race,
   setCamera,
   splitAmounts,
 }: {
@@ -675,6 +769,8 @@ function LiveRacePage({
   countdown: ReturnType<typeof getCountdownParts>;
   entrants: RaceEntrant[];
   field: LeagueKol[];
+  isLiveRaceActive: boolean;
+  race: RaceInterval;
   setCamera: (mode: CameraMode) => void;
   splitAmounts: ReturnType<typeof getSplitAmounts>;
 }) {
@@ -688,7 +784,7 @@ function LiveRacePage({
         </a>
         <div className="live-header-center">
           <span className="status-light" />
-          The Track Feed
+          {isLiveRaceActive ? "The Track Feed" : "Next Race"}
         </div>
         <a className="secondary-cta compact" href="/">
           Tournament Home
@@ -699,10 +795,10 @@ function LiveRacePage({
       <section className="live-stage" aria-label="Live race broadcast">
         <div className="live-titlebar">
           <div>
-            <p className="eyebrow">{activeRace.label}</p>
+            <p className="eyebrow">{race.label}</p>
             <h1>The Track</h1>
           </div>
-          <Countdown countdown={countdown} label="Snapshot closes" />
+          <Countdown countdown={countdown} label={isLiveRaceActive ? "Snapshot closes" : "Race opens"} />
         </div>
 
         <div className="camera-row broadcast-controls" role="group" aria-label="Race view">
@@ -725,7 +821,7 @@ function LiveRacePage({
           </button>
         </div>
 
-        <RaceTrack entrants={entrants} camera={camera} />
+        <RaceTrack entrants={entrants} camera={camera} isLiveRaceActive={isLiveRaceActive} />
       </section>
 
       <aside className="live-sidebar" aria-label="Live race stats">
@@ -739,7 +835,7 @@ function LiveRacePage({
                 <strong>{entrant.name}</strong>
                 <em>{formatCompactUsd(entrant.marketCapUsd)}</em>
               </div>
-              <strong>{getPerformanceGain(entrant).toFixed(1)}%</strong>
+              <strong>{formatPercentChange(entrant.percentChange)}</strong>
             </div>
           ))}
         </section>
@@ -750,8 +846,12 @@ function LiveRacePage({
           <span className="card-label">Winner Line</span>
           <div className="winner-line">
             <Shield size={20} aria-hidden="true" />
-            <strong>{entrants[0].name}</strong>
-            <span>{entrants[0].symbol} leads by market cap</span>
+            <strong>{isLiveRaceActive && entrants[0] ? entrants[0].name : "Next race begins soon"}</strong>
+            <span>
+              {isLiveRaceActive && entrants[0]
+                ? `${entrants[0].symbol} leads by market cap performance`
+                : "Cars are parked at the start line"}
+            </span>
           </div>
         </section>
 
@@ -773,29 +873,51 @@ function LiveRacePage({
 function RaceTrack({
   entrants,
   camera,
+  isLiveRaceActive,
 }: {
   entrants: RaceEntrant[];
   camera: CameraMode;
+  isLiveRaceActive: boolean;
 }) {
   return (
     <div
-      className={`race-track race-track--${camera}`}
+      className={`race-track race-track--${camera} ${isLiveRaceActive ? "is-live" : "is-parked"}`}
       aria-label="Live KOL race positions"
     >
+      <div className="start-line" aria-hidden="true">
+        <span>START</span>
+      </div>
       <div className="finish-line" aria-hidden="true">
         <span>FINISH</span>
       </div>
 
-      {entrants.map((entrant) => (
-        <div className="track-lane" key={entrant.id}>
-          <div className="lane-label">
-            <span>#{entrant.rank}</span>
-            <strong>{entrant.name}</strong>
-            <em>{getPerformanceGain(entrant).toFixed(1)}%</em>
+      {entrants.length > 0 ? (
+        entrants.map((entrant) => (
+          <div className={`track-lane ${entrant.isLeader ? "is-leader" : ""}`} key={entrant.id}>
+            <div className="lane-label">
+              <span className="lane-rank">#{entrant.rank}</span>
+              <div className="lane-kol">
+                <strong>{entrant.name}</strong>
+                <span>{entrant.symbol}</span>
+              </div>
+              <div className="lane-stat">
+                <span>Market cap</span>
+                <strong>{formatCompactUsd(entrant.marketCapUsd)}</strong>
+              </div>
+              <div className={`lane-change ${entrant.percentChange >= 0 ? "is-positive" : "is-negative"}`}>
+                <span>Change</span>
+                <strong>{formatPercentChange(entrant.percentChange)}</strong>
+              </div>
+            </div>
+            <RacerMarker entrant={entrant} camera={camera} />
           </div>
-          <RacerMarker entrant={entrant} camera={camera} />
+        ))
+      ) : (
+        <div className="track-empty">
+          <strong>Next race begins soon</strong>
+          <span>Cars will park at the start line when the next matchup is loaded.</span>
         </div>
-      ))}
+      )}
     </div>
   );
 }
@@ -809,10 +931,19 @@ function RacerMarker({
 }) {
   return (
     <div
-      className={`racer-marker racer-marker--${camera}`}
-      style={{ left: `${entrant.progress}%`, "--car-color": entrant.color } as CSSProperties}
+      className={`racer-marker racer-marker--${camera} ${entrant.isLeader ? "is-leader" : ""}`}
+      style={
+        {
+          left: `${entrant.progress}%`,
+          "--car-color": entrant.color,
+        } as CSSProperties
+      }
     >
       <span className="speed-trail" aria-hidden="true" />
+      <span className="racer-callout" aria-hidden="true">
+        <strong>{entrant.symbol}</strong>
+        <em>{formatPercentChange(entrant.percentChange)}</em>
+      </span>
       <span className="lambo" aria-hidden="true">
         <span className="lambo-body" />
         <span className="lambo-cabin" />
@@ -908,20 +1039,32 @@ function MiniPot({ label, value }: { label: string; value: string }) {
   );
 }
 
-function buildLeagueField(liveCaps: Record<string, number>): LeagueKol[] {
-  return kols.map((kol, index) => ({
-    ...kol,
-    marketCapUsd: liveCaps[kol.id] ?? kol.marketCapUsd,
-    leagueRank: index + 1,
-    averageGain: Number((12.8 - index * 0.72 + kol.wins * 1.9 - kol.losses * 0.8).toFixed(1)),
-    upcomingRace: activeRace.entrants.includes(kol.id)
-      ? "Live now"
-      : `Round of 32 Race ${Math.floor(index / 4) + 1}`,
-  }));
+function buildLeagueField(
+  profiles: KolProfile[],
+  currentRace: RaceInterval,
+  entrants: RaceEntrant[],
+): LeagueKol[] {
+  const entrantById = new Map(entrants.map((entrant) => [entrant.id, entrant]));
+
+  return profiles.map((kol, index) => {
+    const entrant = entrantById.get(kol.id);
+
+    return {
+      ...kol,
+      marketCapUsd: entrant?.marketCapUsd ?? kol.marketCapUsd,
+      leagueRank: index + 1,
+      averageGain: entrant?.percentChange ?? 0,
+      upcomingRace: currentRace.entrants.includes(kol.id)
+        ? currentRace.status === "live"
+          ? "Live now"
+          : "Next race"
+        : `Round 1 Race ${Math.floor(index / 4) + 1}`,
+    };
+  });
 }
 
-function buildSchedule(): RaceInterval[] {
-  return [activeRace, ...upcomingRaces].slice(0, 7);
+function buildSchedule(currentRace: RaceInterval, upcomingRaces: RaceInterval[]): RaceInterval[] {
+  return [currentRace, ...upcomingRaces.filter((race) => race.id !== currentRace.id)].slice(0, 7);
 }
 
 function formatTimeRange(race: RaceInterval): string {
@@ -932,17 +1075,14 @@ function formatTimeRange(race: RaceInterval): string {
   });
 }
 
-function getPerformanceGain(entrant: Pick<RaceEntrant, "rank" | "marketCapUsd">): number {
-  return Number((18.5 - entrant.rank * 2.35 + (entrant.marketCapUsd % 37000) / 10000).toFixed(1));
-}
-
-function getCountdownTarget(endsAt: string): string {
-  const end = new Date(endsAt);
-  if (end.getTime() > Date.now()) {
-    return endsAt;
+function getCountdownTarget(race: RaceInterval, isLiveRaceActive: boolean): string {
+  const target = isLiveRaceActive ? race.endsAt : race.startsAt;
+  const targetDate = new Date(target);
+  if (Number.isFinite(targetDate.getTime()) && targetDate.getTime() > Date.now()) {
+    return target;
   }
 
-  return new Date(Date.now() + 54 * 60 * 1000 + 18 * 1000).toISOString();
+  return new Date().toISOString();
 }
 
 export default App;

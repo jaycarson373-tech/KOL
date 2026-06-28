@@ -91,3 +91,23 @@ alter table public.race_intervals enable row level security;
 alter table public.distributions enable row level security;
 alter table public.holder_snapshots enable row level security;
 alter table public.system_logs enable row level security;
+
+grant select on public.kols, public.race_intervals, public.distributions to anon, authenticated;
+
+drop policy if exists public_read_kols on public.kols;
+create policy public_read_kols
+  on public.kols
+  for select
+  using (true);
+
+drop policy if exists public_read_race_intervals on public.race_intervals;
+create policy public_read_race_intervals
+  on public.race_intervals
+  for select
+  using (true);
+
+drop policy if exists public_read_distributions on public.distributions;
+create policy public_read_distributions
+  on public.distributions
+  for select
+  using (true);

@@ -391,7 +391,7 @@ export const kols: KolProfile[] = [
 
 export const activeRace: RaceInterval = {
   id: "race-01",
-  label: "Round of 32 · Race 1",
+  label: "Round 1 · Race 1",
   status: "live",
   startsAt: "2026-06-28T12:00:00-04:00",
   endsAt: "2026-06-28T20:00:00-04:00",
@@ -403,7 +403,7 @@ export const activeRace: RaceInterval = {
 export const upcomingRaces: RaceInterval[] = [
   {
     id: "race-02",
-    label: "Round of 32 · Race 2",
+    label: "Round 1 · Race 2",
     status: "queued",
     startsAt: "2026-06-28T20:00:00-04:00",
     endsAt: "2026-06-29T04:00:00-04:00",
@@ -413,7 +413,7 @@ export const upcomingRaces: RaceInterval[] = [
   },
   {
     id: "race-03",
-    label: "Round of 32 · Race 3",
+    label: "Round 1 · Race 3",
     status: "queued",
     startsAt: "2026-06-29T04:00:00-04:00",
     endsAt: "2026-06-29T12:00:00-04:00",
@@ -423,7 +423,7 @@ export const upcomingRaces: RaceInterval[] = [
   },
   {
     id: "race-04",
-    label: "Round of 32 · Race 4",
+    label: "Round 1 · Race 4",
     status: "queued",
     startsAt: "2026-06-29T12:00:00-04:00",
     endsAt: "2026-06-29T20:00:00-04:00",
@@ -433,7 +433,7 @@ export const upcomingRaces: RaceInterval[] = [
   },
   {
     id: "race-05",
-    label: "Round of 32 · Race 5",
+    label: "Round 1 · Race 5",
     status: "queued",
     startsAt: "2026-06-29T20:00:00-04:00",
     endsAt: "2026-06-30T04:00:00-04:00",
@@ -443,7 +443,7 @@ export const upcomingRaces: RaceInterval[] = [
   },
   {
     id: "race-06",
-    label: "Round of 32 · Race 6",
+    label: "Round 1 · Race 6",
     status: "queued",
     startsAt: "2026-06-30T04:00:00-04:00",
     endsAt: "2026-06-30T12:00:00-04:00",
@@ -453,7 +453,7 @@ export const upcomingRaces: RaceInterval[] = [
   },
   {
     id: "race-07",
-    label: "Round of 32 · Race 7",
+    label: "Round 1 · Race 7",
     status: "queued",
     startsAt: "2026-06-30T12:00:00-04:00",
     endsAt: "2026-06-30T20:00:00-04:00",
@@ -463,7 +463,7 @@ export const upcomingRaces: RaceInterval[] = [
   },
   {
     id: "race-08",
-    label: "Round of 32 · Race 8",
+    label: "Round 1 · Race 8",
     status: "queued",
     startsAt: "2026-06-30T20:00:00-04:00",
     endsAt: "2026-07-01T04:00:00-04:00",

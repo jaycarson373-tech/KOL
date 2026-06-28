@@ -1,4 +1,13 @@
-export type RaceStatus = "live" | "queued" | "final";
+export type RaceStatus = "live" | "queued" | "final" | "paused";
+
+export interface MarketCapSnapshot {
+  marketCapUsd: number;
+  priceUsd: number | null;
+  source: "dexscreener" | "helius" | "fallback";
+  recordedAt: string;
+}
+
+export type RaceSnapshot = Record<string, MarketCapSnapshot>;
 
 export interface KolProfile {
   id: string;
@@ -20,6 +29,10 @@ export interface KolProfile {
 export interface RaceEntrant extends KolProfile {
   progress: number;
   rank: number;
+  startMarketCapUsd: number;
+  marketCapUsd: number;
+  percentChange: number;
+  isLeader: boolean;
 }
 
 export interface RaceInterval {
@@ -31,6 +44,9 @@ export interface RaceInterval {
   entrants: string[];
   kolFeesSol: number;
   entrantFeesSol: number;
+  snapshotStart?: RaceSnapshot | null;
+  snapshotEnd?: RaceSnapshot | null;
+  liveMarketCaps?: RaceSnapshot | null;
 }
 
 export interface TournamentStats {

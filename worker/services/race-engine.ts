@@ -46,7 +46,7 @@ async function completeRace(repo: SupabaseRepository, race: RaceIntervalRecord, 
 
   const snapshotStart = race.snapshotStart ?? (await getMarketCapSnapshot(entrants, race));
   const snapshotEnd = race.snapshotEnd ?? (await getMarketCapSnapshot(entrants, race));
-  const winnerKolId = race.winnerKolId ?? getWinnerFromSnapshot(race, snapshotEnd);
+  const winnerKolId = race.winnerKolId ?? getWinnerFromSnapshot({ ...race, snapshotStart }, snapshotEnd);
   const next: RaceIntervalRecord = {
     ...race,
     snapshotStart,
