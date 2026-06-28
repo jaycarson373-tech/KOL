@@ -89,7 +89,7 @@ const faqs = [
     "Hold 250K+ $KOL for holder rewards. Hold the winning coin to share in that race's winner-holder pool.",
   ],
   [
-    "What is the tournament format?",
+    "How do tournaments work?",
     "Round 1 has eight 4-KOL races at 8 hours each. Elite 8 has two 4-KOL races at 10 hours each. The Grand Final is a 20-hour 1v1.",
   ],
   [
@@ -242,19 +242,19 @@ function App() {
           isLiveRaceActive={isLiveRaceActive}
           race={currentRace}
         />
-        <CurrentRaceSummary
-          entrants={entrants}
-          isLiveRaceActive={isLiveRaceActive}
-          race={currentRace}
-          splitAmounts={splitAmounts}
-        />
         <section className="content-section reward-pots-section" aria-labelledby="rewards-title">
           <SectionHeading
             eyebrow="Reward Pots"
-            title="Every race pays five pools."
-            copy="The current race pot is split across winner holders, $KOL holders, the winning KOL, burn, and the championship vault."
+            title="Live money on the line."
+            copy="Every race pays winner holders, $KOL holders, the winning KOL championship bonus, buyback and burn, and the championship vault."
           />
           <RewardPots splitAmounts={splitAmounts} />
+          <CurrentRaceSummary
+            entrants={entrants}
+            isLiveRaceActive={isLiveRaceActive}
+            race={currentRace}
+            splitAmounts={splitAmounts}
+          />
         </section>
         <HowItWorks />
         <TournamentBracket />
@@ -262,8 +262,8 @@ function App() {
         <RaceSchedule currentRace={currentRace} upcomingRaces={currentUpcomingRaces} />
         <KolGrid field={field} />
         <Resources />
-        <FinalCinematic />
         <Faq />
+        <FinalCinematic />
       </main>
       <KolOsNav />
       <LoadingScreen active={shouldShowLoadingScreen} />
@@ -314,10 +314,10 @@ function HeroSection({
       <div className="hero-content">
         <p className="eyebrow">Season One · Live Tournament</p>
         <h1 className="pump-title" id="hero-title">King of Liquidity</h1>
-        <p className="hero-kicker">32 KOLs. One tournament. One crown.</p>
+        <p className="hero-kicker">32 KOLs. One Tournament. One Crown.</p>
         <p className="hero-copy">
           Four KOLs enter The Track. Market cap performance decides who
-          advances. Every race pays holders.
+          advances. Every race pays holders. One King of Liquidity remains.
         </p>
         <div className="hero-actions">
           <a className="primary-cta" href="#track">
@@ -402,7 +402,7 @@ function CurrentRaceSummary({
   const racePot = getRacePot(race);
 
   return (
-    <section className="race-summary-grid" aria-label="Homepage race overview">
+    <div className="race-summary-grid" aria-label="Homepage race overview">
       <div className="dashboard-card standings-card">
         <span className="card-label">{isLiveRaceActive ? "Current Leader" : "Track Status"}</span>
         {winner ? (
@@ -459,7 +459,7 @@ function CurrentRaceSummary({
         <SummaryMetric label="$KOL Holders" value={formatSol(splitAmounts.kolAirdrop)} />
         <SummaryMetric label="Championship Vault" value={formatSol(splitAmounts.finalsVault)} />
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -530,9 +530,9 @@ function KingOfHillBanner({
 
 function RewardPots({ splitAmounts }: { splitAmounts: ReturnType<typeof getSplitAmounts> }) {
   const pots = [
-    ["Winning Coin Holders", splitAmounts.winnerHolders, Trophy],
-    ["$KOL Holders", splitAmounts.kolAirdrop, WalletCards],
-    ["Winning KOL Bonus", splitAmounts.winningKolBonus, Medal],
+    ["Winning Coin Pot", splitAmounts.winnerHolders, Trophy],
+    ["20% Holder Pot", splitAmounts.kolAirdrop, WalletCards],
+    ["Winning KOL Championship Bonus", splitAmounts.winningKolBonus, Medal],
     ["Buyback + Burn", splitAmounts.buybackBurn, Flame],
     ["Championship Vault", splitAmounts.finalsVault, Crown],
   ] as const;
@@ -584,7 +584,7 @@ function HowItWorks() {
 function TournamentBracket() {
   const rounds = [
     {
-      label: "Round 1",
+      label: "Round of 32",
       detail: "8 races · 4 KOLs each · 8 hours",
       matches: ["R32 Race 1", "R32 Race 2", "R32 Race 3", "R32 Race 4", "R32 Race 5", "R32 Race 6", "R32 Race 7", "R32 Race 8"],
     },
@@ -610,7 +610,7 @@ function TournamentBracket() {
       <SectionHeading
         eyebrow="Tournament Bracket"
         title="32 enter. One survives."
-        copy="Season One moves from eight opening races to the Elite 8, then into a 20-hour Grand Final for the crown."
+        copy="Round of 32 moves through eight opening races, into the Elite 8, then a 20-hour Grand Final for the crown."
       />
       <div className="league-format">
         <div className="format-stats">
@@ -773,8 +773,8 @@ function FinalCinematic() {
   return (
     <section className="final-cinematic" aria-label="Season One closing statement">
       <Crown size={34} aria-hidden="true" />
-      <p>32 KOLs.</p>
-      <p>One survives.</p>
+      <p>32 KOLs entered.</p>
+      <p>One survived.</p>
       <p>One wears the crown.</p>
       <strong>Season One is live. Season Two begins after the King is crowned.</strong>
     </section>
