@@ -62,14 +62,10 @@ const resources = [
 const fallbackRaceFeed: RaceFeed = {
   race: {
     ...activeRace,
-    status: "queued",
-    snapshotStart: null,
-    snapshotEnd: null,
-    liveMarketCaps: null,
   },
   kols,
   upcomingRaces: fallbackUpcomingRaces,
-  isLiveRaceActive: false,
+  isLiveRaceActive: activeRace.status === "live",
   isConfigured: false,
 };
 
@@ -88,7 +84,7 @@ const faqs = [
   ],
   [
     "How do I qualify?",
-    "Hold 100K+ $KOL for $KOL-holder rewards. Hold the winning coin to share in that race's winner-holder pool.",
+    "Hold 250K+ $KOL for holder rewards. Hold the winning coin to share in that race's winner-holder pool.",
   ],
   [
     "What is the tournament format?",
@@ -522,7 +518,7 @@ function RewardPots({ splitAmounts }: { splitAmounts: ReturnType<typeof getSplit
 
 function HowItWorks() {
   const steps = [
-    ["Step 1", "Hold 100K+ $KOL"],
+    ["Step 1", "Hold 250K+ $KOL"],
     ["Step 2", "4 KOLs enter The Track"],
     ["Step 3", "Highest ending market cap performance wins"],
     ["Step 4", "Creator fees split 50% / 20% / 10% / 10% / 10%"],

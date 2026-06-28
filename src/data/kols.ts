@@ -13,7 +13,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 1,
     color: "#c45a28",
-    marketCapUsd: 842000,
+    marketCapUsd: 4920000,
   },
   {
     id: "kol-02",
@@ -25,7 +25,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 2,
     color: "#11151f",
-    marketCapUsd: 731000,
+    marketCapUsd: 4240000,
   },
   {
     id: "kol-03",
@@ -37,7 +37,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 3,
     color: "#69736a",
-    marketCapUsd: 691000,
+    marketCapUsd: 3860000,
   },
   {
     id: "kol-04",
@@ -49,7 +49,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 4,
     color: "#d19a34",
-    marketCapUsd: 615000,
+    marketCapUsd: 3420000,
   },
   {
     id: "kol-05",
@@ -61,7 +61,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 5,
     color: "#8f3f9d",
-    marketCapUsd: 582000,
+    marketCapUsd: 3180000,
   },
   {
     id: "kol-06",
@@ -73,7 +73,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 6,
     color: "#2e6f9e",
-    marketCapUsd: 556000,
+    marketCapUsd: 2960000,
   },
   {
     id: "kol-07",
@@ -85,7 +85,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 7,
     color: "#bd3b46",
-    marketCapUsd: 492000,
+    marketCapUsd: 2720000,
   },
   {
     id: "kol-08",
@@ -97,7 +97,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 8,
     color: "#378a57",
-    marketCapUsd: 468000,
+    marketCapUsd: 2560000,
   },
   {
     id: "kol-09",
@@ -109,7 +109,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 9,
     color: "#9f4e32",
-    marketCapUsd: 442000,
+    marketCapUsd: 2410000,
   },
   {
     id: "kol-10",
@@ -121,7 +121,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 10,
     color: "#5c56ac",
-    marketCapUsd: 417000,
+    marketCapUsd: 2180000,
   },
   {
     id: "kol-11",
@@ -133,7 +133,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 11,
     color: "#ce597e",
-    marketCapUsd: 384000,
+    marketCapUsd: 2020000,
   },
   {
     id: "kol-12",
@@ -145,7 +145,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 12,
     color: "#805337",
-    marketCapUsd: 352000,
+    marketCapUsd: 1880000,
   },
   {
     id: "kol-13",
@@ -157,7 +157,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 13,
     color: "#4f7f95",
-    marketCapUsd: 326000,
+    marketCapUsd: 1740000,
   },
   {
     id: "kol-14",
@@ -169,7 +169,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 14,
     color: "#a67c32",
-    marketCapUsd: 298000,
+    marketCapUsd: 1610000,
   },
   {
     id: "kol-15",
@@ -181,7 +181,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 15,
     color: "#49555f",
-    marketCapUsd: 264000,
+    marketCapUsd: 1480000,
   },
   {
     id: "kol-16",
@@ -193,7 +193,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 16,
     color: "#5e8f3e",
-    marketCapUsd: 238000,
+    marketCapUsd: 1360000,
   },
   {
     id: "kol-17",
@@ -205,7 +205,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 17,
     color: "#c7a15c",
-    marketCapUsd: 226000,
+    marketCapUsd: 1240000,
   },
   {
     id: "kol-18",
@@ -217,7 +217,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 18,
     color: "#1f8f82",
-    marketCapUsd: 214000,
+    marketCapUsd: 1150000,
   },
   {
     id: "kol-19",
@@ -229,7 +229,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 19,
     color: "#bb5945",
-    marketCapUsd: 203000,
+    marketCapUsd: 1070000,
   },
   {
     id: "kol-20",
@@ -241,7 +241,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 20,
     color: "#775ed8",
-    marketCapUsd: 195000,
+    marketCapUsd: 990000,
   },
   {
     id: "kol-21",
@@ -253,7 +253,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 21,
     color: "#b48c35",
-    marketCapUsd: 187000,
+    marketCapUsd: 925000,
   },
   {
     id: "kol-22",
@@ -265,7 +265,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 22,
     color: "#2d6f8d",
-    marketCapUsd: 178000,
+    marketCapUsd: 870000,
   },
   {
     id: "kol-23",
@@ -277,7 +277,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 23,
     color: "#ad4972",
-    marketCapUsd: 169000,
+    marketCapUsd: 815000,
   },
   {
     id: "kol-24",
@@ -289,7 +289,7 @@ export const kols: KolProfile[] = [
     losses: 0,
     seed: 24,
     color: "#59675f",
-    marketCapUsd: 161000,
+    marketCapUsd: 760000,
   },
   {
     id: "kol-25",
@@ -301,7 +301,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 25,
     color: "#7d4a31",
-    marketCapUsd: 153000,
+    marketCapUsd: 710000,
   },
   {
     id: "kol-26",
@@ -313,7 +313,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 26,
     color: "#395c9e",
-    marketCapUsd: 145000,
+    marketCapUsd: 665000,
   },
   {
     id: "kol-27",
@@ -325,7 +325,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 27,
     color: "#a65f2f",
-    marketCapUsd: 138000,
+    marketCapUsd: 620000,
   },
   {
     id: "kol-28",
@@ -337,7 +337,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 28,
     color: "#5d7c74",
-    marketCapUsd: 131000,
+    marketCapUsd: 585000,
   },
   {
     id: "kol-29",
@@ -349,7 +349,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 29,
     color: "#bc6a54",
-    marketCapUsd: 124000,
+    marketCapUsd: 548000,
   },
   {
     id: "kol-30",
@@ -361,7 +361,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 30,
     color: "#9360b8",
-    marketCapUsd: 118000,
+    marketCapUsd: 515000,
   },
   {
     id: "kol-31",
@@ -373,7 +373,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 31,
     color: "#587078",
-    marketCapUsd: 112000,
+    marketCapUsd: 486000,
   },
   {
     id: "kol-32",
@@ -385,7 +385,7 @@ export const kols: KolProfile[] = [
     losses: 1,
     seed: 32,
     color: "#d1a23c",
-    marketCapUsd: 107000,
+    marketCapUsd: 462000,
   },
 ];
 
@@ -396,8 +396,60 @@ export const activeRace: RaceInterval = {
   startsAt: "2026-06-28T12:00:00-04:00",
   endsAt: "2026-06-28T20:00:00-04:00",
   entrants: ["kol-01", "kol-05", "kol-09", "kol-13"],
-  kolFeesSol: 127.4,
-  entrantFeesSol: 58.6,
+  kolFeesSol: 91.2,
+  entrantFeesSol: 64.8,
+  snapshotStart: {
+    "kol-01": {
+      marketCapUsd: 4310000,
+      priceUsd: null,
+      source: "fallback",
+      recordedAt: "2026-06-28T12:00:00-04:00",
+    },
+    "kol-05": {
+      marketCapUsd: 2880000,
+      priceUsd: null,
+      source: "fallback",
+      recordedAt: "2026-06-28T12:00:00-04:00",
+    },
+    "kol-09": {
+      marketCapUsd: 2255000,
+      priceUsd: null,
+      source: "fallback",
+      recordedAt: "2026-06-28T12:00:00-04:00",
+    },
+    "kol-13": {
+      marketCapUsd: 1703000,
+      priceUsd: null,
+      source: "fallback",
+      recordedAt: "2026-06-28T12:00:00-04:00",
+    },
+  },
+  liveMarketCaps: {
+    "kol-01": {
+      marketCapUsd: 4920000,
+      priceUsd: null,
+      source: "fallback",
+      recordedAt: "2026-06-28T17:40:00-04:00",
+    },
+    "kol-05": {
+      marketCapUsd: 3180000,
+      priceUsd: null,
+      source: "fallback",
+      recordedAt: "2026-06-28T17:40:00-04:00",
+    },
+    "kol-09": {
+      marketCapUsd: 2410000,
+      priceUsd: null,
+      source: "fallback",
+      recordedAt: "2026-06-28T17:40:00-04:00",
+    },
+    "kol-13": {
+      marketCapUsd: 1740000,
+      priceUsd: null,
+      source: "fallback",
+      recordedAt: "2026-06-28T17:40:00-04:00",
+    },
+  },
 };
 
 export const upcomingRaces: RaceInterval[] = [
@@ -474,9 +526,9 @@ export const upcomingRaces: RaceInterval[] = [
 ];
 
 export const tournamentStats: TournamentStats = {
-  totalKolBurned: 1842000,
-  solAirdropped: 312.8,
-  winningKolBonusSol: 42.6,
-  finalsVaultSol: 96.4,
-  totalFeesSol: 643.6,
+  totalKolBurned: 7420000,
+  solAirdropped: 1240.6,
+  winningKolBonusSol: 156.4,
+  finalsVaultSol: 328.8,
+  totalFeesSol: 1825.2,
 };

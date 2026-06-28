@@ -1,31 +1,34 @@
-@import url("https://fonts.googleapis.com/css2?family=Bangers&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@500;600;700;800&display=swap");
 
 :root {
-  --ink: #f8f3ea;
-  --muted: rgba(248, 243, 234, 0.68);
-  --soft: rgba(248, 243, 234, 0.46);
-  --bg: #07080a;
-  --bg-2: #101114;
-  --surface: rgba(15, 16, 19, 0.84);
-  --surface-strong: rgba(11, 12, 15, 0.94);
-  --line: rgba(248, 243, 234, 0.14);
-  --line-strong: rgba(248, 243, 234, 0.24);
-  --gold: #d9b968;
-  --gold-soft: rgba(217, 185, 104, 0.16);
-  --teal: #23d3bd;
-  --teal-soft: rgba(35, 211, 189, 0.13);
-  --coral: #ff6f5f;
+  --ink: #fff7db;
+  --muted: rgba(255, 247, 219, 0.68);
+  --soft: rgba(255, 247, 219, 0.42);
+  --bg: #050506;
+  --bg-2: #0b0b0d;
+  --surface: rgba(10, 10, 12, 0.88);
+  --surface-strong: rgba(4, 5, 6, 0.96);
+  --line: rgba(255, 213, 112, 0.16);
+  --line-strong: rgba(255, 213, 112, 0.32);
+  --gold: #f1c76a;
+  --gold-strong: #ffde8a;
+  --gold-soft: rgba(241, 199, 106, 0.16);
+  --terminal-green: #79ffa8;
+  --terminal-green-soft: rgba(121, 255, 168, 0.13);
+  --teal: #79ffa8;
+  --teal-soft: rgba(121, 255, 168, 0.13);
+  --coral: #ff724d;
   --coral-soft: rgba(255, 111, 95, 0.14);
-  --blue: #7c8cff;
-  --road: #17191d;
-  --road-2: #0d0f12;
-  --shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+  --blue: #9ab0ff;
+  --road: #101113;
+  --road-2: #060708;
+  --shadow: 0 28px 90px rgba(0, 0, 0, 0.54);
   --pump-title-font: "KingOfTheHill", "Bangers", "Arial Black", Impact, sans-serif;
+  --ui-font: Geist, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --number-font: "Geist Mono", "SFMono-Regular", Consolas, monospace;
   color: var(--ink);
   background: var(--bg);
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: var(--ui-font);
   font-synthesis: none;
   line-height: 1.45;
   text-rendering: optimizeLegibility;
@@ -45,8 +48,10 @@ body {
   min-height: 100vh;
   padding-bottom: 96px;
   background:
-    linear-gradient(180deg, rgba(7, 8, 10, 0.2), rgba(7, 8, 10, 0.9) 780px, var(--bg) 1280px),
-    repeating-linear-gradient(135deg, rgba(248, 243, 234, 0.025) 0 1px, transparent 1px 9px),
+    radial-gradient(circle at 52% 0%, rgba(255, 213, 112, 0.22), transparent 32rem),
+    radial-gradient(circle at 86% 20%, rgba(121, 255, 168, 0.08), transparent 24rem),
+    linear-gradient(180deg, rgba(5, 5, 6, 0.2), rgba(5, 5, 6, 0.94) 780px, var(--bg) 1280px),
+    repeating-linear-gradient(135deg, rgba(255, 213, 112, 0.025) 0 1px, transparent 1px 9px),
     url("./assets/tournament-atmosphere.jpg") center top / min(2200px, 190vw) auto no-repeat,
     linear-gradient(180deg, var(--bg), var(--bg-2));
 }
@@ -78,11 +83,15 @@ a {
   gap: 14px;
   align-items: center;
   margin-bottom: 28px;
-  padding: 12px;
-  border: 1px solid var(--line);
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 213, 112, 0.12);
   border-radius: 8px;
-  background: rgba(8, 9, 11, 0.72);
-  box-shadow: 0 16px 52px rgba(0, 0, 0, 0.28);
+  background:
+    linear-gradient(180deg, rgba(16, 16, 18, 0.92), rgba(7, 7, 8, 0.88)),
+    rgba(8, 9, 11, 0.86);
+  box-shadow:
+    0 16px 52px rgba(0, 0, 0, 0.36),
+    inset 0 -1px 0 rgba(255, 213, 112, 0.08);
   backdrop-filter: blur(18px);
 }
 
@@ -111,12 +120,13 @@ a {
 .brand-lockup {
   gap: 9px;
   min-width: 0;
-  font-weight: 950;
+  color: var(--terminal-green);
+  font-weight: 850;
 }
 
 .brand-lockup svg,
 .brand-lockup span {
-  color: var(--gold);
+  color: var(--terminal-green);
 }
 
 .brand-lockup span {
@@ -124,9 +134,9 @@ a {
   place-items: center;
   width: 36px;
   height: 36px;
-  border: 1px solid rgba(217, 185, 104, 0.38);
+  border: 1px solid rgba(121, 255, 168, 0.38);
   border-radius: 50%;
-  background: var(--gold-soft);
+  background: var(--terminal-green-soft);
   font-size: 0.78rem;
   letter-spacing: 0.08em;
 }
@@ -134,29 +144,30 @@ a {
 .brand-lockup strong {
   overflow: hidden;
   font-size: clamp(1rem, 1.8vw, 1.28rem);
+  font-weight: 850;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .site-nav {
   gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--line);
+  padding: 3px;
+  border: 1px solid rgba(255, 213, 112, 0.1);
   border-radius: 8px;
-  background: rgba(248, 243, 234, 0.04);
+  background: rgba(0, 0, 0, 0.22);
 }
 
 .site-nav a {
   padding: 9px 11px;
   border-radius: 7px;
-  color: var(--muted);
+  color: rgba(255, 247, 219, 0.82);
   font-size: 0.86rem;
-  font-weight: 850;
+  font-weight: 650;
 }
 
 .site-nav a:hover {
-  color: var(--ink);
-  background: rgba(248, 243, 234, 0.08);
+  color: var(--terminal-green);
+  background: rgba(121, 255, 168, 0.08);
 }
 
 .nav-live,
@@ -173,9 +184,9 @@ a {
 
 .nav-live {
   padding: 9px 13px;
-  border-color: rgba(35, 211, 189, 0.4);
-  background: var(--teal-soft);
-  color: #d4fff8;
+  border-color: rgba(121, 255, 168, 0.42);
+  background: linear-gradient(180deg, rgba(121, 255, 168, 0.14), rgba(121, 255, 168, 0.06));
+  color: #caffd7;
   white-space: nowrap;
 }
 
@@ -244,7 +255,7 @@ h1 {
   margin-bottom: 16px;
   color: var(--ink);
   font-size: clamp(1.12rem, 1.8vw, 1.55rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 1.08;
 }
 
@@ -266,14 +277,19 @@ h1 {
 }
 
 .primary-cta {
-  border-color: rgba(217, 185, 104, 0.58);
-  background: linear-gradient(135deg, #f2d98e, #d9b968);
-  color: #11100d;
-  box-shadow: 0 18px 38px rgba(217, 185, 104, 0.2);
+  border-color: rgba(255, 222, 138, 0.68);
+  background:
+    linear-gradient(180deg, rgba(255, 243, 182, 0.92), rgba(216, 158, 55, 0.95)),
+    #e7b95a;
+  color: #100d08;
+  box-shadow:
+    0 18px 38px rgba(241, 199, 106, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .secondary-cta {
-  background: rgba(248, 243, 234, 0.06);
+  border-color: rgba(255, 213, 112, 0.18);
+  background: rgba(255, 247, 219, 0.055);
   color: var(--ink);
 }
 
@@ -286,10 +302,14 @@ h1 {
 .hero-broadcast,
 .dashboard-card,
 .live-panel {
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 213, 112, 0.18);
   border-radius: 8px;
-  background: rgba(9, 10, 13, 0.78);
-  box-shadow: var(--shadow);
+  background:
+    linear-gradient(180deg, rgba(20, 18, 14, 0.84), rgba(7, 8, 10, 0.86)),
+    rgba(9, 10, 13, 0.82);
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 rgba(255, 247, 219, 0.06);
   backdrop-filter: blur(18px);
 }
 
@@ -308,24 +328,43 @@ h1 {
 }
 
 .hero-race-card {
+  position: relative;
   display: grid;
   gap: 8px;
   padding: 14px;
-  border: 1px solid rgba(217, 185, 104, 0.32);
+  overflow: hidden;
+  border: 1px solid rgba(255, 213, 112, 0.38);
   border-radius: 8px;
-  background: rgba(217, 185, 104, 0.08);
+  background:
+    linear-gradient(90deg, rgba(255, 213, 112, 0.14), transparent 72%),
+    radial-gradient(circle at 100% 0%, rgba(121, 255, 168, 0.12), transparent 34%),
+    rgba(0, 0, 0, 0.34);
+}
+
+.hero-race-card::after {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  left: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 213, 112, 0.88), transparent);
+  content: "";
 }
 
 .hero-race-card span {
   color: var(--gold);
   font-size: 0.74rem;
-  font-weight: 950;
+  font-weight: 800;
   letter-spacing: 0.11em;
   text-transform: uppercase;
 }
 
 .hero-race-card strong {
+  position: relative;
+  z-index: 1;
+  color: var(--gold-strong);
   font-size: clamp(1.15rem, 2vw, 1.55rem);
+  font-weight: 850;
 }
 
 .broadcast-status,
@@ -377,9 +416,9 @@ h1 {
 
 .countdown > span,
 .card-label {
-  color: var(--soft);
+  color: var(--gold);
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 750;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -394,14 +433,18 @@ h1 {
   display: grid;
   min-height: 82px;
   padding: 10px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 213, 112, 0.15);
   border-radius: 8px;
-  background: rgba(248, 243, 234, 0.055);
+  background:
+    linear-gradient(180deg, rgba(255, 213, 112, 0.08), rgba(0, 0, 0, 0.28)),
+    rgba(255, 247, 219, 0.04);
 }
 
 .time-tile strong {
   align-self: end;
+  font-family: var(--number-font);
   font-size: clamp(1.7rem, 4vw, 2.55rem);
+  font-weight: 700;
   line-height: 1;
 }
 
@@ -425,9 +468,11 @@ h1 {
 .standing-row,
 .watch-row,
 .live-leader-row {
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 213, 112, 0.14);
   border-radius: 8px;
-  background: rgba(248, 243, 234, 0.045);
+  background:
+    linear-gradient(180deg, rgba(255, 247, 219, 0.05), rgba(0, 0, 0, 0.1)),
+    rgba(255, 247, 219, 0.035);
 }
 
 .mini-pot {
@@ -444,6 +489,7 @@ h1 {
 
 .mini-pot strong {
   color: var(--gold);
+  font-family: var(--number-font);
   font-size: 0.95rem;
 }
 
@@ -452,10 +498,15 @@ h1 {
   gap: 14px;
   margin: 0 0 18px;
   padding: 14px;
-  border: 1px solid rgba(217, 185, 104, 0.22);
+  border: 1px solid rgba(255, 213, 112, 0.28);
   border-radius: 8px;
-  background: rgba(7, 8, 10, 0.7);
-  box-shadow: var(--shadow);
+  background:
+    radial-gradient(circle at 50% -30%, rgba(255, 213, 112, 0.16), transparent 42%),
+    linear-gradient(180deg, rgba(18, 14, 8, 0.82), rgba(5, 6, 8, 0.88)),
+    rgba(7, 8, 10, 0.76);
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 rgba(255, 247, 219, 0.08);
   backdrop-filter: blur(18px);
   scroll-margin-top: 18px;
 }
@@ -468,7 +519,9 @@ h1 {
 
 .track-header h2 {
   margin: 0;
+  color: var(--gold-strong);
   font-size: clamp(2.1rem, 5vw, 5rem);
+  font-weight: 850;
   line-height: 0.92;
 }
 
@@ -505,11 +558,11 @@ h1 {
   min-height: 92px;
   overflow: hidden;
   padding: 12px 14px;
-  border: 1px solid rgba(35, 211, 189, 0.24);
+  border: 1px solid rgba(255, 213, 112, 0.26);
   border-radius: 8px;
   background:
-    linear-gradient(90deg, rgba(35, 211, 189, 0.1), transparent 30%),
-    linear-gradient(135deg, rgba(217, 185, 104, 0.16), rgba(9, 10, 13, 0.9) 52%, rgba(35, 211, 189, 0.08));
+    linear-gradient(90deg, rgba(121, 255, 168, 0.08), transparent 30%),
+    linear-gradient(135deg, rgba(255, 213, 112, 0.18), rgba(9, 10, 13, 0.92) 52%, rgba(121, 255, 168, 0.06));
   box-shadow: inset 0 1px 0 rgba(248, 243, 234, 0.08);
 }
 
@@ -527,10 +580,10 @@ h1 {
 }
 
 .king-hill-banner.is-active {
-  border-color: rgba(217, 185, 104, 0.48);
+  border-color: rgba(255, 213, 112, 0.52);
   box-shadow:
     inset 0 1px 0 rgba(248, 243, 234, 0.1),
-    0 18px 46px rgba(217, 185, 104, 0.12);
+    0 18px 46px rgba(255, 213, 112, 0.13);
 }
 
 .king-hill-mark,
@@ -544,7 +597,7 @@ h1 {
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  color: #39f78a;
+  color: var(--terminal-green);
   font-size: 1.35rem;
   font-weight: 950;
 }
@@ -602,9 +655,9 @@ h1 {
   align-items: center;
   min-width: 174px;
   padding: 9px 10px;
-  border: 1px solid rgba(35, 211, 189, 0.25);
+  border: 1px solid rgba(255, 213, 112, 0.2);
   border-radius: 8px;
-  background: rgba(7, 8, 10, 0.58);
+  background: rgba(0, 0, 0, 0.42);
 }
 
 .king-hill-chip .avatar {
@@ -635,10 +688,29 @@ h1 {
 }
 
 .dashboard-card {
+  position: relative;
   display: grid;
   gap: 12px;
   align-content: start;
+  overflow: hidden;
   padding: 16px;
+}
+
+.dashboard-card::before,
+.live-panel::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 213, 112, 0.07), transparent 28%),
+    linear-gradient(180deg, rgba(255, 247, 219, 0.045), transparent 34%);
+  content: "";
+}
+
+.dashboard-card > *,
+.live-panel > * {
+  position: relative;
+  z-index: 1;
 }
 
 .matchup-list,
@@ -648,16 +720,31 @@ h1 {
 }
 
 .matchup-row {
+  position: relative;
   display: grid;
   grid-template-columns: 38px 40px minmax(0, 1fr);
   gap: 9px;
   align-items: center;
   min-height: 58px;
   padding: 9px;
+  overflow: hidden;
+}
+
+.matchup-row::after,
+.live-leader-row::after {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  left: 8px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 213, 112, 0.4), transparent);
+  content: "";
+  opacity: 0.55;
 }
 
 .match-rank {
   color: var(--gold);
+  font-family: var(--number-font);
   font-weight: 950;
 }
 
@@ -722,9 +809,10 @@ h1 {
 }
 
 .leader-number {
-  color: var(--gold);
+  color: var(--gold-strong);
+  font-family: var(--number-font);
   font-size: clamp(2rem, 4vw, 3.1rem);
-  font-weight: 950;
+  font-weight: 800;
   line-height: 1;
 }
 
@@ -736,9 +824,11 @@ h1 {
   display: grid;
   gap: 3px;
   padding: 10px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 213, 112, 0.14);
   border-radius: 8px;
-  background: rgba(248, 243, 234, 0.045);
+  background:
+    linear-gradient(180deg, rgba(255, 213, 112, 0.075), rgba(0, 0, 0, 0.12)),
+    rgba(255, 247, 219, 0.035);
 }
 
 .summary-metric span {
@@ -750,6 +840,7 @@ h1 {
 
 .summary-metric strong {
   color: var(--ink);
+  font-family: var(--number-font);
   font-size: 1rem;
 }
 
@@ -857,6 +948,7 @@ h1 {
 
 .metric-pill strong {
   color: var(--gold);
+  font-family: var(--number-font);
   font-size: 1.4rem;
 }
 
@@ -976,6 +1068,7 @@ h1 {
   display: inline-grid;
   place-items: center;
   color: var(--gold);
+  font-family: var(--number-font);
   font-weight: 950;
 }
 
@@ -993,6 +1086,7 @@ h1 {
 }
 
 .standing-stat strong {
+  font-family: var(--number-font);
   font-size: 0.95rem;
 }
 
@@ -1024,8 +1118,10 @@ h1 {
 }
 
 .schedule-card.is-current {
-  border-color: rgba(217, 185, 104, 0.42);
-  background: linear-gradient(180deg, rgba(217, 185, 104, 0.12), rgba(15, 16, 19, 0.78));
+  border-color: rgba(255, 213, 112, 0.48);
+  background:
+    linear-gradient(180deg, rgba(255, 213, 112, 0.14), rgba(15, 16, 19, 0.82)),
+    rgba(0, 0, 0, 0.24);
 }
 
 .schedule-card span,
@@ -1068,10 +1164,11 @@ h1 {
 
 .kol-card-stats span {
   padding: 7px 8px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 213, 112, 0.13);
   border-radius: 7px;
   color: var(--ink);
-  background: rgba(248, 243, 234, 0.045);
+  background: rgba(255, 247, 219, 0.04);
+  font-family: var(--number-font);
   font-size: 0.8rem;
   font-weight: 900;
   text-align: center;
@@ -1254,7 +1351,8 @@ h1 {
   min-height: 100vh;
   padding: 18px;
   background:
-    linear-gradient(180deg, rgba(7, 8, 10, 0.74), #07080a 78%),
+    radial-gradient(circle at 50% 0%, rgba(255, 213, 112, 0.2), transparent 28rem),
+    linear-gradient(180deg, rgba(7, 8, 10, 0.78), #050506 78%),
     url("./assets/tournament-atmosphere.jpg") center / cover no-repeat,
     var(--bg);
 }
@@ -1277,9 +1375,11 @@ h1 {
   gap: 14px;
   align-items: end;
   padding: 16px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 213, 112, 0.18);
   border-radius: 8px;
-  background: rgba(9, 10, 13, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 213, 112, 0.08), rgba(0, 0, 0, 0.22)),
+    rgba(9, 10, 13, 0.8);
   backdrop-filter: blur(16px);
 }
 
@@ -1308,15 +1408,15 @@ h1 {
   min-width: 112px;
   min-height: 40px;
   padding: 8px 15px;
-  border: 1px solid var(--line-strong);
+  border: 1px solid rgba(255, 213, 112, 0.22);
   border-radius: 8px;
   color: var(--ink);
-  background: rgba(248, 243, 234, 0.05);
-  font-weight: 900;
+  background: rgba(255, 247, 219, 0.045);
+  font-weight: 750;
 }
 
 .camera-row button.is-active {
-  border-color: rgba(217, 185, 104, 0.52);
+  border-color: rgba(255, 213, 112, 0.58);
   background: var(--gold-soft);
   color: #ffe7ad;
 }
@@ -1325,31 +1425,64 @@ h1 {
   position: relative;
   min-height: 420px;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 213, 112, 0.26);
   border-radius: 8px;
   background:
-    radial-gradient(circle at 86% 18%, rgba(217, 185, 104, 0.14), transparent 26%),
-    linear-gradient(90deg, rgba(217, 185, 104, 0.09) 1px, transparent 1px),
+    radial-gradient(circle at 82% 18%, rgba(255, 213, 112, 0.2), transparent 28%),
+    linear-gradient(90deg, rgba(255, 213, 112, 0.13) 1px, transparent 1px),
+    repeating-linear-gradient(180deg, rgba(255, 247, 219, 0.035) 0 1px, transparent 1px 22px),
     linear-gradient(180deg, var(--road), var(--road-2));
-  background-size: auto, 86px 100%, auto;
-  box-shadow: var(--shadow), inset 0 1px 0 rgba(248, 243, 234, 0.06);
+  background-size: auto, 88px 100%, auto, auto;
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 rgba(255, 247, 219, 0.08),
+    inset 0 0 44px rgba(255, 213, 112, 0.08);
+}
+
+.race-track::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.5), transparent 18%, transparent 76%, rgba(0, 0, 0, 0.46)),
+    radial-gradient(circle at 50% 100%, rgba(255, 213, 112, 0.12), transparent 44%);
+  content: "";
+  z-index: 1;
 }
 
 .race-track--cinema {
   background:
-    linear-gradient(180deg, rgba(217, 185, 104, 0.11), transparent 24%),
+    linear-gradient(180deg, rgba(255, 213, 112, 0.12), transparent 24%),
     linear-gradient(180deg, #191714, #111111);
 }
 
 .track-lane {
   position: relative;
-  min-height: 112px;
-  border-bottom: 1px solid rgba(248, 243, 234, 0.09);
-  background: rgba(248, 243, 234, 0.02);
+  z-index: 2;
+  min-height: 118px;
+  border-bottom: 1px solid rgba(255, 213, 112, 0.12);
+  background:
+    linear-gradient(90deg, rgba(255, 213, 112, 0.05), transparent 24%),
+    rgba(255, 247, 219, 0.018);
+}
+
+.track-lane::before {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+  left: 58px;
+  height: 2px;
+  background:
+    linear-gradient(90deg, rgba(255, 213, 112, 0.65), rgba(255, 213, 112, 0.1) 34%, transparent),
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(255, 247, 219, 0.18) 22px 24px);
+  content: "";
+  opacity: 0.7;
 }
 
 .track-lane:nth-child(odd) {
-  background: rgba(248, 243, 234, 0.045);
+  background:
+    linear-gradient(90deg, rgba(255, 213, 112, 0.065), transparent 24%),
+    rgba(255, 247, 219, 0.035);
 }
 
 .track-lane:last-child {
@@ -1362,8 +1495,9 @@ h1 {
 
 .track-lane.is-leader {
   background:
-    linear-gradient(90deg, rgba(217, 185, 104, 0.1), transparent 44%),
-    rgba(248, 243, 234, 0.045);
+    linear-gradient(90deg, rgba(255, 213, 112, 0.18), transparent 48%),
+    rgba(255, 247, 219, 0.045);
+  box-shadow: inset 0 0 28px rgba(255, 213, 112, 0.08);
 }
 
 .lane-label {
@@ -1391,9 +1525,11 @@ h1 {
   min-height: 36px;
   padding: 7px 10px;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 213, 112, 0.16);
   border-radius: 8px;
-  background: rgba(7, 8, 10, 0.72);
+  background:
+    linear-gradient(180deg, rgba(255, 213, 112, 0.08), rgba(0, 0, 0, 0.2)),
+    rgba(7, 8, 10, 0.8);
   color: rgba(248, 243, 234, 0.92);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1401,7 +1537,8 @@ h1 {
 
 .lane-rank {
   place-items: center;
-  color: var(--gold);
+  color: var(--gold-strong);
+  font-family: var(--number-font);
   font-weight: 950;
 }
 
@@ -1415,6 +1552,7 @@ h1 {
 .lane-stat strong,
 .lane-change strong {
   overflow: hidden;
+  font-family: var(--number-font);
   font-size: 0.95rem;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1451,8 +1589,8 @@ h1 {
 
 .start-line {
   left: 42px;
-  background: linear-gradient(180deg, rgba(35, 211, 189, 0.85), rgba(35, 211, 189, 0.18));
-  box-shadow: 10px 0 0 rgba(35, 211, 189, 0.08);
+  background: linear-gradient(180deg, rgba(121, 255, 168, 0.9), rgba(121, 255, 168, 0.18));
+  box-shadow: 10px 0 0 rgba(121, 255, 168, 0.08), 0 0 20px rgba(121, 255, 168, 0.28);
 }
 
 .finish-line {
@@ -1462,7 +1600,7 @@ h1 {
     #f8f3ea 0 12px,
     #151515 12px 24px
   );
-  box-shadow: -10px 0 0 rgba(217, 185, 104, 0.12);
+  box-shadow: -10px 0 0 rgba(255, 213, 112, 0.14), 0 0 24px rgba(255, 213, 112, 0.24);
 }
 
 .start-line span,
@@ -1501,10 +1639,10 @@ h1 {
 
 .racer-marker {
   position: absolute;
-  z-index: 3;
+  z-index: 6;
   top: 70%;
-  width: 168px;
-  height: 66px;
+  width: 188px;
+  height: 70px;
   transform: translate(-50%, -50%);
   transition: left 780ms cubic-bezier(0.2, 0.82, 0.22, 1);
   opacity: 0.88;
@@ -1520,18 +1658,25 @@ h1 {
 
 .speed-trail {
   position: absolute;
-  top: 39px;
-  left: -46px;
-  width: 96px;
-  height: 7px;
+  top: 40px;
+  left: -112px;
+  width: 170px;
+  height: 9px;
   border-radius: 999px;
-  background: linear-gradient(90deg, transparent, rgba(248, 243, 234, 0.18), var(--car-color));
-  opacity: 0.5;
+  background:
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--car-color) 22%, transparent), var(--car-color)),
+    linear-gradient(90deg, transparent, rgba(255, 247, 219, 0.24));
+  filter: blur(0.2px);
+  opacity: 0.68;
   animation: engine-trail 880ms ease-in-out infinite alternate;
 }
 
 .racer-marker.is-leader .speed-trail {
-  background: linear-gradient(90deg, transparent, rgba(217, 185, 104, 0.26), #f2d98e);
+  width: 210px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 213, 112, 0.2), #ffde8a),
+    linear-gradient(90deg, transparent, rgba(121, 255, 168, 0.12), transparent);
+  box-shadow: 0 0 18px rgba(255, 213, 112, 0.32);
   opacity: 0.9;
 }
 
@@ -1544,17 +1689,20 @@ h1 {
   gap: 7px;
   align-items: center;
   padding: 5px 8px;
-  border: 1px solid rgba(248, 243, 234, 0.16);
+  border: 1px solid rgba(255, 213, 112, 0.2);
   border-radius: 7px;
-  background: rgba(7, 8, 10, 0.78);
+  background:
+    linear-gradient(180deg, rgba(255, 213, 112, 0.09), rgba(0, 0, 0, 0.24)),
+    rgba(7, 8, 10, 0.82);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.36);
   color: var(--ink);
   font-size: 0.68rem;
-  font-weight: 950;
+  font-weight: 850;
   white-space: nowrap;
 }
 
 .racer-callout em {
+  font-family: var(--number-font);
   color: var(--teal);
   font-style: normal;
 }
@@ -1563,13 +1711,15 @@ h1 {
   position: absolute;
   inset: 0;
   animation: road-glide 760ms ease-in-out infinite alternate;
-  filter: drop-shadow(0 15px 18px rgba(0, 0, 0, 0.48));
+  filter:
+    drop-shadow(0 16px 18px rgba(0, 0, 0, 0.58))
+    drop-shadow(0 0 14px color-mix(in srgb, var(--car-color) 34%, transparent));
 }
 
 .racer-marker.is-leader .lambo {
   filter:
-    drop-shadow(0 15px 18px rgba(0, 0, 0, 0.48))
-    drop-shadow(0 0 16px rgba(217, 185, 104, 0.58));
+    drop-shadow(0 16px 18px rgba(0, 0, 0, 0.58))
+    drop-shadow(0 0 20px rgba(255, 213, 112, 0.68));
 }
 
 .race-track.is-parked .speed-trail {
@@ -1613,25 +1763,26 @@ h1 {
 
 .lambo-body {
   left: 22px;
-  top: 29px;
-  width: 122px;
-  height: 26px;
-  border-radius: 8px 19px 12px 10px;
+  top: 30px;
+  width: 138px;
+  height: 25px;
+  border-radius: 7px 24px 12px 9px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 48%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 46%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.22), transparent 30%),
     var(--car-color);
   box-shadow:
-    inset -16px -8px 0 rgba(0, 0, 0, 0.18),
-    0 0 18px color-mix(in srgb, var(--car-color) 46%, transparent);
+    inset -20px -8px 0 rgba(0, 0, 0, 0.22),
+    0 0 20px color-mix(in srgb, var(--car-color) 48%, transparent);
   transform: skewX(-14deg);
 }
 
 .lambo-hood {
-  left: 99px;
-  top: 22px;
-  width: 47px;
-  height: 19px;
-  border-radius: 4px 20px 8px 3px;
+  left: 111px;
+  top: 23px;
+  width: 56px;
+  height: 18px;
+  border-radius: 4px 22px 8px 3px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 50%),
     var(--car-color);
@@ -1639,9 +1790,9 @@ h1 {
 }
 
 .lambo-cabin {
-  left: 60px;
+  left: 66px;
   top: 13px;
-  width: 44px;
+  width: 50px;
   height: 25px;
   border: 2px solid color-mix(in srgb, var(--car-color) 48%, #ffffff);
   border-radius: 16px 13px 5px 5px;
@@ -1652,7 +1803,7 @@ h1 {
 .lambo-wing {
   left: 16px;
   top: 25px;
-  width: 36px;
+  width: 42px;
   height: 8px;
   border-radius: 6px;
   background: color-mix(in srgb, var(--car-color) 70%, #080808);
@@ -1660,7 +1811,7 @@ h1 {
 }
 
 .lambo-light--front {
-  left: 137px;
+  left: 154px;
   top: 35px;
   width: 18px;
   height: 6px;
@@ -1693,14 +1844,14 @@ h1 {
 }
 
 .lambo-wheel--front {
-  left: 117px;
+  left: 133px;
 }
 
 .racer-marker .avatar {
   position: absolute;
   z-index: 6;
   top: 4px;
-  left: 75px;
+  left: 84px;
   width: 42px;
   height: 42px;
   border-color: rgba(248, 243, 234, 0.8);
@@ -1715,13 +1866,16 @@ h1 {
 }
 
 .live-panel {
+  position: relative;
   display: grid;
   gap: 10px;
+  overflow: hidden;
   padding: 14px;
 }
 
 .live-leader-row,
 .watch-row {
+  position: relative;
   display: grid;
   grid-template-columns: 34px 40px minmax(0, 1fr) auto;
   gap: 9px;
@@ -1736,6 +1890,13 @@ h1 {
   font-style: normal;
   font-size: 0.78rem;
   font-weight: 800;
+}
+
+.live-leader-row > span:first-child,
+.live-leader-row > strong:last-child,
+.watch-row > span:first-child,
+.watch-row em {
+  font-family: var(--number-font);
 }
 
 .winner-line {
@@ -1844,7 +2005,7 @@ h1 {
 
 @media (max-width: 760px) {
   body {
-    background-size: auto, auto, min(1400px, 300vw) auto, auto;
+    background-size: auto, auto, auto, auto, min(1400px, 300vw) auto, auto;
   }
 
   .site-shell,
