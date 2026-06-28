@@ -280,7 +280,7 @@ function HeroSection({
     <section className="hero-section" aria-labelledby="hero-title">
       <div className="hero-content">
         <p className="eyebrow">Season One · Live Tournament</p>
-        <h1 id="hero-title">KING OF LIQUIDITY</h1>
+        <h1 className="pump-title" id="hero-title">King of Liquidity</h1>
         <p className="hero-kicker">32 KOLs. One tournament. One crown.</p>
         <p className="hero-copy">
           Four KOLs enter The Track. Market cap performance decides who
