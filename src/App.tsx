@@ -346,6 +346,7 @@ function TrackSection({
           </a>
         </div>
       </div>
+      <KingOfHillBanner entrants={entrants} isLiveRaceActive={isLiveRaceActive} race={race} />
       <RaceTrack entrants={entrants} camera="top" isLiveRaceActive={isLiveRaceActive} />
       {race.status === "final" ? <RaceResult entrants={entrants} race={race} /> : null}
     </section>
@@ -446,9 +447,50 @@ function RaceResult({ entrants, race }: { entrants: RaceEntrant[]; race: RaceInt
 
   return (
     <div className="race-result">
-      <span>Winner</span>
+      <span>King of the Hill</span>
       <strong>{winner.name}</strong>
       <em>{formatPercentChange(winner.percentChange)} · {formatSol(getRacePot(race) * prizeSplit.winnerHolders)} paid to winner holders</em>
+    </div>
+  );
+}
+
+function KingOfHillBanner({
+  entrants,
+  isLiveRaceActive,
+  race,
+}: {
+  entrants: RaceEntrant[];
+  isLiveRaceActive: boolean;
+  race: RaceInterval;
+}) {
+  const king = entrants[0];
+  const hasKing = Boolean(isLiveRaceActive && king);
+
+  return (
+    <div className={`king-hill-banner ${hasKing ? "is-active" : "is-idle"}`}>
+      <div className="king-hill-mark" aria-hidden="true">
+        <span>[</span>
+        <Crown size={26} />
+        <span>]</span>
+      </div>
+      <div className="king-hill-copy">
+        <span className="king-hill-wordmark">king of the hill</span>
+        <strong>{hasKing && king ? `${king.name} owns the hill right now` : "The hill is waiting for green"}</strong>
+        <em>
+          {hasKing && king
+            ? `${king.symbol} leads ${race.label} by ${formatPercentChange(king.percentChange)} from the opening snapshot.`
+            : "Once market caps move, the leading KOL gets the live crown."}
+        </em>
+      </div>
+      {king ? (
+        <div className="king-hill-chip">
+          <Avatar entrant={king} />
+          <div>
+            <span>{hasKing ? "Current king" : "Pole position"}</span>
+            <strong>{king.symbol}</strong>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -842,18 +884,7 @@ function LiveRacePage({
 
         <RewardPots splitAmounts={splitAmounts} />
 
-        <section className="live-panel">
-          <span className="card-label">Winner Line</span>
-          <div className="winner-line">
-            <Shield size={20} aria-hidden="true" />
-            <strong>{isLiveRaceActive && entrants[0] ? entrants[0].name : "Next race begins soon"}</strong>
-            <span>
-              {isLiveRaceActive && entrants[0]
-                ? `${entrants[0].symbol} leads by market cap performance`
-                : "Cars are parked at the start line"}
-            </span>
-          </div>
-        </section>
+        <KingOfHillPanel entrants={entrants} isLiveRaceActive={isLiveRaceActive} />
 
         <section className="live-panel">
           <span className="card-label">Tournament Watch</span>
@@ -867,6 +898,32 @@ function LiveRacePage({
         </section>
       </aside>
     </main>
+  );
+}
+
+function KingOfHillPanel({
+  entrants,
+  isLiveRaceActive,
+}: {
+  entrants: RaceEntrant[];
+  isLiveRaceActive: boolean;
+}) {
+  const king = entrants[0];
+  const hasKing = Boolean(isLiveRaceActive && king);
+
+  return (
+    <section className={`live-panel king-hill-panel ${hasKing ? "is-active" : "is-idle"}`}>
+      <span className="card-label">King of the Hill</span>
+      <div className="winner-line">
+        <Crown size={20} aria-hidden="true" />
+        <strong>{hasKing && king ? king.name : "Next crown unclaimed"}</strong>
+        <span>
+          {hasKing && king
+            ? `${king.symbol} holds the hill at ${formatPercentChange(king.percentChange)}`
+            : "Cars are parked at the start line"}
+        </span>
+      </div>
+    </section>
   );
 }
 
