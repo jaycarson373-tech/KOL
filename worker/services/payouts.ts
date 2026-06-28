@@ -48,6 +48,14 @@ function buildWeightedRecipients(holders: TokenHolderBalance[], totalSol: number
   }));
 }
 
+function normalizedMint(mint: string): string {
+  return mint.trim().toLowerCase();
+}
+
+function holderSnapshotId(race: RaceIntervalRecord, kind: HolderSnapshot["kind"], mint: string): string {
+  return `${race.id}-${kind}-${mint}`;
+}
+
 function makeHolderSnapshot(options: {
   race: RaceIntervalRecord;
   mint: string;
@@ -56,7 +64,7 @@ function makeHolderSnapshot(options: {
   capturedAt: Date;
 }): HolderSnapshot {
   return {
-    id: `${options.race.id}-${options.kind}-${options.capturedAt.getTime()}`,
+    id: holderSnapshotId(options.race, options.kind, options.mint),
     raceId: options.race.id,
     mint: options.mint,
     kind: options.kind,
@@ -65,6 +73,89 @@ function makeHolderSnapshot(options: {
     totalTokenAmount: round(sum(options.holders.map((holder) => holder.amount)), 6),
     holders: options.holders,
   };
+}
+
+function findSnapshot(
+  snapshots: HolderSnapshot[],
+  kind: HolderSnapshot["kind"],
+  mint: string,
+): HolderSnapshot | null {
+  const match = normalizedMint(mint);
+  return snapshots.find((snapshot) => snapshot.kind === kind && normalizedMint(snapshot.mint) === match) ?? null;
+}
+
+async function captureHolderSnapshot(options: {
+  repo: SupabaseRepository;
+  race: RaceIntervalRecord;
+  mint: string;
+  kind: HolderSnapshot["kind"];
+  capturedAt: Date;
+  existingSnapshots: HolderSnapshot[];
+}): Promise<HolderSnapshot> {
+  const existing = findSnapshot(options.existingSnapshots, options.kind, options.mint);
+  if (existing) {
+    return existing;
+  }
+
+  const snapshot = makeHolderSnapshot({
+    race: options.race,
+    mint: options.mint,
+    kind: options.kind,
+    holders: await getTokenHolderBalances(options.mint),
+    capturedAt: options.capturedAt,
+  });
+
+  await options.repo.insertHolderSnapshot(snapshot);
+  options.existingSnapshots.push(snapshot);
+  return snapshot;
+}
+
+export async function captureRaceHolderSnapshots(
+  repo: SupabaseRepository,
+  race: RaceIntervalRecord,
+  entrants: Kol[],
+  capturedAt = new Date(),
+): Promise<void> {
+  const kolMint = requireValue(config.kolMint, "KOL_MINT");
+  const existingSnapshots = await repo.getHolderSnapshotsForRace(race.id);
+  const requests = [
+    {
+      kind: "kol_airdrop" as const,
+      mint: kolMint,
+      label: "$KOL",
+    },
+    ...entrants.map((entrant) => ({
+      kind: "entrant_kol" as const,
+      mint: requireValue(entrant.tokenMint, `${entrant.name} token mint`),
+      label: entrant.id,
+    })),
+  ];
+  const uniqueRequests = [
+    ...new Map(requests.map((request) => [`${request.kind}:${normalizedMint(request.mint)}`, request])).values(),
+  ];
+
+  await Promise.all(
+    uniqueRequests.map((request) =>
+      captureHolderSnapshot({
+        repo,
+        race,
+        mint: request.mint,
+        kind: request.kind,
+        capturedAt,
+        existingSnapshots,
+      }),
+    ),
+  );
+
+  await repo.appendLog("info", "Race holder snapshots captured", {
+    raceId: race.id,
+    capturedAt: capturedAt.toISOString(),
+    snapshots: uniqueRequests.map((request) => ({
+      kind: request.kind,
+      mint: request.mint,
+      label: request.label,
+    })),
+  });
 }
 
 export async function buildPayoutPlan(options: {
@@ -78,33 +169,34 @@ export async function buildPayoutPlan(options: {
   const kolMint = requireValue(config.kolMint, "KOL_MINT");
   const generatedAt = options.generatedAt ?? new Date();
   const excluded = excludedWallets();
+  const existingSnapshots = await options.repo.getHolderSnapshotsForRace(options.race.id);
 
-  const [winnerHolders, kolHolders] = await Promise.all([
-    getTokenHolderBalances(winningKolMint),
-    getTokenHolderBalances(kolMint),
+  const [winnerSnapshot, kolSnapshot] = await Promise.all([
+    findSnapshot(existingSnapshots, "entrant_kol", winningKolMint) ??
+      findSnapshot(existingSnapshots, "winner_kol", winningKolMint) ??
+      captureHolderSnapshot({
+        repo: options.repo,
+        race: options.race,
+        mint: winningKolMint,
+        kind: "entrant_kol",
+        capturedAt: generatedAt,
+        existingSnapshots,
+      }),
+    findSnapshot(existingSnapshots, "kol_airdrop", kolMint) ??
+      captureHolderSnapshot({
+        repo: options.repo,
+        race: options.race,
+        mint: kolMint,
+        kind: "kol_airdrop",
+        capturedAt: generatedAt,
+        existingSnapshots,
+      }),
   ]);
-
-  const winnerSnapshot = makeHolderSnapshot({
-    race: options.race,
-    mint: winningKolMint,
-    kind: "winner_kol",
-    holders: winnerHolders,
-    capturedAt: generatedAt,
-  });
-  const kolSnapshot = makeHolderSnapshot({
-    race: options.race,
-    mint: kolMint,
-    kind: "kol_airdrop",
-    holders: kolHolders,
-    capturedAt: generatedAt,
-  });
-
-  await Promise.all([
-    options.repo.insertHolderSnapshot(winnerSnapshot),
-    options.repo.insertHolderSnapshot(kolSnapshot),
-  ]);
-
+  const winnerHolders = winnerSnapshot.holders;
+  const kolHolders = kolSnapshot.holders;
   const kolEligible = kolHolders.filter((holder) => holder.amount >= config.kolMinHolding);
+  const kolEligibleOwners = new Set(kolEligible.map((holder) => holder.owner));
+  const winnerEligible = winnerHolders.filter((holder) => kolEligibleOwners.has(holder.owner));
   const winningKolBonusWallet = options.winningKol.feeWallet ?? config.winningKolBonusWallet;
 
   return {
@@ -114,7 +206,7 @@ export async function buildPayoutPlan(options: {
     winningKolMint,
     kolMint,
     minKolHolding: config.kolMinHolding,
-    winnerHolderRecipients: buildWeightedRecipients(winnerHolders, options.distribution.winnerHoldersAmountSol, excluded),
+    winnerHolderRecipients: buildWeightedRecipients(winnerEligible, options.distribution.winnerHoldersAmountSol, excluded),
     kolHolderRecipients: buildWeightedRecipients(kolEligible, options.distribution.kolAirdropAmountSol, excluded),
     winningKolBonusTransfer: winningKolBonusWallet
       ? {
@@ -164,6 +256,35 @@ function assertPlanExecutable(plan: PayoutPlan): void {
   }
 }
 
+async function syncDistributionWinner(
+  repo: SupabaseRepository,
+  race: RaceIntervalRecord,
+  distribution: Distribution,
+): Promise<Distribution> {
+  const winningKolId = race.winnerKolId ?? distribution.winningKolId;
+  if (!winningKolId) {
+    throw new Error("Race winner is required before payout execution.");
+  }
+
+  const planMatchesWinner = distribution.payoutPlan?.winningKolId === winningKolId;
+  if (distribution.winningKolId === winningKolId && (!distribution.payoutPlan || planMatchesWinner)) {
+    return distribution;
+  }
+
+  const synced = {
+    ...distribution,
+    winningKolId,
+    payoutPlan: planMatchesWinner ? distribution.payoutPlan : null,
+  };
+  await repo.upsertDistribution(synced);
+  await repo.appendLog("info", "Distribution winner synced from race", {
+    distributionId: distribution.id,
+    raceId: race.id,
+    winningKolId,
+  });
+  return synced;
+}
+
 async function getOrAttachPayoutPlan(
   repo: SupabaseRepository,
   race: RaceIntervalRecord,
@@ -183,9 +304,6 @@ async function getOrAttachPayoutPlan(
     race,
     distribution,
     winningKol,
-    generatedAt: race.snapshotEnd?.[winningKol.id]?.recordedAt
-      ? new Date(race.snapshotEnd[winningKol.id].recordedAt)
-      : new Date(),
   });
 
   await repo.upsertDistribution({ ...distribution, payoutPlan: plan });
@@ -282,13 +400,14 @@ export async function executeDistributionPayout(repo: SupabaseRepository, distri
     throw new Error("Distribution race not found.");
   }
 
-  const plan = await getOrAttachPayoutPlan(repo, race, distribution);
+  const syncedDistribution = await syncDistributionWinner(repo, race, distribution);
+  const plan = await getOrAttachPayoutPlan(repo, race, syncedDistribution);
   assertPlanExecutable(plan);
 
   const signatures: string[] = [];
 
   if (config.payoutSplitFromClaimWallet) {
-    signatures.push(...(await transferBucketSplit(plan, distribution)));
+    signatures.push(...(await transferBucketSplit(plan, syncedDistribution)));
   } else {
     signatures.push(...(await transferTreasuryBuckets(plan)));
   }
@@ -309,11 +428,11 @@ export async function executeDistributionPayout(repo: SupabaseRepository, distri
 
   const completedAt = new Date().toISOString();
   await repo.upsertDistribution({
-    ...distribution,
+    ...syncedDistribution,
     payoutPlan: plan,
     txStatus: "complete",
     completedAt,
-    txSignatures: [...distribution.txSignatures, ...signatures],
+    txSignatures: [...syncedDistribution.txSignatures, ...signatures],
     failedReason: null,
   });
   await repo.upsertRace({ ...race, distributionComplete: true });

@@ -45,13 +45,25 @@ Railway cron run. Payout execution is disabled by default; set
 keys are configured on Railway.
 
 The worker snapshots race market caps, determines winners, snapshots holder
-balances with Helius, builds payout plans, and can execute the `$KOL` split:
-50% winner KOL holders, 20% `$KOL` holders, 15% buyback/burn wallet, and 15%
-finals vault.
+balances with Helius, waits through the manual review window, builds payout
+plans, and can execute the `$KOL` split: 50% winner KOL holders, 20% `$KOL`
+holders, 10% winning KOL wallet, 10% buyback/burn wallet, and 10% championship
+vault.
+
+Set `KOL_MIN_HOLDING=250000` so only wallets holding at least 250K `$KOL`
+qualify for holder airdrops. This gate applies to both the 50% winning-token
+holder payout and the 20% `$KOL` holder payout.
+
+The default payout delay is five minutes after race end
+(`DISTRIBUTION_READY_DELAY_MS=300000`). Race-end snapshots are captured first,
+then the payout plan is generated after the delay from the current
+`race_intervals.winner_kol_id`, so an incorrect winner can be manually corrected
+in Supabase before funds move.
 
 ## Prize Split
 
 - 50% to holders of the winning KOL from the race interval
 - 20% airdropped to `$KOL` holders
-- 15% buyback and burn
-- 15% to the grand finals holder-winner pot
+- 10% to the winning KOL wallet
+- 10% buyback and burn
+- 10% to the championship holder wallet

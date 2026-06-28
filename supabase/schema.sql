@@ -64,13 +64,20 @@ create table if not exists public.holder_snapshots (
   id text primary key,
   race_id text not null references public.race_intervals(id) on delete cascade,
   mint text not null,
-  kind text not null check (kind in ('winner_kol', 'kol_airdrop')),
+  kind text not null check (kind in ('entrant_kol', 'winner_kol', 'kol_airdrop')),
   captured_at timestamptz not null,
   holder_count integer not null default 0,
   total_token_amount numeric not null default 0,
   holders jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now()
 );
+
+alter table public.holder_snapshots
+  drop constraint if exists holder_snapshots_kind_check;
+
+alter table public.holder_snapshots
+  add constraint holder_snapshots_kind_check
+  check (kind in ('entrant_kol', 'winner_kol', 'kol_airdrop'));
 
 create table if not exists public.system_logs (
   id uuid primary key default gen_random_uuid(),

@@ -1,6 +1,6 @@
 export type RaceStatus = "scheduled" | "live" | "completed" | "paused";
 export type DistributionStatus = "queued" | "ready" | "complete" | "failed";
-export type HolderSnapshotKind = "winner_kol" | "kol_airdrop";
+export type HolderSnapshotKind = "entrant_kol" | "winner_kol" | "kol_airdrop";
 
 export interface Kol {
   id: string;

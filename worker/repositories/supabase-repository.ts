@@ -61,6 +61,17 @@ type DistributionRow = {
   failed_reason: string | null;
 };
 
+type HolderSnapshotRow = {
+  id: string;
+  race_id: string;
+  mint: string;
+  kind: HolderSnapshot["kind"];
+  captured_at: string;
+  holder_count: number;
+  total_token_amount: number;
+  holders: TokenHolderBalance[];
+};
+
 function toKol(row: KolRow): Kol {
   return {
     id: row.id,
@@ -177,6 +188,35 @@ function fromDistribution(distribution: Distribution): DistributionRow {
   };
 }
 
+function toHolderSnapshot(row: HolderSnapshotRow): HolderSnapshot {
+  return {
+    id: row.id,
+    raceId: row.race_id,
+    mint: row.mint,
+    kind: row.kind,
+    capturedAt: row.captured_at,
+    holderCount: row.holder_count,
+    totalTokenAmount: Number(row.total_token_amount),
+    holders: (row.holders ?? []).map((holder) => ({
+      owner: holder.owner,
+      amount: Number(holder.amount),
+    })),
+  };
+}
+
+function fromHolderSnapshot(snapshot: HolderSnapshot) {
+  return {
+    id: snapshot.id,
+    race_id: snapshot.raceId,
+    mint: snapshot.mint,
+    kind: snapshot.kind,
+    captured_at: snapshot.capturedAt,
+    holder_count: snapshot.holderCount,
+    total_token_amount: snapshot.totalTokenAmount,
+    holders: snapshot.holders,
+  };
+}
+
 export class SupabaseRepository {
   private readonly client = getSupabaseAdmin();
 
@@ -231,17 +271,18 @@ export class SupabaseRepository {
     if (error) throw error;
   }
 
+  async getHolderSnapshotsForRace(raceId: string): Promise<HolderSnapshot[]> {
+    const { data, error } = await this.client
+      .from("holder_snapshots")
+      .select("*")
+      .eq("race_id", raceId)
+      .order("created_at", { ascending: true });
+    if (error) throw error;
+    return ((data ?? []) as HolderSnapshotRow[]).map(toHolderSnapshot);
+  }
+
   async insertHolderSnapshot(snapshot: HolderSnapshot): Promise<void> {
-    const { error } = await this.client.from("holder_snapshots").upsert({
-      id: snapshot.id,
-      race_id: snapshot.raceId,
-      mint: snapshot.mint,
-      kind: snapshot.kind,
-      captured_at: snapshot.capturedAt,
-      holder_count: snapshot.holderCount,
-      total_token_amount: snapshot.totalTokenAmount,
-      holders: snapshot.holders,
-    });
+    const { error } = await this.client.from("holder_snapshots").upsert(fromHolderSnapshot(snapshot));
     if (error) throw error;
   }
 

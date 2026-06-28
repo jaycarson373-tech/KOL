@@ -3,7 +3,7 @@ import type { Kol, RaceIntervalRecord } from "../types.js";
 import { getRepository, type SupabaseRepository } from "../repositories/supabase-repository.js";
 import { markReadyDistributions, queueDistribution } from "./distributions.js";
 import { getMarketCapSnapshot, getWinnerFromSnapshot } from "./market-caps.js";
-import { attachPayoutPlanToDistribution, executeReadyDistributions } from "./payouts.js";
+import { captureRaceHolderSnapshots, executeReadyDistributions } from "./payouts.js";
 
 function kolsForRace(race: RaceIntervalRecord, kols: Kol[]): Kol[] {
   const byId = new Map(kols.map((kol) => [kol.id, kol]));
@@ -56,12 +56,9 @@ async function completeRace(repo: SupabaseRepository, race: RaceIntervalRecord, 
     status: "completed",
   };
 
+  await captureRaceHolderSnapshots(repo, next, entrants);
   await repo.upsertRace(next);
-  await queueDistribution(repo, next);
-  const distribution = await repo.getDistribution(`distribution-${race.id}`);
-  if (distribution && !distribution.payoutPlan) {
-    await attachPayoutPlanToDistribution(repo, next, distribution);
-  }
+  await queueDistribution(repo, next, new Date(race.endsAt));
   await repo.appendLog("info", "Race completed", { raceId: race.id, label: race.label, winnerKolId });
 }
 

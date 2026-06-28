@@ -30,7 +30,7 @@ export const config = {
   liveRefreshMs: readNumber("LIVE_REFRESH_MS", 30_000),
   distributionReadyDelayMs: readNumber("DISTRIBUTION_READY_DELAY_MS", 5 * 60_000),
   kolMint: readEnv("KOL_MINT") ?? readEnv("VITE_KOL_TOKEN_CA"),
-  kolMinHolding: readNumber("KOL_MIN_HOLDING", 0),
+  kolMinHolding: readNumber("KOL_MIN_HOLDING", 250_000),
   payoutExecutionEnabled: readBoolean("PAYOUT_EXECUTION_ENABLED", false),
   payoutSplitFromClaimWallet: readBoolean("PAYOUT_SPLIT_FROM_CLAIM_WALLET", true),
   payoutBatchSize: readNumber("PAYOUT_BATCH_SIZE", 8),
