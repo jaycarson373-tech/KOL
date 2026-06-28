@@ -23,6 +23,8 @@ import {
   kols,
   upcomingRaces as fallbackUpcomingRaces,
 } from "./data/kols";
+import kolLogo from "./assets/logo/kol-logo.jpg";
+import { LoadingScreen } from "./components/LoadingScreen";
 import { fetchCurrentRaceFeed, type RaceFeed } from "./services/raceFeed";
 import type { KolProfile, RaceEntrant, RaceInterval } from "./types";
 import {
@@ -103,6 +105,10 @@ const faqs = [
 function App() {
   const [camera, setCamera] = useState<CameraMode>("top");
   const [raceFeed, setRaceFeed] = useState<RaceFeed>(fallbackRaceFeed);
+  const [isIntroLoading, setIsIntroLoading] = useState(true);
+  const [isLoadingWindowOpen, setIsLoadingWindowOpen] = useState(true);
+  const [isRaceFeedFetching, setIsRaceFeedFetching] = useState(true);
+  const [hasCompletedInitialRaceFetch, setHasCompletedInitialRaceFetch] = useState(false);
   const currentRace = raceFeed.race ?? fallbackRaceFeed.race!;
   const raceProfiles = raceFeed.kols.length > 0 ? raceFeed.kols : fallbackRaceFeed.kols;
   const currentUpcomingRaces =
@@ -126,10 +132,25 @@ function App() {
   }, [countdownEndsAt]);
 
   useEffect(() => {
+    const introTimeout = window.setTimeout(() => setIsIntroLoading(false), 1_800);
+    const maxLoadingTimeout = window.setTimeout(() => setIsLoadingWindowOpen(false), 2_400);
+
+    return () => {
+      window.clearTimeout(introTimeout);
+      window.clearTimeout(maxLoadingTimeout);
+    };
+  }, []);
+
+  useEffect(() => {
     let isMounted = true;
     let interval: number | undefined;
+    let completedInitialFetch = false;
 
     const loadRaceFeed = () => {
+      if (isMounted) {
+        setIsRaceFeedFetching(true);
+      }
+
       fetchCurrentRaceFeed()
         .then((feed) => {
           if (isMounted && feed?.race) {
@@ -139,6 +160,16 @@ function App() {
         .catch(() => {
           if (isMounted) {
             setRaceFeed(fallbackRaceFeed);
+          }
+        })
+        .finally(() => {
+          if (isMounted) {
+            setIsRaceFeedFetching(false);
+
+            if (!completedInitialFetch) {
+              completedInitialFetch = true;
+              setHasCompletedInitialRaceFetch(true);
+            }
           }
         });
     };
@@ -172,19 +203,25 @@ function App() {
     return b.averageGain - a.averageGain;
   });
   const currentPath = window.location.pathname;
+  const shouldShowLoadingScreen =
+    isIntroLoading ||
+    (isLoadingWindowOpen && isRaceFeedFetching && !hasCompletedInitialRaceFetch);
 
   if (currentPath === "/live" || currentPath === "/race" || currentPath === "/track") {
     return (
-      <LiveRacePage
-        camera={camera}
-        countdown={countdown}
-        entrants={entrants}
-        field={field}
-        isLiveRaceActive={isLiveRaceActive}
-        race={currentRace}
-        setCamera={setCamera}
-        splitAmounts={splitAmounts}
-      />
+      <>
+        <LiveRacePage
+          camera={camera}
+          countdown={countdown}
+          entrants={entrants}
+          field={field}
+          isLiveRaceActive={isLiveRaceActive}
+          race={currentRace}
+          setCamera={setCamera}
+          splitAmounts={splitAmounts}
+        />
+        <LoadingScreen active={shouldShowLoadingScreen} />
+      </>
     );
   }
 
@@ -229,6 +266,7 @@ function App() {
         <Faq />
       </main>
       <KolOsNav />
+      <LoadingScreen active={shouldShowLoadingScreen} />
     </>
   );
 }
@@ -237,8 +275,7 @@ function SiteHeader() {
   return (
     <header className="site-header">
       <a className="brand-lockup" href="/" aria-label="King of Liquidity home">
-        <CircleDollarSign size={23} aria-hidden="true" />
-        <span>KOL</span>
+        <img className="brand-logo" src={kolLogo} alt="" aria-hidden="true" />
         <strong>King of Liquidity</strong>
       </a>
       <nav className="site-nav" aria-label="Primary navigation">
@@ -816,8 +853,7 @@ function LiveRacePage({
     <main className="live-shell">
       <header className="live-header">
         <a className="brand-lockup" href="/" aria-label="Back to King of Liquidity home">
-          <CircleDollarSign size={23} aria-hidden="true" />
-          <span>KOL</span>
+          <img className="brand-logo" src={kolLogo} alt="" aria-hidden="true" />
           <strong>King of Liquidity</strong>
         </a>
         <div className="live-header-center">

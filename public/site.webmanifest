@@ -1,0 +1,21 @@
+{
+  "name": "King of Liquidity",
+  "short_name": "KOL",
+  "icons": [
+    {
+      "src": "/kol-logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/kol-logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#050506",
+  "background_color": "#050506",
+  "display": "standalone"
+}
