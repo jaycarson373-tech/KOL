@@ -76,6 +76,7 @@ export interface PayoutPlan {
   minKolHolding: number;
   winnerHolderRecipients: PayoutRecipient[];
   kolHolderRecipients: PayoutRecipient[];
+  winningKolBonusTransfer: PayoutRecipient | null;
   buybackBurnTransfer: PayoutRecipient | null;
   finalsVaultTransfer: PayoutRecipient | null;
   excludedWallets: string[];
@@ -88,6 +89,7 @@ export interface Distribution {
   winningKolId: string;
   winnerHoldersAmountSol: number;
   kolAirdropAmountSol: number;
+  winningKolBonusAmountSol: number;
   buybackBurnAmountSol: number;
   finalsVaultAmountSol: number;
   txStatus: DistributionStatus;

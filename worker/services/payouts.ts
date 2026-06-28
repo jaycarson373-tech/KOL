@@ -17,6 +17,7 @@ function excludedWallets(): Set<string> {
   const configured = [
     config.winnerKolRewardVault,
     config.kolHolderRewardVault,
+    config.winningKolBonusWallet,
     config.buybackBurnWallet,
     config.finalsVaultWallet,
     ...(config.excludedHolderWallets?.split(",") ?? []),
@@ -104,6 +105,7 @@ export async function buildPayoutPlan(options: {
   ]);
 
   const kolEligible = kolHolders.filter((holder) => holder.amount >= config.kolMinHolding);
+  const winningKolBonusWallet = options.winningKol.feeWallet ?? config.winningKolBonusWallet;
 
   return {
     generatedAt: generatedAt.toISOString(),
@@ -114,6 +116,13 @@ export async function buildPayoutPlan(options: {
     minKolHolding: config.kolMinHolding,
     winnerHolderRecipients: buildWeightedRecipients(winnerHolders, options.distribution.winnerHoldersAmountSol, excluded),
     kolHolderRecipients: buildWeightedRecipients(kolEligible, options.distribution.kolAirdropAmountSol, excluded),
+    winningKolBonusTransfer: winningKolBonusWallet
+      ? {
+          wallet: winningKolBonusWallet,
+          tokenAmount: 0,
+          amountSol: options.distribution.winningKolBonusAmountSol,
+        }
+      : null,
     buybackBurnTransfer: config.buybackBurnWallet
       ? {
           wallet: config.buybackBurnWallet,
@@ -140,6 +149,10 @@ function assertPlanExecutable(plan: PayoutPlan): void {
 
   if (plan.kolHolderRecipients.length === 0) {
     throw new Error("No eligible $KOL recipients after filters.");
+  }
+
+  if (!plan.winningKolBonusTransfer) {
+    throw new Error("winning KOL fee_wallet or WINNING_KOL_BONUS_WALLET is required.");
   }
 
   if (!plan.buybackBurnTransfer) {
@@ -188,6 +201,10 @@ async function transferBucketSplit(plan: PayoutPlan, distribution: Distribution)
     throw new Error("FINALS_VAULT_WALLET is required.");
   }
 
+  if (!plan.winningKolBonusTransfer) {
+    throw new Error("winning KOL fee_wallet or WINNING_KOL_BONUS_WALLET is required.");
+  }
+
   const recipients: PayoutRecipient[] = [
     {
       wallet: requireValue(config.winnerKolRewardVault, "WINNER_KOL_REWARD_VAULT"),
@@ -199,6 +216,7 @@ async function transferBucketSplit(plan: PayoutPlan, distribution: Distribution)
       tokenAmount: 0,
       amountSol: distribution.kolAirdropAmountSol,
     },
+    plan.winningKolBonusTransfer,
     plan.buybackBurnTransfer,
     plan.finalsVaultTransfer,
   ];
@@ -212,7 +230,7 @@ async function transferBucketSplit(plan: PayoutPlan, distribution: Distribution)
 }
 
 async function transferTreasuryBuckets(plan: PayoutPlan): Promise<string[]> {
-  const transfers = [plan.buybackBurnTransfer, plan.finalsVaultTransfer].filter(
+  const transfers = [plan.winningKolBonusTransfer, plan.buybackBurnTransfer, plan.finalsVaultTransfer].filter(
     (transfer): transfer is PayoutRecipient => Boolean(transfer),
   );
 

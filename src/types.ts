@@ -36,6 +36,7 @@ export interface RaceInterval {
 export interface TournamentStats {
   totalKolBurned: number;
   solAirdropped: number;
+  winningKolBonusSol: number;
   finalsVaultSol: number;
   totalFeesSol: number;
 }
@@ -43,6 +44,7 @@ export interface TournamentStats {
 export interface PrizeSplit {
   winnerHolders: number;
   kolAirdrop: number;
+  winningKolBonus: number;
   buybackBurn: number;
   finalsVault: number;
 }

@@ -39,6 +39,7 @@ export const config = {
   treasuryPrivateKey: readEnv("TREASURY_PRIVATE_KEY"),
   winnerKolRewardVault: readEnv("WINNER_KOL_REWARD_VAULT"),
   kolHolderRewardVault: readEnv("KOL_HOLDER_REWARD_VAULT"),
+  winningKolBonusWallet: readEnv("WINNING_KOL_BONUS_WALLET"),
   buybackBurnWallet: readEnv("BUYBACK_BURN_WALLET"),
   finalsVaultWallet: readEnv("FINALS_VAULT_WALLET"),
   winnerKolRewardPrivateKey: readEnv("WINNER_KOL_REWARD_PRIVATE_KEY"),

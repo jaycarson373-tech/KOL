@@ -7,7 +7,6 @@ import {
   CircleDollarSign,
   Crown,
   Flame,
-  Gauge,
   HelpCircle,
   Medal,
   Play,
@@ -22,7 +21,6 @@ import {
 import {
   activeRace,
   kols,
-  tournamentStats,
   upcomingRaces,
 } from "./data/kols";
 import { fetchLiveMarketCaps } from "./services/marketData";
@@ -30,7 +28,6 @@ import type { KolProfile, RaceEntrant, RaceInterval } from "./types";
 import {
   buildEntrants,
   formatCompactUsd,
-  formatNumber,
   formatSol,
   getCountdownParts,
   getInitials,
@@ -50,8 +47,9 @@ interface LeagueKol extends KolProfile {
 
 const resources = [
   ["Live Race", "/live", Radio],
-  ["Leaderboard", "#standings", Trophy],
-  ["Season Schedule", "#schedule", CalendarDays],
+  ["Standings", "#standings", Trophy],
+  ["Bracket", "#bracket", Route],
+  ["Schedule", "#schedule", CalendarDays],
   ["Current KOLs", "#kols", Users],
   ["Buy $KOL", "#", CircleDollarSign],
   ["DexScreener", "#", BarChart3],
@@ -63,27 +61,31 @@ const resources = [
 const faqs = [
   [
     "What is King of Liquidity?",
-    "A 32-KOL market cap racing league where every race creates holder rewards and moves the season standings.",
+    "Season One is a 32-KOL tournament where market cap performance decides who advances toward the crown.",
   ],
   [
     "How does a race work?",
-    "Every 90 minutes, four KOL tokens compete. The winner is decided by live market cap performance at the race snapshot.",
+    "Four KOLs enter The Track, race for a fixed window, and the highest ending market cap performance wins.",
   ],
   [
-    "How do rewards work?",
-    "Race fees split to winning KOL holders, $KOL holders, buyback/burn, and the championship finals vault.",
-  ],
-  [
-    "How do playoffs work?",
-    "After 82 races, the top 16 qualify into quarterfinals, semifinals, and a championship final.",
+    "How are rewards split?",
+    "Race fees split 50% to winning coin holders, 20% to $KOL holders, 10% to the winning KOL, 10% to burn, and 10% to the championship vault.",
   ],
   [
     "How do I qualify?",
-    "Hold 100K+ $KOL for holder rewards, then hold the race-winning KOL to share in that winner holder pool.",
+    "Hold 100K+ $KOL for $KOL-holder rewards. Hold the winning coin to share in that race's winner-holder pool.",
+  ],
+  [
+    "What is the tournament format?",
+    "Round of 32 has eight 4-KOL races. Elite 8 has two 4-KOL races. The Grand Final is a 1v1 for the crown.",
   ],
   [
     "When are payouts?",
     "Payout plans are generated after race snapshots, then executed by the Railway worker once payout execution is enabled.",
+  ],
+  [
+    "How does Season Two work?",
+    "After the King is crowned, Season Two begins with a fresh field and a new path to the title.",
   ],
 ] as const;
 
@@ -153,18 +155,31 @@ function App() {
   }
 
   return (
-    <main className="site-shell">
-      <SiteHeader />
-      <HeroSection countdown={countdown} entrants={entrants} splitAmounts={splitAmounts} />
-      <CurrentRaceSummary entrants={entrants} countdown={countdown} splitAmounts={splitAmounts} />
-      <HowItWorks />
-      <LeagueStructure />
-      <Standings standings={standings} />
-      <RaceSchedule />
-      <KolGrid field={field} />
-      <Resources />
-      <Faq />
-    </main>
+    <>
+      <main className="site-shell">
+        <SiteHeader />
+        <HeroSection countdown={countdown} entrants={entrants} splitAmounts={splitAmounts} />
+        <TrackSection entrants={entrants} countdown={countdown} />
+        <CurrentRaceSummary entrants={entrants} splitAmounts={splitAmounts} />
+        <section className="content-section reward-pots-section" aria-labelledby="rewards-title">
+          <SectionHeading
+            eyebrow="Reward Pots"
+            title="Every race pays five pools."
+            copy="The current race pot is split across winner holders, $KOL holders, the winning KOL, burn, and the championship vault."
+          />
+          <RewardPots splitAmounts={splitAmounts} />
+        </section>
+        <HowItWorks />
+        <TournamentBracket />
+        <Standings standings={standings} />
+        <RaceSchedule />
+        <KolGrid field={field} />
+        <Resources />
+        <FinalCinematic />
+        <Faq />
+      </main>
+      <KolOsNav />
+    </>
   );
 }
 
@@ -177,14 +192,15 @@ function SiteHeader() {
         <strong>King of Liquidity</strong>
       </a>
       <nav className="site-nav" aria-label="Primary navigation">
+        <a href="#track">Track</a>
         <a href="#standings">Standings</a>
+        <a href="#bracket">Bracket</a>
         <a href="#schedule">Schedule</a>
         <a href="#kols">KOLs</a>
-        <a href="#faq">FAQ</a>
       </nav>
       <a className="nav-live" href="/live">
         <Radio size={16} aria-hidden="true" />
-        Live Race
+        The Track
       </a>
     </header>
   );
@@ -199,20 +215,23 @@ function HeroSection({
   entrants: RaceEntrant[];
   splitAmounts: ReturnType<typeof getSplitAmounts>;
 }) {
+  const leader = entrants[0];
+  const racePot = getRacePot(activeRace);
+
   return (
     <section className="hero-section" aria-labelledby="hero-title">
       <div className="hero-content">
-        <p className="eyebrow">Season One · Live League</p>
+        <p className="eyebrow">Season One · Live Tournament</p>
         <h1 id="hero-title">KING OF LIQUIDITY</h1>
-        <p className="hero-kicker">32 KOLs. 82 Race Season. Live League.</p>
+        <p className="hero-kicker">32 KOLs. One Tournament. One Crown. One King of Liquidity.</p>
         <p className="hero-copy">
-          Every race tracks real market cap performance. Every race pays
-          holders. Top 16 qualify. One champion remains.
+          Four KOLs enter The Track. Market cap performance decides who
+          advances. Every race pays holders.
         </p>
         <div className="hero-actions">
-          <a className="primary-cta" href="/live">
+          <a className="primary-cta" href="#track">
             <Play size={18} aria-hidden="true" />
-            View Live Race
+            View The Track
           </a>
           <a className="secondary-cta" href="#how-it-works">
             How It Works
@@ -221,44 +240,89 @@ function HeroSection({
         </div>
       </div>
 
-      <aside className="hero-broadcast" aria-label="Current league snapshot">
+      <aside className="hero-broadcast" aria-label="Current tournament snapshot">
         <div className="broadcast-status">
           <span className="status-light" />
-          Race feed live
+          Track feed live
         </div>
-        <div className="hero-matchup">
-          {entrants.slice(0, 2).map((entrant) => (
-            <div className="matchup-kol" key={entrant.id}>
-              <Avatar entrant={entrant} />
-              <span>{entrant.symbol}</span>
-            </div>
-          ))}
+        <div className="hero-race-card">
+          <span>{activeRace.label}</span>
+          <strong>{entrants.map((entrant) => entrant.symbol).join("  ·  ")}</strong>
+        </div>
+        <div className="hero-intel-grid">
+          <MiniPot label="Current leader" value={leader.symbol} />
+          <MiniPot label="Race pot" value={formatSol(racePot)} />
+          <MiniPot label="Winner holders" value={formatSol(splitAmounts.winnerHolders)} />
+          <MiniPot label="Burn + vault" value={formatSol(splitAmounts.buybackBurn + splitAmounts.finalsVault)} />
         </div>
         <Countdown countdown={countdown} label="Next snapshot" />
-        <div className="mini-pots">
-          <MiniPot label="Winner pool" value={formatSol(splitAmounts.winnerHolders)} />
-          <MiniPot label="$KOL holders" value={formatSol(splitAmounts.kolAirdrop)} />
-        </div>
       </aside>
+    </section>
+  );
+}
+
+function TrackSection({
+  entrants,
+  countdown,
+}: {
+  entrants: RaceEntrant[];
+  countdown: ReturnType<typeof getCountdownParts>;
+}) {
+  return (
+    <section className="track-section" id="track" aria-labelledby="track-title">
+      <div className="track-header">
+        <div>
+          <p className="eyebrow">The Track</p>
+          <h2 id="track-title">Live tournament race</h2>
+        </div>
+        <div className="track-header-actions">
+          <Countdown countdown={countdown} label="Race closes" />
+          <a className="primary-cta" href="/live">
+            <Radio size={18} aria-hidden="true" />
+            Fullscreen
+          </a>
+        </div>
+      </div>
+      <RaceTrack entrants={entrants} camera="top" />
+      {activeRace.status === "final" ? <RaceResult entrants={entrants} /> : null}
     </section>
   );
 }
 
 function CurrentRaceSummary({
   entrants,
-  countdown,
   splitAmounts,
 }: {
   entrants: RaceEntrant[];
-  countdown: ReturnType<typeof getCountdownParts>;
   splitAmounts: ReturnType<typeof getSplitAmounts>;
 }) {
   const winner = entrants[0];
+  const totalMarketCap = entrants.reduce((total, entrant) => total + entrant.marketCapUsd, 0);
+  const racePot = getRacePot(activeRace);
 
   return (
-    <section className="league-dashboard" aria-label="Homepage race overview">
+    <section className="race-summary-grid" aria-label="Homepage race overview">
+      <div className="dashboard-card standings-card">
+        <span className="card-label">Current Leader</span>
+        <div className="leader-feature">
+          <Avatar entrant={winner} />
+          <div>
+            <strong>{winner.name}</strong>
+            <span>{winner.symbol} · {getPerformanceGain(winner).toFixed(1)}%</span>
+          </div>
+        </div>
+        <div className="leader-number">{formatCompactUsd(winner.marketCapUsd)}</div>
+      </div>
+
+      <div className="dashboard-card stat-stack-card">
+        <span className="card-label">Race Summary</span>
+        <SummaryMetric label="Total Market Cap" value={formatCompactUsd(totalMarketCap)} />
+        <SummaryMetric label="Race Pot" value={formatSol(racePot)} />
+        <SummaryMetric label="Reward Split" value="50 / 20 / 10 / 10 / 10" />
+      </div>
+
       <div className="dashboard-card matchup-card">
-        <span className="card-label">Current Matchup</span>
+        <span className="card-label">Current Racers</span>
         <div className="matchup-list">
           {entrants.map((entrant) => (
             <div className="matchup-row" key={entrant.id}>
@@ -273,37 +337,42 @@ function CurrentRaceSummary({
         </div>
       </div>
 
-      <div className="dashboard-card countdown-card">
-        <span className="card-label">Race Countdown</span>
-        <Countdown countdown={countdown} label="Lights out" />
-        <a className="enter-live" href="/live">
-          Enter Live Race
-          <ArrowRight size={17} aria-hidden="true" />
-        </a>
-      </div>
-
-      <RewardPots splitAmounts={splitAmounts} />
-
-      <div className="dashboard-card standings-card">
-        <span className="card-label">Current Leader</span>
-        <div className="leader-feature">
-          <Avatar entrant={winner} />
-          <div>
-            <strong>{winner.name}</strong>
-            <span>{winner.symbol} · pole position</span>
-          </div>
-        </div>
-        <div className="leader-number">{formatCompactUsd(winner.marketCapUsd)}</div>
+      <div className="dashboard-card stat-stack-card">
+        <span className="card-label">Top Pools</span>
+        <SummaryMetric label="Winning Coin Holders" value={formatSol(splitAmounts.winnerHolders)} />
+        <SummaryMetric label="$KOL Holders" value={formatSol(splitAmounts.kolAirdrop)} />
+        <SummaryMetric label="Championship Vault" value={formatSol(splitAmounts.finalsVault)} />
       </div>
     </section>
   );
 }
 
+function SummaryMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="summary-metric">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function RaceResult({ entrants }: { entrants: RaceEntrant[] }) {
+  const winner = entrants[0];
+  return (
+    <div className="race-result">
+      <span>Winner</span>
+      <strong>{winner.name}</strong>
+      <em>{getPerformanceGain(winner).toFixed(1)}% · {formatSol(getRacePot(activeRace) * prizeSplit.winnerHolders)} paid to winner holders</em>
+    </div>
+  );
+}
+
 function RewardPots({ splitAmounts }: { splitAmounts: ReturnType<typeof getSplitAmounts> }) {
   const pots = [
-    ["Winning KOL Pot", splitAmounts.winnerHolders, Trophy],
-    ["KOL Holder Pot", splitAmounts.kolAirdrop, WalletCards],
-    ["Burn", splitAmounts.buybackBurn, Flame],
+    ["Winning Coin Holders", splitAmounts.winnerHolders, Trophy],
+    ["$KOL Holders", splitAmounts.kolAirdrop, WalletCards],
+    ["Winning KOL Bonus", splitAmounts.winningKolBonus, Medal],
+    ["Buyback + Burn", splitAmounts.buybackBurn, Flame],
     ["Championship Vault", splitAmounts.finalsVault, Crown],
   ] as const;
 
@@ -326,18 +395,18 @@ function RewardPots({ splitAmounts }: { splitAmounts: ReturnType<typeof getSplit
 function HowItWorks() {
   const steps = [
     ["Step 1", "Hold 100K+ $KOL"],
-    ["Step 2", "Every 90 minutes four KOLs compete"],
-    ["Step 3", "Highest market cap performance wins"],
-    ["Step 4", "Creator fees split 50% winner holders, 20% $KOL holders, 15% burn, 15% finals vault"],
-    ["Step 5", "After 82 races, top 16 qualify, playoffs begin, one champion remains"],
+    ["Step 2", "4 KOLs enter The Track"],
+    ["Step 3", "Highest ending market cap performance wins"],
+    ["Step 4", "Creator fees split 50% / 20% / 10% / 10% / 10%"],
+    ["Step 5", "Winner advances. Losers are eliminated."],
   ];
 
   return (
     <section className="content-section" id="how-it-works" aria-labelledby="how-title">
       <SectionHeading
         eyebrow="How It Works"
-        title="A league people can follow every day."
-        copy="Simple race rules, visible reward pots, and standings that matter all season."
+        title="Simple rules. Brutal bracket."
+        copy="Every match is a market-cap race with visible pots and an immediate tournament consequence."
       />
       <div className="step-grid">
         {steps.map(([label, text]) => (
@@ -351,28 +420,60 @@ function HowItWorks() {
   );
 }
 
-function LeagueStructure() {
-  const bracket = ["Season", "Top 16", "Quarterfinals", "Semifinals", "Championship"];
+function TournamentBracket() {
+  const rounds = [
+    {
+      label: "Round of 32",
+      detail: "8 races · 4 KOLs each · 8 hours",
+      matches: ["R32 Race 1", "R32 Race 2", "R32 Race 3", "R32 Race 4", "R32 Race 5", "R32 Race 6", "R32 Race 7", "R32 Race 8"],
+    },
+    {
+      label: "Elite 8",
+      detail: "2 races · 4 KOLs each · 10 hours",
+      matches: ["Elite Race 1", "Elite Race 2"],
+    },
+    {
+      label: "Grand Final",
+      detail: "1v1 · 20 hours",
+      matches: ["Crown Match"],
+    },
+    {
+      label: "King of Liquidity",
+      detail: "Season One champion",
+      matches: ["Crowned"],
+    },
+  ];
 
   return (
-    <section className="content-section league-section" aria-labelledby="league-title">
+    <section className="content-section bracket-section" id="bracket" aria-labelledby="bracket-title">
       <SectionHeading
-        eyebrow="League Structure"
-        title="32 KOLs. 82 races. One title."
-        copy="A full season feeds into a playoff bracket, turning every interval into a standings event."
+        eyebrow="Tournament Bracket"
+        title="32 enter. One survives."
+        copy="Season One moves from eight opening races to the Elite 8, then into a 20-hour Grand Final for the crown."
       />
       <div className="league-format">
         <div className="format-stats">
           <MetricPill label="Season Field" value="32 KOLs" />
-          <MetricPill label="Regular Season" value="82 races" />
-          <MetricPill label="Cut Line" value="Top 16" />
-          <MetricPill label="Final" value="1 champion" />
+          <MetricPill label="Opening Round" value="8 races" />
+          <MetricPill label="Elite 8" value="2 races" />
+          <MetricPill label="Grand Final" value="1v1" />
         </div>
-        <div className="bracket" aria-label="Playoff bracket">
-          {bracket.map((round, index) => (
-            <div className="bracket-node" key={round}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{round}</strong>
+        <div className="bracket" aria-label="Season One tournament bracket">
+          {rounds.map((round, index) => (
+            <div className={`bracket-column bracket-column--${index + 1}`} key={round.label}>
+              <div className="bracket-node">
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{round.label}</strong>
+                <em>{round.detail}</em>
+              </div>
+              <div className="bracket-match-list">
+                {round.matches.map((match) => (
+                  <div className="bracket-match" key={match}>
+                    <Shield size={14} aria-hidden="true" />
+                    <span>{match}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
@@ -386,36 +487,39 @@ function Standings({ standings }: { standings: LeagueKol[] }) {
     <section className="content-section" id="standings" aria-labelledby="standings-title">
       <SectionHeading
         eyebrow="Standings"
-        title="The playoff race is the product."
-        copy="Top 16 qualify. Bubble positions fight to survive. Everyone else is chasing the cut."
+        title="Who is still alive?"
+        copy="Top positions lead the field, contenders stay in the bracket, and eliminated KOLs fall out of Season One."
       />
-      <div className="standings-table" role="table" aria-label="League standings">
-        {standings.slice(0, 20).map((kol, index) => (
-          <article
-            className={`standing-row ${index < 3 ? "is-medal" : ""} ${index >= 12 && index < 16 ? "is-bubble" : ""} ${index >= 16 ? "is-eliminated" : ""}`}
-            key={kol.id}
-          >
-            <span className="standing-rank">
-              {index < 3 ? <Medal size={17} aria-hidden="true" /> : `#${index + 1}`}
-            </span>
-            <Avatar entrant={kol} />
-            <div className="standing-name">
-              <strong>{kol.name}</strong>
-              <span>{kol.symbol}</span>
-            </div>
-            <div className="standing-stat">
-              <span>Record</span>
-              <strong>{kol.wins}-{kol.losses}</strong>
-            </div>
-            <div className="standing-stat">
-              <span>Avg Gain</span>
-              <strong>{kol.averageGain.toFixed(1)}%</strong>
-            </div>
-            <div className="standing-state">
-              {index < 16 ? (index >= 12 ? "Bubble" : "Top 16") : "Eliminated"}
-            </div>
-          </article>
-        ))}
+      <div className="standings-table" role="table" aria-label="Tournament standings">
+        {standings.slice(0, 32).map((kol, index) => {
+          const isEliminated = kol.losses > 0 || index >= 24;
+          const state = isEliminated ? "Eliminated" : index < 8 ? "Top Seed" : "Contender";
+
+          return (
+            <article
+              className={`standing-row ${index < 3 ? "is-medal" : ""} ${!isEliminated && index >= 8 ? "is-bubble" : ""} ${isEliminated ? "is-eliminated" : ""}`}
+              key={kol.id}
+            >
+              <span className="standing-rank">
+                {index < 3 ? <Medal size={17} aria-hidden="true" /> : `#${index + 1}`}
+              </span>
+              <Avatar entrant={kol} />
+              <div className="standing-name">
+                <strong>{kol.name}</strong>
+                <span>{kol.symbol}</span>
+              </div>
+              <div className="standing-stat">
+                <span>Record</span>
+                <strong>{kol.wins}-{kol.losses}</strong>
+              </div>
+              <div className="standing-stat">
+                <span>Avg Gain</span>
+                <strong>{kol.averageGain.toFixed(1)}%</strong>
+              </div>
+              <div className="standing-state">{state}</div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -427,9 +531,9 @@ function RaceSchedule() {
   return (
     <section className="content-section" id="schedule" aria-labelledby="schedule-title">
       <SectionHeading
-        eyebrow="Race Schedule"
+        eyebrow="Upcoming Matches"
         title="Current race plus the next six."
-        copy="The admin worker can store the full season privately. The homepage stays focused on what fans need now."
+        copy="Future rounds stay hidden until the bracket earns them."
       />
       <div className="schedule-strip">
         {schedule.map((race, index) => (
@@ -450,7 +554,7 @@ function KolGrid({ field }: { field: LeagueKol[] }) {
       <SectionHeading
         eyebrow="Current KOLs"
         title="The field of 32."
-        copy="Portraits, rank, record, average gain, and upcoming race info live in one clean grid."
+        copy="Portraits, records, average gain, next match, and profile links for every Season One competitor."
       />
       <div className="kol-grid">
         {field.map((kol) => (
@@ -479,11 +583,11 @@ function KolGrid({ field }: { field: LeagueKol[] }) {
 
 function Resources() {
   return (
-    <section className="content-section" aria-labelledby="resources-title">
+    <section className="content-section" id="resources" aria-labelledby="resources-title">
       <SectionHeading
         eyebrow="Daily Links"
         title="Everything fans need in one place."
-        copy="Resources replace scattered links and make the league feel easy to follow."
+        copy="The daily hub for watching, checking standings, buying, and following the tournament."
       />
       <div className="resource-grid">
         {resources.map(([label, href, Icon]) => (
@@ -498,13 +602,25 @@ function Resources() {
   );
 }
 
+function FinalCinematic() {
+  return (
+    <section className="final-cinematic" aria-label="Season One closing statement">
+      <Crown size={34} aria-hidden="true" />
+      <p>32 KOLs.</p>
+      <p>One survives.</p>
+      <p>One wears the crown.</p>
+      <strong>Season One is live. Season Two begins after the King is crowned.</strong>
+    </section>
+  );
+}
+
 function Faq() {
   return (
     <section className="content-section faq-section" id="faq" aria-labelledby="faq-title">
       <SectionHeading
         eyebrow="FAQ"
         title="The rules, without the noise."
-        copy="Clear answers for new holders, daily viewers, and playoff chasers."
+        copy="Clear answers for new holders, daily viewers, and bracket chasers."
       />
       <div className="faq-grid">
         {faqs.map(([question, answer]) => (
@@ -515,6 +631,35 @@ function Faq() {
         ))}
       </div>
     </section>
+  );
+}
+
+function KolOsNav() {
+  const nav = [
+    ["The Track", "#track", Radio],
+    ["Standings", "#standings", Trophy],
+    ["Bracket", "#bracket", Route],
+    ["KOLs", "#kols", Users],
+    ["Links", "#resources", ArrowUpRight],
+    ["FAQ", "#faq", HelpCircle],
+    ["Buy $KOL", "#", CircleDollarSign],
+    ["Dex", "#", BarChart3],
+    ["Twitter", "https://x.com", ArrowUpRight],
+    ["Telegram", "#", Zap],
+  ] as const;
+
+  return (
+    <nav className="kol-os" aria-label="KOL OS">
+      <span className="kol-os-brand">KOL OS</span>
+      <div>
+        {nav.map(([label, href, Icon]) => (
+          <a href={href} key={label}>
+            <Icon size={15} aria-hidden="true" />
+            <span>{label}</span>
+          </a>
+        ))}
+      </div>
+    </nav>
   );
 }
 
@@ -543,10 +688,10 @@ function LiveRacePage({
         </a>
         <div className="live-header-center">
           <span className="status-light" />
-          Live Race Feed
+          The Track Feed
         </div>
         <a className="secondary-cta compact" href="/">
-          League Home
+          Tournament Home
           <ArrowRight size={16} aria-hidden="true" />
         </a>
       </header>
@@ -555,7 +700,7 @@ function LiveRacePage({
         <div className="live-titlebar">
           <div>
             <p className="eyebrow">{activeRace.label}</p>
-            <h1>Live Race</h1>
+            <h1>The Track</h1>
           </div>
           <Countdown countdown={countdown} label="Snapshot closes" />
         </div>
@@ -611,7 +756,7 @@ function LiveRacePage({
         </section>
 
         <section className="live-panel">
-          <span className="card-label">Season Watch</span>
+          <span className="card-label">Tournament Watch</span>
           {field.slice(0, 4).map((kol) => (
             <div className="watch-row" key={kol.id}>
               <span>#{kol.leagueRank}</span>
@@ -764,61 +909,19 @@ function MiniPot({ label, value }: { label: string; value: string }) {
 }
 
 function buildLeagueField(liveCaps: Record<string, number>): LeagueKol[] {
-  const base = kols.map((kol, index) => ({
+  return kols.map((kol, index) => ({
     ...kol,
     marketCapUsd: liveCaps[kol.id] ?? kol.marketCapUsd,
     leagueRank: index + 1,
     averageGain: Number((12.8 - index * 0.72 + kol.wins * 1.9 - kol.losses * 0.8).toFixed(1)),
-    upcomingRace: index < 16 ? `Race ${Math.floor(index / 4) + 1}` : `Qualifier ${index - 15}`,
-  }));
-
-  const placeholders: LeagueKol[] = Array.from({ length: 16 }, (_, index) => {
-    const number = index + 17;
-    return {
-      id: `kol-${number}`,
-      name: `KOL Slot ${number}`,
-      symbol: `$KOL${number}`,
-      xHandle: "@comingsoon",
-      xUrl: "https://x.com",
-      wins: Math.max(0, 2 - Math.floor(index / 5)),
-      losses: Math.floor(index / 4),
-      seed: number,
-      color: ["#d8b76a", "#25c7b0", "#ff7467", "#7c8cff"][index % 4],
-      marketCapUsd: 210000 - index * 8200,
-      leagueRank: number,
-      averageGain: Number((1.6 - index * 0.36).toFixed(1)),
-      upcomingRace: "Waiting list",
-      isPlaceholder: true,
-    };
-  });
-
-  return [...base, ...placeholders].map((kol, index) => ({
-    ...kol,
-    leagueRank: index + 1,
+    upcomingRace: activeRace.entrants.includes(kol.id)
+      ? "Live now"
+      : `Round of 32 Race ${Math.floor(index / 4) + 1}`,
   }));
 }
 
 function buildSchedule(): RaceInterval[] {
-  const generated = Array.from({ length: 3 }, (_, index) => {
-    const lastUpcoming = upcomingRaces[upcomingRaces.length - 1];
-    const start = new Date(lastUpcoming?.endsAt ?? activeRace.endsAt);
-    start.setMinutes(start.getMinutes() + index * 90);
-    const end = new Date(start);
-    end.setMinutes(end.getMinutes() + 90);
-
-    return {
-      id: `race-extra-${index + 1}`,
-      label: `Round 2 · Heat ${String.fromCharCode(65 + index)}`,
-      status: "queued" as const,
-      startsAt: start.toISOString(),
-      endsAt: end.toISOString(),
-      entrants: kols.slice(index * 4, index * 4 + 4).map((kol) => kol.id),
-      kolFeesSol: 0,
-      entrantFeesSol: 0,
-    };
-  });
-
-  return [activeRace, ...upcomingRaces, ...generated].slice(0, 7);
+  return [activeRace, ...upcomingRaces].slice(0, 7);
 }
 
 function formatTimeRange(race: RaceInterval): string {

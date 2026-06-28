@@ -49,6 +49,7 @@ type DistributionRow = {
   winning_kol_id: string;
   winner_holders_amount_sol: number;
   kol_airdrop_amount_sol: number;
+  winning_kol_bonus_amount_sol: number;
   buyback_burn_amount_sol: number;
   finals_vault_amount_sol: number;
   tx_status: Distribution["txStatus"];
@@ -143,6 +144,7 @@ function toDistribution(row: DistributionRow): Distribution {
     winningKolId: row.winning_kol_id,
     winnerHoldersAmountSol: Number(row.winner_holders_amount_sol),
     kolAirdropAmountSol: Number(row.kol_airdrop_amount_sol),
+    winningKolBonusAmountSol: Number(row.winning_kol_bonus_amount_sol ?? 0),
     buybackBurnAmountSol: Number(row.buyback_burn_amount_sol),
     finalsVaultAmountSol: Number(row.finals_vault_amount_sol),
     txStatus: row.tx_status,
@@ -162,6 +164,7 @@ function fromDistribution(distribution: Distribution): DistributionRow {
     winning_kol_id: distribution.winningKolId,
     winner_holders_amount_sol: distribution.winnerHoldersAmountSol,
     kol_airdrop_amount_sol: distribution.kolAirdropAmountSol,
+    winning_kol_bonus_amount_sol: distribution.winningKolBonusAmountSol,
     buyback_burn_amount_sol: distribution.buybackBurnAmountSol,
     finals_vault_amount_sol: distribution.finalsVaultAmountSol,
     tx_status: distribution.txStatus,

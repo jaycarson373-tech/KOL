@@ -6,8 +6,9 @@ import type { SupabaseRepository } from "../repositories/supabase-repository.js"
 const split = {
   winnerHolders: 0.5,
   kolAirdrop: 0.2,
-  buybackBurn: 0.15,
-  finalsVault: 0.15,
+  winningKolBonus: 0.1,
+  buybackBurn: 0.1,
+  finalsVault: 0.1,
 };
 
 export function createDistributionForRace(race: RaceIntervalRecord, now = new Date()): Distribution | null {
@@ -24,6 +25,7 @@ export function createDistributionForRace(race: RaceIntervalRecord, now = new Da
     winningKolId: race.winnerKolId,
     winnerHoldersAmountSol: round(total * split.winnerHolders, 9),
     kolAirdropAmountSol: round(total * split.kolAirdrop, 9),
+    winningKolBonusAmountSol: round(total * split.winningKolBonus, 9),
     buybackBurnAmountSol: round(total * split.buybackBurn, 9),
     finalsVaultAmountSol: round(total * split.finalsVault, 9),
     txStatus: "queued",

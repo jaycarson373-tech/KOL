@@ -45,6 +45,7 @@ create table if not exists public.distributions (
   winning_kol_id text not null references public.kols(id),
   winner_holders_amount_sol numeric not null default 0,
   kol_airdrop_amount_sol numeric not null default 0,
+  winning_kol_bonus_amount_sol numeric not null default 0,
   buyback_burn_amount_sol numeric not null default 0,
   finals_vault_amount_sol numeric not null default 0,
   tx_status text not null default 'queued' check (tx_status in ('queued', 'ready', 'complete', 'failed')),
@@ -55,6 +56,9 @@ create table if not exists public.distributions (
   tx_signatures jsonb not null default '[]'::jsonb,
   failed_reason text
 );
+
+alter table public.distributions
+  add column if not exists winning_kol_bonus_amount_sol numeric not null default 0;
 
 create table if not exists public.holder_snapshots (
   id text primary key,

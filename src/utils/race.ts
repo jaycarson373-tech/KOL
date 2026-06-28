@@ -3,8 +3,9 @@ import type { KolProfile, PrizeSplit, RaceEntrant, RaceInterval } from "../types
 export const prizeSplit: PrizeSplit = {
   winnerHolders: 0.5,
   kolAirdrop: 0.2,
-  buybackBurn: 0.15,
-  finalsVault: 0.15,
+  winningKolBonus: 0.1,
+  buybackBurn: 0.1,
+  finalsVault: 0.1,
 };
 
 export const formatCompactUsd = (value: number) =>
@@ -73,6 +74,7 @@ export const getSplitAmounts = (race: RaceInterval) => {
   return {
     winnerHolders: pot * prizeSplit.winnerHolders,
     kolAirdrop: pot * prizeSplit.kolAirdrop,
+    winningKolBonus: pot * prizeSplit.winningKolBonus,
     buybackBurn: pot * prizeSplit.buybackBurn,
     finalsVault: pot * prizeSplit.finalsVault,
   };
