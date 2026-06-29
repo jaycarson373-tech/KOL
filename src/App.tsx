@@ -119,7 +119,7 @@ const faqs = [
   ],
   [
     "How are rewards split?",
-    "Race fees split 50% to winning coin holders, 20% to $KOL holders, 10% to the winning KOL, 10% to burn, and 10% to the championship vault.",
+    "Race fees split 30% to winning coin holders, 40% to $KOL holders, 10% to the winning KOL, 10% to burn, and 10% to the championship vault.",
   ],
   [
     "How do I qualify?",
@@ -893,8 +893,8 @@ function KingOfHillBanner({
 
 function RewardPots({ splitAmounts }: { splitAmounts: ReturnType<typeof getSplitAmounts> }) {
   const pots = [
-    ["Winning Coin Pot", splitAmounts.winnerHolders, Trophy],
-    ["20% Holder Pot", splitAmounts.kolAirdrop, WalletCards],
+    ["30% Winning Coin Pot", splitAmounts.winnerHolders, Trophy],
+    ["40% $KOL Holder Pot", splitAmounts.kolAirdrop, WalletCards],
     ["Winning KOL Championship Bonus", splitAmounts.winningKolBonus, Medal],
     ["Buyback + Burn", splitAmounts.buybackBurn, Flame],
     ["Championship Vault", splitAmounts.finalsVault, Crown],
@@ -921,7 +921,7 @@ function HowItWorks() {
     ["Step 1", "Hold 250K+ $KOL"],
     ["Step 2", "4 KOLs enter each Season 1 race"],
     ["Step 3", "Highest ending market cap performance wins"],
-    ["Step 4", "Creator fees split 50% / 20% / 10% / 10% / 10%"],
+    ["Step 4", "Creator fees split 30% / 40% / 10% / 10% / 10%"],
     ["Step 5", "Winner advances. Losers are eliminated."],
   ];
 

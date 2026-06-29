@@ -61,13 +61,13 @@ keys are configured on Railway.
 
 The worker snapshots race market caps, determines winners, snapshots holder
 balances with Helius, waits through the manual review window, builds payout
-plans, and can execute the `$KOL` split: 50% winner KOL holders, 20% `$KOL`
+plans, and can execute the `$KOL` split: 30% winner KOL holders, 40% `$KOL`
 holders, 10% winning KOL wallet, 10% buyback/burn wallet, and 10% championship
 vault.
 
 Set `KOL_MIN_HOLDING=250000` so only wallets holding at least 250K `$KOL`
-qualify for holder airdrops. This gate applies to both the 50% winning-token
-holder payout and the 20% `$KOL` holder payout.
+qualify for holder airdrops. This gate applies to both the 30% winning-token
+holder payout and the 40% `$KOL` holder payout.
 
 The default payout delay is five minutes after race end
 (`DISTRIBUTION_READY_DELAY_MS=300000`). Race-end snapshots are captured first,
@@ -106,8 +106,8 @@ private keys, fee claiming, and buyback/burn execution are intentionally ready.
 
 ## Prize Split
 
-- 50% to holders of the winning KOL from the race interval
-- 20% airdropped to `$KOL` holders
+- 30% to holders of the winning KOL from the race interval
+- 40% airdropped to `$KOL` holders
 - 10% to the winning KOL wallet
 - 10% buyback and burn
 - 10% to the championship holder wallet

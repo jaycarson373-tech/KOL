@@ -4,8 +4,8 @@ import type { Distribution, RaceIntervalRecord } from "../types.js";
 import type { SupabaseRepository } from "../repositories/supabase-repository.js";
 
 const split = {
-  winnerHolders: 0.5,
-  kolAirdrop: 0.2,
+  winnerHolders: 0.3,
+  kolAirdrop: 0.4,
   winningKolBonus: 0.1,
   buybackBurn: 0.1,
   finalsVault: 0.1,

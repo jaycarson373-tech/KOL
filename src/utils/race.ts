@@ -1,8 +1,8 @@
 import type { KolProfile, PrizeSplit, RaceEntrant, RaceInterval } from "../types";
 
 export const prizeSplit: PrizeSplit = {
-  winnerHolders: 0.5,
-  kolAirdrop: 0.2,
+  winnerHolders: 0.3,
+  kolAirdrop: 0.4,
   winningKolBonus: 0.1,
   buybackBurn: 0.1,
   finalsVault: 0.1,
