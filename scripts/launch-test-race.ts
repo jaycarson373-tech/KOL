@@ -41,8 +41,8 @@ function getTestMints(): string[] {
   const mints = fromArgs.length > 0 ? fromArgs : readList("TEST_KOL_CAS");
   const uniqueMints = [...new Set(mints.map(validateMint))];
 
-  if (uniqueMints.length !== 4) {
-    throw new Error("Test launch requires exactly 4 unique token mints via args or TEST_KOL_CAS.");
+  if (uniqueMints.length < 2 || uniqueMints.length > 4) {
+    throw new Error("Test launch requires 2 to 4 unique token mints via args or TEST_KOL_CAS.");
   }
 
   return uniqueMints;
@@ -88,7 +88,7 @@ function buildTestRace(kols: Kol[]): RaceIntervalRecord {
 
   return {
     id: process.env.TEST_RACE_ID?.trim() || `test-race-${startsAt.toISOString().replace(/[-:.]/g, "").slice(0, 15)}`,
-    label: process.env.TEST_RACE_LABEL?.trim() || "Test Launch Race · 30 Minutes",
+    label: process.env.TEST_RACE_LABEL?.trim() || `Test Launch Race · ${durationMinutes} Minutes`,
     status: "scheduled",
     startsAt: startsAt.toISOString(),
     endsAt: endsAt.toISOString(),

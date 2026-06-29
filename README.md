@@ -70,27 +70,28 @@ then the payout plan is generated after the delay from the current
 `race_intervals.winner_kol_id`, so an incorrect winner can be manually corrected
 in Supabase before funds move.
 
-## 30-Minute Test Race
+## Test Race
 
-Use four real Solana token mints with DexScreener/Helius data:
+Use two to four real Solana token mints with DexScreener/Helius data:
 
 ```bash
-npm run launch:test-race -- CA_1 CA_2 CA_3 CA_4
+TEST_RACE_DURATION_MINUTES=10 npm run launch:test-race -- CA_1 CA_2
 npm run worker:tick
 ```
 
-The test launcher creates `test-kol-01` through `test-kol-04`, schedules a
-30-minute race starting immediately, and pauses other open races by default so
-the app shows the test matchup. Set `TEST_PAUSE_OTHER_RACES=false` to leave
-existing races untouched.
+The test launcher creates `test-kol-01` through however many CAs you pass,
+schedules a race starting immediately, and pauses other open races by default
+so the app shows the test matchup. Set `TEST_PAUSE_OTHER_RACES=false` to leave
+existing races untouched. First test should stay at 10 minutes with two CAs and
+`PAYOUT_EXECUTION_ENABLED=false`.
 
 Useful overrides:
 
 ```bash
 TEST_RACE_START_DELAY_MINUTES=2
-TEST_RACE_DURATION_MINUTES=30
-TEST_KOL_NAMES="KOL One,KOL Two,KOL Three,KOL Four"
-TEST_KOL_SYMBOLS="$ONE,$TWO,$THREE,$FOUR"
+TEST_RACE_DURATION_MINUTES=10
+TEST_KOL_NAMES="KOL One,KOL Two"
+TEST_KOL_SYMBOLS="$ONE,$TWO"
 TEST_KOL_FEES_SOL=0
 TEST_ENTRANT_FEES_SOL=0
 ```

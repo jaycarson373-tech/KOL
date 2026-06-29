@@ -606,7 +606,9 @@ function LiveRaceTelemetry({
   return (
     <div className="live-race-telemetry" aria-label="Live race status">
       <div className="telemetry-racers">
-        <span className="card-label">Current four racers</span>
+        <span className="card-label">
+          {entrants.length > 0 ? `Current ${entrants.length} racers` : "Current racers"}
+        </span>
         <div>
           {entrants.map((entrant) => (
             <span className={`telemetry-racer ${entrant.isLeader ? "is-leader" : ""}`} key={entrant.id}>
