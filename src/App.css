@@ -4179,6 +4179,304 @@ body {
   }
 }
 
+/* Uploaded KOL background + banner typography pass. The banner remains reference-only. */
+body {
+  background:
+    radial-gradient(circle at 48% -5%, rgba(255, 202, 66, 0.34), transparent 34rem),
+    radial-gradient(circle at 88% 17%, rgba(110, 255, 87, 0.1), transparent 22rem),
+    radial-gradient(circle at 10% 32%, rgba(255, 96, 12, 0.16), transparent 30rem),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.82) 720px, rgba(0, 0, 0, 0.98) 1360px),
+    url("./assets/kol-bg-hero.jpg") center top / cover no-repeat,
+    #020202;
+}
+
+.site-shell::before {
+  top: 520px;
+  right: -5vw;
+  bottom: -180px;
+  left: -5vw;
+  background:
+    linear-gradient(180deg, rgba(1, 1, 1, 0.96), rgba(1, 1, 1, 0.38) 9%, rgba(1, 1, 1, 0.6) 40%, rgba(1, 1, 1, 0.68) 68%, rgba(1, 1, 1, 0.96) 100%),
+    radial-gradient(circle at 18% 13%, rgba(255, 190, 40, 0.24), transparent 28rem),
+    radial-gradient(circle at 83% 34%, rgba(255, 119, 22, 0.16), transparent 31rem),
+    linear-gradient(115deg, transparent 0 58%, rgba(255, 191, 43, 0.18) 58% 59%, transparent 59% 100%),
+    url("./assets/kol-bg-track.jpg") center 5% / min(1880px, 138vw) auto no-repeat,
+    url("./assets/kol-bg-lower.jpg") center 56% / min(1860px, 138vw) auto no-repeat,
+    url("./assets/kol-bg-lower.jpg") center bottom / min(1760px, 132vw) auto no-repeat;
+  opacity: 0.96;
+}
+
+.site-shell::after {
+  inset: 500px -3vw -150px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 194, 67, 0.18), transparent 32rem),
+    linear-gradient(90deg, transparent, rgba(255, 194, 67, 0.15), transparent),
+    repeating-linear-gradient(135deg, rgba(255, 194, 67, 0.045) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(90deg, rgba(255, 194, 67, 0.02) 0 1px, transparent 1px 64px);
+  opacity: 0.88;
+}
+
+.hero-section::before {
+  display: block;
+  z-index: -3;
+  top: -150px;
+  right: auto;
+  bottom: -100px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.36) 45%, rgba(0, 0, 0, 0.64)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.06) 42%, rgba(0, 0, 0, 0.9) 100%),
+    radial-gradient(circle at 58% 22%, rgba(255, 213, 112, 0.25), transparent 30rem),
+    radial-gradient(circle at 12% 45%, rgba(255, 111, 26, 0.12), transparent 25rem),
+    url("./assets/kol-bg-hero.jpg") center 42% / cover no-repeat;
+  opacity: 0.98;
+  mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 100%);
+}
+
+.hero-section::after {
+  z-index: -2;
+  inset: -92px -24px -40px;
+  background:
+    linear-gradient(90deg, rgba(3, 3, 3, 0.5), rgba(3, 3, 3, 0.08) 48%, rgba(3, 3, 3, 0.5)),
+    radial-gradient(circle at 83% 36%, rgba(255, 194, 67, 0.22), transparent 25rem),
+    linear-gradient(135deg, transparent 0 54%, rgba(255, 174, 23, 0.18) 54% 55%, transparent 55%),
+    repeating-linear-gradient(115deg, rgba(255, 194, 67, 0.072) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 7px);
+  opacity: 0.78;
+}
+
+.track-section {
+  border-color: rgba(255, 203, 77, 0.55);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.76)),
+    radial-gradient(circle at 72% 0%, rgba(255, 194, 67, 0.34), transparent 30rem),
+    radial-gradient(circle at 12% 64%, rgba(255, 111, 26, 0.16), transparent 28rem),
+    linear-gradient(135deg, rgba(255, 174, 23, 0.2), rgba(0, 0, 0, 0.72) 50%),
+    url("./assets/kol-bg-track.jpg") center / cover no-repeat,
+    rgba(4, 4, 4, 0.94);
+}
+
+.live-shell {
+  background:
+    radial-gradient(circle at 52% 0%, rgba(255, 213, 112, 0.24), transparent 30rem),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.96) 82%),
+    url("./assets/kol-bg-track.jpg") center / cover no-repeat,
+    #030303;
+}
+
+.race-summary-grid::before,
+.reward-pots-section::before,
+#how-it-works::before,
+.bracket-section::before,
+#standings::before,
+#schedule::before,
+#kols::before,
+#resources::before,
+.faq-section::before {
+  inset: -58px -30px -64px;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.32) 44%, rgba(0, 0, 0, 0.9)),
+    radial-gradient(circle at 13% 23%, rgba(255, 194, 67, 0.23), transparent 27rem),
+    radial-gradient(circle at 88% 36%, rgba(255, 111, 26, 0.14), transparent 26rem),
+    linear-gradient(115deg, transparent 0 55%, rgba(255, 194, 67, 0.12) 55% 56%, transparent 56%),
+    var(--section-bg, none);
+  background-position: center;
+  background-size: cover;
+  opacity: var(--section-bg-opacity, 0.92);
+  filter: saturate(1.18) contrast(1.1);
+}
+
+.reward-pots-section,
+.race-summary-grid,
+#how-it-works {
+  --section-bg: url("./assets/kol-bg-lower.jpg");
+  --section-bg-opacity: 0.92;
+}
+
+.bracket-section,
+#standings,
+#schedule,
+#kols,
+#resources,
+.faq-section {
+  --section-bg: url("./assets/kol-bg-lower.jpg");
+  --section-bg-opacity: 0.9;
+}
+
+.hero-broadcast,
+.dashboard-card,
+.hero-race-card,
+.mini-pot,
+.step-card,
+.format-card,
+.bracket-column,
+.standing-row,
+.schedule-card,
+.kol-card,
+.resource-card,
+.faq-card,
+.live-panel,
+.reward-card {
+  border-color: rgba(255, 194, 67, 0.4);
+  background:
+    linear-gradient(180deg, rgba(37, 23, 8, 0.74), rgba(0, 0, 0, 0.84)),
+    rgba(2, 2, 2, 0.66);
+  box-shadow:
+    0 28px 86px rgba(0, 0, 0, 0.62),
+    0 0 34px rgba(255, 174, 23, 0.08),
+    inset 0 1px 0 rgba(255, 247, 219, 0.11),
+    inset 0 -1px 0 rgba(255, 174, 23, 0.1);
+  backdrop-filter: blur(20px) saturate(1.18);
+}
+
+.final-cinematic {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.34) 48%, rgba(0, 0, 0, 0.84)),
+    radial-gradient(circle at 50% 48%, rgba(255, 213, 112, 0.26), transparent 27rem),
+    linear-gradient(90deg, transparent, rgba(255, 194, 67, 0.16), transparent),
+    url("./assets/kol-bg-lower.jpg") center / cover no-repeat,
+    #030303;
+}
+
+.section-heading {
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+.section-heading p:last-child,
+.track-subtitle {
+  position: relative;
+  z-index: 2;
+  color: rgba(255, 239, 207, 0.9);
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.72);
+}
+
+.section-heading h2,
+.track-header h2 {
+  margin-bottom: 10px;
+}
+
+.pump-title,
+.section-heading h2,
+.track-header h2,
+.live-titlebar h1,
+.final-cinematic p,
+.king-hill-wordmark,
+.king-hill-panel .card-label,
+.race-result span {
+  color: #ffb10a;
+  font-family: Impact, "Arial Black", "Teko", var(--headline-font);
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  transform: skewX(-10deg) rotate(-1deg) scaleX(1.05);
+  transform-origin: left bottom;
+  -webkit-text-stroke: 1.55px rgba(56, 14, 0, 0.96);
+  background:
+    linear-gradient(180deg, #fff08f 0%, #ffd12a 14%, #ffad13 33%, #ff7e05 56%, #e14d00 76%, #8b2100 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(2px 2px 0 rgba(197, 62, 0, 0.98))
+    drop-shadow(5px 6px 0 rgba(129, 32, 0, 0.98))
+    drop-shadow(9px 11px 0 rgba(50, 9, 0, 0.9))
+    drop-shadow(0 0 16px rgba(255, 194, 67, 0.42))
+    drop-shadow(0 0 34px rgba(255, 125, 0, 0.2));
+  text-shadow:
+    0 -2px 0 rgba(255, 255, 224, 0.36),
+    0 2px 0 rgba(255, 244, 168, 0.18),
+    0 0 26px rgba(255, 214, 77, 0.5),
+    0 12px 18px rgba(0, 0, 0, 0.72);
+}
+
+.pump-title {
+  margin-bottom: 30px;
+  font-size: 9rem;
+  line-height: 0.76;
+}
+
+.section-heading h2,
+.track-header h2 {
+  max-width: 1060px;
+  font-size: 5.85rem;
+  line-height: 0.78;
+}
+
+.live-titlebar h1 {
+  font-size: 6.4rem;
+  line-height: 0.78;
+}
+
+.king-hill-wordmark {
+  font-size: 4.35rem;
+  line-height: 0.78;
+  text-transform: lowercase;
+}
+
+.final-cinematic p {
+  font-size: 5.2rem;
+}
+
+@media (max-width: 1180px) {
+  .pump-title {
+    font-size: 6.7rem;
+  }
+
+  .section-heading h2,
+  .track-header h2 {
+    font-size: 4.8rem;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    background-position: center top;
+  }
+
+  .site-shell::before {
+    top: 500px;
+    right: -20px;
+    left: -20px;
+  }
+
+  .hero-section::before {
+    top: -92px;
+    bottom: -52px;
+    background-position: 52% top;
+  }
+
+  .pump-title,
+  .section-heading h2,
+  .track-header h2,
+  .live-titlebar h1,
+  .final-cinematic p,
+  .king-hill-wordmark {
+    transform: skewX(-8deg) rotate(-0.5deg);
+  }
+
+  .pump-title {
+    font-size: 3.05rem;
+    line-height: 0.82;
+  }
+
+  .section-heading h2,
+  .track-header h2,
+  .live-titlebar h1,
+  .final-cinematic p {
+    max-width: calc(100vw - 34px);
+    font-size: 2.75rem;
+    line-height: 0.84;
+  }
+
+  .king-hill-wordmark {
+    font-size: 2.25rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .loading-logo,
   .loading-race-line::before,
