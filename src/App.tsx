@@ -127,7 +127,7 @@ const faqs = [
   ],
   [
     "How do tournaments work?",
-    "Season 1 starts with eight 4-KOL Round 1 races at 8 hours each. Round 2 has two 4-KOL battles at 10 hours each. The Grand Final is a 20-hour 1v1.",
+    "Season 1 starts with eight public 4-KOL Round 1 races at 8 hours each, with a 1-hour intermission between races. Round 2 has two 4-KOL battles at 10 hours each. The Grand Final is a 20-hour 1v1.",
   ],
   [
     "When are payouts?",
@@ -551,7 +551,7 @@ function TrackSection({
           <p className="eyebrow">Season 1 · {race.label}</p>
           <h2 id="track-title">{isLiveRaceActive ? "Live tournament race" : "Next race begins soon"}</h2>
           <p className="track-subtitle">
-            32 KOLs enter Season 1. Round 1 races run 8 hours. Round 2 runs 10 hours. The Grand Final is a 20-hour 1v1.
+            32 KOLs enter Season 1. Round 1 races run 8 hours with a 1-hour intermission. Round 2 runs 10 hours. The Grand Final is a 20-hour 1v1.
           </p>
         </div>
         <div className="track-header-actions">
@@ -1080,7 +1080,7 @@ function RaceSchedule({
       <SectionHeading
         eyebrow="Upcoming Matches"
         title="Upcoming Matches"
-        copy="Future rounds stay hidden until the bracket earns them."
+        copy="Round 1 matchups are public in official seed order with a 1-hour intermission between races."
       />
       <div className="schedule-strip">
         {schedule.map((race, index) => (
@@ -1568,7 +1568,7 @@ function buildLeagueField(
 }
 
 function buildSchedule(currentRace: RaceInterval, upcomingRaces: RaceInterval[]): RaceInterval[] {
-  return [currentRace, ...upcomingRaces.filter((race) => race.id !== currentRace.id)].slice(0, 7);
+  return [currentRace, ...upcomingRaces.filter((race) => race.id !== currentRace.id)];
 }
 
 function formatTimeRange(race: RaceInterval): string {

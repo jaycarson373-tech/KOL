@@ -27,26 +27,31 @@ VITE_TELEGRAM_URL=your_telegram_link
 VITE_CA_URL=your_contract_address_link
 ```
 
-KOL profiles live in `src/data/kols.ts`. Replace the placeholder names, X URLs,
-profile images, token contract addresses, trade links, wins, losses, and starting
-market caps there.
+KOL profiles live in `src/data/kols.ts`. The Season 1 roster is ordered there,
+with profile images stored under `public/kols` and referenced as stable
+`/kols/...jpg` paths. Add token contract addresses, trade links, wins, losses,
+and starting market caps there as they become available.
 
 Market-cap ranking uses local placeholder caps by default. When
 `VITE_ENABLE_LIVE_MARKET_CAPS=true`, the app checks Dexscreener by token CA for
 market cap while keeping Helius wired for Solana token metadata lookups.
 
-The current UI uses a professional race-dashboard theme with Lambo-style KOL racers.
+The current UI uses a professional race-dashboard theme with KOL race cars.
 When `VITE_KOL_TOKEN_CA` is empty, the header shows `CA Soon`. Once the mint is
 set, the header and footer link to `VITE_CA_URL` or Solscan by default.
 
 ## Railway Worker
 
-Run `supabase/schema.sql` in Supabase, then seed the current placeholder KOLs
-and races with:
+Run `supabase/schema.sql` in Supabase, then seed the current KOL roster and
+public Round 1 race schedule with:
 
 ```bash
 npm run seed:worker
 ```
+
+Set `SEASON_ONE_START_AT` before running the seed if the first race should
+start at a different time. The fallback schedule uses 8-hour Round 1 races with
+a 1-hour intermission between each race.
 
 Railway should run `npm run worker` with the variables from `.env.example`.
 Use `WORKER_MODE=daemon` for polling or `WORKER_MODE=cron` for one tick per
