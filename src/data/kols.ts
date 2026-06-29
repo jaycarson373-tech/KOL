@@ -282,7 +282,7 @@ export const kols: KolProfile[] = officialRoster.map((kol, index) => ({
   marketCapUsd: 0,
 }));
 
-const defaultSeasonOneStartsAt = "2026-06-29T21:01:51.000Z";
+const defaultSeasonOneStartsAt = "2026-06-29T21:01:14.000Z";
 const importMetaEnv = (import.meta as { env?: Record<string, string | undefined> }).env;
 const configuredSeasonOneStartsAt =
   (typeof process !== "undefined" ? process.env.SEASON_ONE_START_AT : undefined) ||
@@ -297,14 +297,19 @@ function addHours(value: string, hours: number): string {
 
 function buildRoundOneRace(index: number): RaceInterval {
   const startsAt = addHours(seasonOneStartsAt, index * (roundOneRaceHours + raceIntermissionHours));
+  const endsAt = addHours(startsAt, roundOneRaceHours);
   const entrants = kols.slice(index * 4, index * 4 + 4).map((kol) => kol.id);
+  const now = Date.now();
+  const startMs = new Date(startsAt).getTime();
+  const endMs = new Date(endsAt).getTime();
+  const status = now >= endMs ? "final" : now >= startMs ? "live" : "queued";
 
   return {
     id: `race-${String(index + 1).padStart(2, "0")}`,
     label: `Round 1 · Race ${index + 1}`,
-    status: "queued",
+    status,
     startsAt,
-    endsAt: addHours(startsAt, roundOneRaceHours),
+    endsAt,
     entrants,
     kolFeesSol: 0,
     entrantFeesSol: 0,
@@ -313,8 +318,13 @@ function buildRoundOneRace(index: number): RaceInterval {
 
 const roundOneRaces = Array.from({ length: 8 }, (_, index) => buildRoundOneRace(index));
 
-export const activeRace: RaceInterval = roundOneRaces[0];
-export const upcomingRaces: RaceInterval[] = roundOneRaces.slice(1);
+export const activeRace: RaceInterval =
+  roundOneRaces.find((race) => race.status === "live") ??
+  roundOneRaces.find((race) => race.status === "queued") ??
+  roundOneRaces[roundOneRaces.length - 1];
+export const upcomingRaces: RaceInterval[] = roundOneRaces.filter(
+  (race) => race.id !== activeRace.id && race.status !== "final",
+);
 
 export const tournamentStats: TournamentStats = {
   totalKolBurned: 0,

@@ -15,7 +15,7 @@ interface DexResponse {
 const DEXSCREENER_BATCH_SIZE = 28;
 
 export const liveMarketCapsEnabled =
-  import.meta.env.VITE_ENABLE_LIVE_MARKET_CAPS === "true";
+  import.meta.env.VITE_DISABLE_LIVE_MARKET_CAPS !== "true";
 
 export async function fetchLiveMarketCaps(
   profiles: KolProfile[],

@@ -26,8 +26,9 @@ import {
 } from "./data/kols";
 import kolLogo from "./assets/logo/kol-logo.jpg";
 import { LoadingScreen } from "./components/LoadingScreen";
+import { fetchLiveMarketCaps } from "./services/marketData";
 import { fetchCurrentRaceFeed, type RaceFeed } from "./services/raceFeed";
-import type { KolProfile, PayoutTransaction, RaceEntrant, RaceInterval } from "./types";
+import type { KolProfile, PayoutTransaction, RaceEntrant, RaceInterval, RaceSnapshot } from "./types";
 import {
   buildEntrants,
   formatCompactUsd,
@@ -109,6 +110,38 @@ const fallbackRaceFeed: RaceFeed = {
   isConfigured: false,
 };
 
+const officialKolsById = new Map(kols.map((kol) => [kol.id, kol]));
+
+function mergeOfficialProfileFallbacks(profiles: KolProfile[]): KolProfile[] {
+  const merged = new Map(
+    profiles.map((profile) => {
+      const fallback = officialKolsById.get(profile.id);
+
+      return [
+        profile.id,
+        fallback
+          ? {
+              ...profile,
+              avatarUrl: profile.avatarUrl ?? fallback.avatarUrl,
+              contractAddress: profile.contractAddress ?? fallback.contractAddress,
+              marketUrl: profile.marketUrl ?? fallback.marketUrl,
+              terminalUrl: profile.terminalUrl ?? fallback.terminalUrl,
+              color: profile.color || fallback.color,
+            }
+          : profile,
+      ] as const;
+    }),
+  );
+
+  for (const kol of kols) {
+    if (!merged.has(kol.id)) {
+      merged.set(kol.id, kol);
+    }
+  }
+
+  return Array.from(merged.values()).sort((left, right) => left.seed - right.seed);
+}
+
 const faqs = [
   [
     "What is King of Liquidity?",
@@ -156,16 +189,36 @@ type SiteNavItem = (typeof siteNavItems)[number][0];
 function App() {
   const [camera, setCamera] = useState<CameraMode>("top");
   const [raceFeed, setRaceFeed] = useState<RaceFeed>(fallbackRaceFeed);
+  const [browserMarketCaps, setBrowserMarketCaps] = useState<RaceSnapshot>({});
   const [isIntroLoading, setIsIntroLoading] = useState(true);
   const [isLoadingWindowOpen, setIsLoadingWindowOpen] = useState(true);
   const [isRaceFeedFetching, setIsRaceFeedFetching] = useState(true);
   const [hasCompletedInitialRaceFetch, setHasCompletedInitialRaceFetch] = useState(false);
-  const currentRace = raceFeed.race ?? fallbackRaceFeed.race!;
-  const raceProfiles = raceFeed.kols.length > 0 ? raceFeed.kols : fallbackRaceFeed.kols;
+  const baseCurrentRace = raceFeed.race ?? fallbackRaceFeed.race!;
+  const raceProfiles = useMemo(
+    () => mergeOfficialProfileFallbacks(raceFeed.kols.length > 0 ? raceFeed.kols : fallbackRaceFeed.kols),
+    [raceFeed.kols],
+  );
+  const currentRace = useMemo(
+    () => ({
+      ...baseCurrentRace,
+      liveMarketCaps: {
+        ...(baseCurrentRace.liveMarketCaps ?? {}),
+        ...browserMarketCaps,
+      },
+    }),
+    [baseCurrentRace, browserMarketCaps],
+  );
   const currentUpcomingRaces =
     raceFeed.upcomingRaces.length > 0 ? raceFeed.upcomingRaces : fallbackRaceFeed.upcomingRaces;
   const payoutTransactions = raceFeed.payoutTransactions;
-  const isLiveRaceActive = raceFeed.isLiveRaceActive && currentRace.status === "live";
+  const now = Date.now();
+  const isRaceClockLive =
+    new Date(currentRace.startsAt).getTime() <= now &&
+    now < new Date(currentRace.endsAt).getTime() &&
+    currentRace.status !== "final" &&
+    currentRace.status !== "paused";
+  const isLiveRaceActive = (raceFeed.isLiveRaceActive || isRaceClockLive) && currentRace.status !== "final";
   const countdownEndsAt = useMemo(
     () => getCountdownTarget(currentRace, isLiveRaceActive),
     [currentRace.endsAt, currentRace.id, currentRace.startsAt, isLiveRaceActive],
@@ -236,6 +289,59 @@ function App() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    let interval: number | undefined;
+    const entrantIds = new Set(currentRace.entrants);
+    const currentProfiles = raceProfiles.filter(
+      (profile) => entrantIds.has(profile.id) && profile.contractAddress,
+    );
+
+    const loadBrowserMarketCaps = () => {
+      if (currentProfiles.length === 0) {
+        setBrowserMarketCaps({});
+        return;
+      }
+
+      fetchLiveMarketCaps(currentProfiles)
+        .then((caps) => {
+          if (!isMounted) {
+            return;
+          }
+
+          const recordedAt = new Date().toISOString();
+          setBrowserMarketCaps(
+            Object.fromEntries(
+              Object.entries(caps).map(([id, marketCapUsd]) => [
+                id,
+                {
+                  marketCapUsd,
+                  priceUsd: null,
+                  source: "dexscreener" as const,
+                  recordedAt,
+                },
+              ]),
+            ),
+          );
+        })
+        .catch(() => {
+          if (isMounted) {
+            setBrowserMarketCaps({});
+          }
+        });
+    };
+
+    loadBrowserMarketCaps();
+    interval = window.setInterval(loadBrowserMarketCaps, 30_000);
+
+    return () => {
+      isMounted = false;
+      if (interval) {
+        window.clearInterval(interval);
+      }
+    };
+  }, [currentRace.id, currentRace.entrants, raceProfiles]);
 
   const entrants = useMemo(
     () => buildEntrants(currentRace, raceProfiles, isLiveRaceActive),
@@ -514,7 +620,7 @@ function HeroSection({
           <MiniPot label="Winner holders" value={formatSol(splitAmounts.winnerHolders)} />
           <MiniPot label="Burn + vault" value={formatSol(splitAmounts.buybackBurn + splitAmounts.finalsVault)} />
         </div>
-        <Countdown countdown={countdown} label={isLiveRaceActive ? "Next snapshot" : "Race opens"} />
+        <Countdown countdown={countdown} label={isLiveRaceActive ? "Race ends in" : "Race opens"} />
       </aside>
     </section>
   );
@@ -546,7 +652,7 @@ function TrackSection({
           </p>
         </div>
         <div className="track-header-actions">
-          <Countdown countdown={countdown} label={isLiveRaceActive ? "Race closes" : "Race opens"} />
+          <Countdown countdown={countdown} label={isLiveRaceActive ? "Race ends in" : "Race opens"} />
           <a className="primary-cta" href="/track">
             <Radio size={18} aria-hidden="true" />
             Fullscreen
@@ -1302,7 +1408,7 @@ function LiveRacePage({
             <p className="eyebrow">{race.label}</p>
             <h1>The Track</h1>
           </div>
-          <Countdown countdown={countdown} label={isLiveRaceActive ? "Snapshot closes" : "Race opens"} />
+          <Countdown countdown={countdown} label={isLiveRaceActive ? "Race ends in" : "Race opens"} />
         </div>
 
         <div className="camera-row broadcast-controls" role="group" aria-label="Race view">

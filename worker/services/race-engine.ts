@@ -82,7 +82,7 @@ export async function runRaceEngineTick(options: { repo?: SupabaseRepository; no
     }
 
     if (now >= startsAt && now < endsAt) {
-      if (race.status === "scheduled") {
+      if (race.status === "scheduled" || !race.snapshotStart) {
         await startRace(repo, race, entrants);
       } else {
         await updateLiveRace(repo, race, entrants, now);
