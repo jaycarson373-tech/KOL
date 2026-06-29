@@ -5690,6 +5690,207 @@ body {
   }
 }
 
+/* Emergency brand correction: restore hero-led homepage and move dense content to pages. */
+.home-shell {
+  padding-bottom: 112px;
+  background:
+    radial-gradient(circle at 44% 0%, rgba(255, 194, 67, 0.22), transparent 34rem),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.78) 82%),
+    url("./assets/kol-bg-hero.jpg") center top / cover no-repeat fixed,
+    #030303;
+}
+
+.home-shell .hero-section {
+  display: grid;
+  margin-bottom: 28px;
+  padding-bottom: clamp(170px, 15vw, 230px);
+}
+
+.home-shell .hero-content {
+  max-width: 590px;
+  margin-top: clamp(92px, 9vw, 132px);
+}
+
+.home-shell .track-section {
+  max-width: 1220px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.home-shell .content-section {
+  max-width: 1220px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.pump-title {
+  visibility: visible !important;
+  height: auto !important;
+  max-width: 440px;
+  margin-bottom: 12px;
+  overflow: visible !important;
+  font-size: clamp(3.9rem, 5.8vw, 6rem);
+  line-height: 0.78;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background:
+    linear-gradient(180deg, #fff0a8 0%, #ffd04a 18%, #ff9b1d 42%, #dc4b05 68%, #7a1900 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow:
+    1px 1px 0 #ffb13a,
+    3px 3px 0 #c94705,
+    7px 8px 0 #7b1d00,
+    12px 14px 0 #350800,
+    0 0 24px rgba(255, 174, 23, 0.34);
+  filter:
+    drop-shadow(0 16px 24px rgba(0, 0, 0, 0.82))
+    drop-shadow(0 0 22px rgba(255, 111, 26, 0.3));
+}
+
+.home-shell .hero-kicker {
+  max-width: 560px;
+  font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+  line-height: 1.02;
+}
+
+.home-shell .hero-copy {
+  max-width: 570px;
+  margin-bottom: 16px;
+  font-size: clamp(0.94rem, 1.08vw, 1.04rem);
+}
+
+.home-shell .hero-actions {
+  margin-top: 12px;
+}
+
+.track-section--standard {
+  min-height: auto;
+  margin-top: -22px;
+}
+
+.track-section--standard .season-format-strip,
+.track-section--standard .live-race-telemetry {
+  display: none;
+}
+
+.track-section--standard .track-header h2 {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background:
+    linear-gradient(180deg, #ffe89a 0%, #ffba32 34%, #e95a08 72%, #7d1b00 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.track-section--standard .race-track {
+  min-height: clamp(420px, 46vh, 560px);
+}
+
+.dashboard-page-section {
+  display: grid;
+  gap: 18px;
+}
+
+.dashboard-page-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.dashboard-page-grid .race-summary-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.payout-section {
+  --section-bg: url("./assets/finals-atmosphere.jpg");
+  --section-bg-opacity: 0.82;
+}
+
+.payout-list {
+  display: grid;
+  gap: 10px;
+}
+
+.payout-row,
+.payout-empty {
+  border: 1px solid rgba(255, 194, 67, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(34, 20, 7, 0.72), rgba(0, 0, 0, 0.78)),
+    rgba(4, 4, 4, 0.68);
+  box-shadow:
+    0 18px 56px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 247, 219, 0.08);
+}
+
+.payout-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.3fr) repeat(3, minmax(100px, 0.5fr)) auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 86px;
+  padding: 12px;
+}
+
+.payout-row > div,
+.payout-empty {
+  display: grid;
+  gap: 4px;
+}
+
+.payout-row span,
+.payout-row em,
+.payout-empty p {
+  color: rgba(255, 231, 184, 0.72);
+  font-size: 0.76rem;
+  font-style: normal;
+  font-weight: 850;
+}
+
+.payout-row strong,
+.payout-empty strong {
+  color: #fff0b4;
+  font-family: var(--number-font);
+  font-size: 0.98rem;
+  font-weight: 950;
+}
+
+.payout-row > a,
+.payout-muted {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 210, 87, 0.22);
+  border-radius: 8px;
+  color: #ffe8a1;
+  background: rgba(0, 0, 0, 0.34);
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.payout-row--complete {
+  border-color: rgba(121, 255, 168, 0.38);
+}
+
+.payout-row--failed {
+  border-color: rgba(255, 106, 79, 0.44);
+}
+
+@media (max-width: 980px) {
+  .dashboard-page-grid,
+  .dashboard-page-grid .race-summary-grid,
+  .payout-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .loading-logo,
   .loading-race-line::before,

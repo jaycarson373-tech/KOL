@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { KolProfile, RaceInterval, RaceSnapshot, RaceStatus } from "../types";
+import type { KolProfile, PayoutStatus, PayoutTransaction, RaceInterval, RaceSnapshot, RaceStatus } from "../types";
 
 type SupabaseRaceStatus = "scheduled" | "live" | "completed" | "paused";
 
@@ -34,10 +34,27 @@ interface RaceRow {
   entrant_fees_sol: number | string;
 }
 
+interface DistributionRow {
+  id: string;
+  race_id: string;
+  winning_kol_id: string;
+  winner_holders_amount_sol: number | string;
+  kol_airdrop_amount_sol: number | string;
+  winning_kol_bonus_amount_sol: number | string;
+  buyback_burn_amount_sol: number | string;
+  finals_vault_amount_sol: number | string;
+  tx_status: PayoutStatus;
+  ready_at: string;
+  completed_at: string | null;
+  tx_signatures: string[] | null;
+  failed_reason: string | null;
+}
+
 export interface RaceFeed {
   race: RaceInterval | null;
   kols: KolProfile[];
   upcomingRaces: RaceInterval[];
+  payoutTransactions: PayoutTransaction[];
   isLiveRaceActive: boolean;
   isConfigured: boolean;
 }
@@ -105,6 +122,24 @@ function toRaceInterval(row: RaceRow): RaceInterval {
   };
 }
 
+function toPayoutTransaction(row: DistributionRow): PayoutTransaction {
+  return {
+    id: row.id,
+    raceId: row.race_id,
+    winningKolId: row.winning_kol_id,
+    status: row.tx_status,
+    readyAt: row.ready_at,
+    completedAt: row.completed_at,
+    winnerHoldersAmountSol: Number(row.winner_holders_amount_sol),
+    kolAirdropAmountSol: Number(row.kol_airdrop_amount_sol),
+    winningKolBonusAmountSol: Number(row.winning_kol_bonus_amount_sol),
+    buybackBurnAmountSol: Number(row.buyback_burn_amount_sol),
+    finalsVaultAmountSol: Number(row.finals_vault_amount_sol),
+    txSignatures: Array.isArray(row.tx_signatures) ? row.tx_signatures : [],
+    failedReason: row.failed_reason,
+  };
+}
+
 async function fetchKols(): Promise<KolProfile[]> {
   if (!client) {
     return [];
@@ -168,15 +203,36 @@ async function fetchUpcomingRaces(): Promise<RaceInterval[]> {
   return ((data ?? []) as RaceRow[]).map(toRaceInterval);
 }
 
+async function fetchPayoutTransactions(): Promise<PayoutTransaction[]> {
+  if (!client) {
+    return [];
+  }
+
+  const { data, error } = await client
+    .from("distributions")
+    .select(
+      "id,race_id,winning_kol_id,winner_holders_amount_sol,kol_airdrop_amount_sol,winning_kol_bonus_amount_sol,buyback_burn_amount_sol,finals_vault_amount_sol,tx_status,ready_at,completed_at,tx_signatures,failed_reason",
+    )
+    .order("created_at", { ascending: false })
+    .limit(12);
+
+  if (error) {
+    throw error;
+  }
+
+  return ((data ?? []) as DistributionRow[]).map(toPayoutTransaction);
+}
+
 export async function fetchCurrentRaceFeed(): Promise<RaceFeed | null> {
   if (!client) {
     return null;
   }
 
-  const [kols, liveRace, scheduledRaces] = await Promise.all([
+  const [kols, liveRace, scheduledRaces, payoutTransactions] = await Promise.all([
     fetchKols(),
     fetchLiveRace(),
     fetchUpcomingRaces(),
+    fetchPayoutTransactions(),
   ]);
   const race = liveRace ?? scheduledRaces[0] ?? null;
 
@@ -184,6 +240,7 @@ export async function fetchCurrentRaceFeed(): Promise<RaceFeed | null> {
     race,
     kols,
     upcomingRaces: liveRace ? scheduledRaces : scheduledRaces.slice(1),
+    payoutTransactions,
     isLiveRaceActive: race?.status === "live",
     isConfigured: true,
   };

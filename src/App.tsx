@@ -28,7 +28,7 @@ import {
 import kolLogo from "./assets/logo/kol-logo.jpg";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { fetchCurrentRaceFeed, type RaceFeed } from "./services/raceFeed";
-import type { KolProfile, RaceEntrant, RaceInterval } from "./types";
+import type { KolProfile, PayoutTransaction, RaceEntrant, RaceInterval } from "./types";
 import {
   buildEntrants,
   formatCompactUsd,
@@ -82,10 +82,12 @@ const buyKolUrl = publicEnv("VITE_BUY_KOL_URL") || officialLinks.pump;
 
 const resources = [
   ["Live Race", "/#track", Radio],
+  ["Dashboard", "/dashboard", WalletCards],
   ["Standings", "/standings", Trophy],
   ["Bracket", "/bracket", Route],
   ["Schedule", "/schedule", CalendarDays],
   ["Current KOLs", "/kols", Users],
+  ["How It Works", "/how-it-works", HelpCircle],
   ["Pump.fun", officialLinks.pump, Flame],
   ["Buy $KOL", buyKolUrl, CircleDollarSign],
   ["X", officialLinks.x, ArrowUpRight],
@@ -101,6 +103,7 @@ const fallbackRaceFeed: RaceFeed = {
   },
   kols,
   upcomingRaces: fallbackUpcomingRaces,
+  payoutTransactions: [],
   isLiveRaceActive: activeRace.status === "live",
   isConfigured: false,
 };
@@ -138,15 +141,13 @@ const faqs = [
 
 const siteNavItems = [
   ["track", "The Track", "#track"],
+  ["dashboard", "Dashboard", "/dashboard"],
   ["standings", "Standings", "/standings"],
   ["bracket", "Bracket", "/bracket"],
   ["schedule", "Schedule", "/schedule"],
   ["kols", "KOLs", "/kols"],
+  ["how", "How It Works", "/how-it-works"],
   ["faq", "FAQ", "/faq"],
-  ["buy", "Buy $KOL", buyKolUrl],
-  ["dex", "Dex", officialLinks.dex],
-  ["twitter", "X", officialLinks.x],
-  ["telegram", "Telegram", officialLinks.telegram],
 ] as const;
 
 type SiteNavItem = (typeof siteNavItems)[number][0];
@@ -162,6 +163,7 @@ function App() {
   const raceProfiles = raceFeed.kols.length > 0 ? raceFeed.kols : fallbackRaceFeed.kols;
   const currentUpcomingRaces =
     raceFeed.upcomingRaces.length > 0 ? raceFeed.upcomingRaces : fallbackRaceFeed.upcomingRaces;
+  const payoutTransactions = raceFeed.payoutTransactions;
   const isLiveRaceActive = raceFeed.isLiveRaceActive && currentRace.status === "live";
   const countdownEndsAt = useMemo(
     () => getCountdownTarget(currentRace, isLiveRaceActive),
@@ -282,6 +284,20 @@ function App() {
     );
   }
 
+  if (currentPath === "/dashboard" || currentPath === "/rewards" || currentPath === "/payouts") {
+    return (
+      <RoutedPage activeItem="dashboard" pageClassName="page-shell--dashboard" loading={shouldShowLoadingScreen}>
+        <RewardDashboard
+          entrants={entrants}
+          isLiveRaceActive={isLiveRaceActive}
+          payoutTransactions={payoutTransactions}
+          race={currentRace}
+          splitAmounts={splitAmounts}
+        />
+      </RoutedPage>
+    );
+  }
+
   if (currentPath === "/bracket") {
     return (
       <RoutedPage activeItem="bracket" pageClassName="page-shell--bracket" loading={shouldShowLoadingScreen}>
@@ -308,7 +324,7 @@ function App() {
 
   if (currentPath === "/how-it-works") {
     return (
-      <RoutedPage pageClassName="page-shell--how" loading={shouldShowLoadingScreen}>
+      <RoutedPage activeItem="how" pageClassName="page-shell--how" loading={shouldShowLoadingScreen}>
         <HowItWorks />
       </RoutedPage>
     );
@@ -326,38 +342,24 @@ function App() {
     <>
       <main className="site-shell home-shell">
         <SiteHeader activeItem="track" />
+        <HeroSection
+          countdown={countdown}
+          entrants={entrants}
+          isLiveRaceActive={isLiveRaceActive}
+          race={currentRace}
+          splitAmounts={splitAmounts}
+        />
         <TrackSection
           countdown={countdown}
           entrants={entrants}
           isLiveRaceActive={isLiveRaceActive}
           race={currentRace}
           splitAmounts={splitAmounts}
-          variant="hero"
+          variant="standard"
         />
-        <Standings
-          copy="Top KOLs by tournament position, record, average gain, and live trend."
-          eyebrow="Leaderboard"
-          limit={10}
-          standings={standings}
-          title="The board below the broadcast."
-        />
-        <section className="content-section reward-pots-section" aria-labelledby="rewards-title">
-          <SectionHeading
-            eyebrow="Reward Pots"
-            title="Live money on the line."
-            copy="Every race pays winner holders, $KOL holders, the winning KOL championship bonus, buyback and burn, and the championship vault."
-          />
-          <RewardPots splitAmounts={splitAmounts} />
-          <CurrentRaceSummary
-            entrants={entrants}
-            isLiveRaceActive={isLiveRaceActive}
-            race={currentRace}
-            splitAmounts={splitAmounts}
-          />
-        </section>
         <RaceSchedule currentRace={currentRace} upcomingRaces={currentUpcomingRaces} />
-        <KolGrid field={field} />
         <SiteFooter />
+        <KolOsNav />
       </main>
       <LoadingScreen active={shouldShowLoadingScreen} />
     </>
@@ -473,7 +475,7 @@ function HeroSection({
     <section className="hero-section" aria-labelledby="hero-title">
       <div className="hero-content">
         <p className="eyebrow">Season 1 · Live Tournament</p>
-        <h1 className="pump-title" id="hero-title">King of Liquidity</h1>
+        <h1 className="pump-title" id="hero-title">KING OF LIQUIDITY</h1>
         <p className="hero-kicker">32 KOLs. One Tournament. One Crown.</p>
         <p className="hero-copy">
           Four KOLs enter The Track. Market cap performance decides who
@@ -709,6 +711,102 @@ function CurrentRaceSummary({
         <SummaryMetric label="Championship Vault" value={formatSol(splitAmounts.finalsVault)} />
       </div>
     </div>
+  );
+}
+
+function RewardDashboard({
+  entrants,
+  isLiveRaceActive,
+  payoutTransactions,
+  race,
+  splitAmounts,
+}: {
+  entrants: RaceEntrant[];
+  isLiveRaceActive: boolean;
+  payoutTransactions: PayoutTransaction[];
+  race: RaceInterval;
+  splitAmounts: ReturnType<typeof getSplitAmounts>;
+}) {
+  return (
+    <>
+      <section className="content-section reward-pots-section dashboard-page-section" aria-labelledby="dashboard-title">
+        <SectionHeading
+          eyebrow="Reward Dashboard"
+          title="Rewards, vaults, and payout status."
+          copy="Live race pots, split buckets, current leader, and real payout transactions once the worker queues them."
+        />
+        <div className="dashboard-page-grid">
+          <RewardPots splitAmounts={splitAmounts} />
+          <CurrentRaceSummary
+            entrants={entrants}
+            isLiveRaceActive={isLiveRaceActive}
+            race={race}
+            splitAmounts={splitAmounts}
+          />
+        </div>
+      </section>
+      <PayoutTransactions payoutTransactions={payoutTransactions} />
+    </>
+  );
+}
+
+function PayoutTransactions({ payoutTransactions }: { payoutTransactions: PayoutTransaction[] }) {
+  return (
+    <section className="content-section payout-section" id="payouts" aria-labelledby="payouts-title">
+      <SectionHeading
+        eyebrow="Payout Transactions"
+        title="Worker execution feed."
+        copy="Queued, ready, completed, and failed payout records from Supabase. No fake transaction data is shown."
+      />
+      <div className="payout-list">
+        {payoutTransactions.length > 0 ? (
+          payoutTransactions.map((payout) => {
+            const total =
+              payout.winnerHoldersAmountSol +
+              payout.kolAirdropAmountSol +
+              payout.winningKolBonusAmountSol +
+              payout.buybackBurnAmountSol +
+              payout.finalsVaultAmountSol;
+
+            return (
+              <article className={`payout-row payout-row--${payout.status}`} key={payout.id}>
+                <div>
+                  <span className="card-label">{payout.status}</span>
+                  <strong>{payout.id}</strong>
+                  <em>{payout.raceId}</em>
+                </div>
+                <div>
+                  <span>Total</span>
+                  <strong>{formatSol(total)}</strong>
+                </div>
+                <div>
+                  <span>Ready</span>
+                  <strong>{formatDateTime(payout.readyAt)}</strong>
+                </div>
+                <div>
+                  <span>Txs</span>
+                  <strong>{payout.txSignatures.length}</strong>
+                </div>
+                {payout.txSignatures.length > 0 ? (
+                  <a href={`https://solscan.io/tx/${payout.txSignatures[0]}`} target="_blank" rel="noreferrer">
+                    First Tx
+                    <ArrowUpRight size={15} aria-hidden="true" />
+                  </a>
+                ) : (
+                  <span className="payout-muted">{payout.failedReason ?? "Waiting for execution"}</span>
+                )}
+              </article>
+            );
+          })
+        ) : (
+          <div className="dashboard-card payout-empty">
+            <span className="card-label">No payouts yet</span>
+            <strong>Transactions will appear after a race closes and the worker queues a distribution.</strong>
+            <p>Keep payout execution off during the first test run. The dashboard will still show queued and ready records when they exist.</p>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -1106,12 +1204,13 @@ function Faq() {
 
 function KolOsNav() {
   const nav = [
-    ["The Track", "#track", Radio],
-    ["Standings", "#standings", Trophy],
-    ["Bracket", "#bracket", Route],
-    ["KOLs", "#kols", Users],
-    ["Links", "#resources", ArrowUpRight],
-    ["FAQ", "#faq", HelpCircle],
+    ["The Track", "/#track", Radio],
+    ["Dashboard", "/dashboard", WalletCards],
+    ["Standings", "/standings", Trophy],
+    ["Bracket", "/bracket", Route],
+    ["Schedule", "/schedule", CalendarDays],
+    ["KOLs", "/kols", Users],
+    ["How It Works", "/how-it-works", HelpCircle],
     ["Buy $KOL", buyKolUrl, CircleDollarSign],
     ["Dex", officialLinks.dex, BarChart3],
     ["X", officialLinks.x, ArrowUpRight],
@@ -1460,6 +1559,20 @@ function buildSchedule(currentRace: RaceInterval, upcomingRaces: RaceInterval[])
 function formatTimeRange(race: RaceInterval): string {
   const start = new Date(race.startsAt);
   return start.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function formatDateTime(value: string): string {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) {
+    return "Pending";
+  }
+
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
     hour: "numeric",
     minute: "2-digit",
   });

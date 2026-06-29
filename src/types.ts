@@ -50,6 +50,24 @@ export interface RaceInterval {
   liveMarketCaps?: RaceSnapshot | null;
 }
 
+export type PayoutStatus = "queued" | "ready" | "complete" | "failed";
+
+export interface PayoutTransaction {
+  id: string;
+  raceId: string;
+  winningKolId: string;
+  status: PayoutStatus;
+  readyAt: string;
+  completedAt?: string | null;
+  winnerHoldersAmountSol: number;
+  kolAirdropAmountSol: number;
+  winningKolBonusAmountSol: number;
+  buybackBurnAmountSol: number;
+  finalsVaultAmountSol: number;
+  txSignatures: string[];
+  failedReason?: string | null;
+}
+
 export interface TournamentStats {
   totalKolBurned: number;
   solAirdropped: number;
