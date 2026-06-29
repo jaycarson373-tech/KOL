@@ -108,7 +108,7 @@ const fallbackRaceFeed: RaceFeed = {
 const faqs = [
   [
     "What is King of Liquidity?",
-    "Season One is a 32-KOL tournament where market cap performance decides who advances toward the crown.",
+    "Season 1 is a 32-KOL tournament where market cap performance decides who advances toward the crown.",
   ],
   [
     "How does a race work?",
@@ -124,15 +124,15 @@ const faqs = [
   ],
   [
     "How do tournaments work?",
-    "Round 1 has eight 4-KOL races at 8 hours each. Elite 8 has two 4-KOL races at 10 hours each. The Grand Final is a 20-hour 1v1.",
+    "Season 1 starts with eight 4-KOL Round 1 races at 8 hours each. Round 2 has two 4-KOL battles at 10 hours each. The Grand Final is a 20-hour 1v1.",
   ],
   [
     "When are payouts?",
     "Payout plans are generated after race snapshots, then executed by the Railway worker once payout execution is enabled.",
   ],
   [
-    "How does Season Two work?",
-    "After the King is crowned, Season Two begins with a fresh field and a new path to the title.",
+    "How does Season 2 work?",
+    "After the King is crowned, Season 2 begins with a fresh field and a new path to the title.",
   ],
 ] as const;
 
@@ -472,7 +472,7 @@ function HeroSection({
   return (
     <section className="hero-section" aria-labelledby="hero-title">
       <div className="hero-content">
-        <p className="eyebrow">Season One · Live Tournament</p>
+        <p className="eyebrow">Season 1 · Live Tournament</p>
         <h1 className="pump-title" id="hero-title">King of Liquidity</h1>
         <p className="hero-kicker">32 KOLs. One Tournament. One Crown.</p>
         <p className="hero-copy">
@@ -531,9 +531,11 @@ function TrackSection({
     <section className={`track-section track-section--${variant}`} id="track" aria-labelledby="track-title">
       <div className="track-header">
         <div>
-          <p className="eyebrow">{race.label}</p>
+          <p className="eyebrow">Season 1 · {race.label}</p>
           <h2 id="track-title">{isLiveRaceActive ? "Live tournament race" : "Next race begins soon"}</h2>
-          <p className="track-subtitle">{race.label}</p>
+          <p className="track-subtitle">
+            32 KOLs enter Season 1. Round 1 races run 8 hours. Round 2 runs 10 hours. The Grand Final is a 20-hour 1v1.
+          </p>
         </div>
         <div className="track-header-actions">
           <Countdown countdown={countdown} label={isLiveRaceActive ? "Race closes" : "Race opens"} />
@@ -544,6 +546,7 @@ function TrackSection({
         </div>
       </div>
       <RaceTrack entrants={entrants} camera="top" isLiveRaceActive={isLiveRaceActive} />
+      <SeasonFormatStrip />
       <KingOfHillBanner entrants={entrants} isLiveRaceActive={isLiveRaceActive} race={race} />
       {splitAmounts ? (
         <LiveRaceTelemetry
@@ -555,6 +558,27 @@ function TrackSection({
       ) : null}
       {race.status === "final" ? <RaceResult entrants={entrants} race={race} /> : null}
     </section>
+  );
+}
+
+function SeasonFormatStrip() {
+  const format = [
+    ["Season 1", "32 KOLs", "One tournament. One crown."],
+    ["Round 1", "8 hours", "8 races · 4 KOLs per race"],
+    ["Round 2", "10 hours", "8 winners · 2 battles of 4"],
+    ["Finals", "20 hours", "1v1 for King of Liquidity"],
+  ] as const;
+
+  return (
+    <div className="season-format-strip" aria-label="Season 1 tournament format">
+      {format.map(([label, value, detail]) => (
+        <article className="season-format-card" key={label}>
+          <span>{label}</span>
+          <strong>{value}</strong>
+          <em>{detail}</em>
+        </article>
+      ))}
+    </div>
   );
 }
 
@@ -780,7 +804,7 @@ function RewardPots({ splitAmounts }: { splitAmounts: ReturnType<typeof getSplit
 function HowItWorks() {
   const steps = [
     ["Step 1", "Hold 250K+ $KOL"],
-    ["Step 2", "4 KOLs enter The Track"],
+    ["Step 2", "4 KOLs enter each Season 1 race"],
     ["Step 3", "Highest ending market cap performance wins"],
     ["Step 4", "Creator fees split 50% / 20% / 10% / 10% / 10%"],
     ["Step 5", "Winner advances. Losers are eliminated."],
@@ -813,9 +837,9 @@ function TournamentBracket() {
       matches: ["R32 Race 1", "R32 Race 2", "R32 Race 3", "R32 Race 4", "R32 Race 5", "R32 Race 6", "R32 Race 7", "R32 Race 8"],
     },
     {
-      label: "Elite 8",
-      detail: "2 races · 4 KOLs each · 10 hours",
-      matches: ["Elite Race 1", "Elite Race 2"],
+      label: "Round 2 · Elite 8",
+      detail: "2 battles · 4 winners each · 10 hours",
+      matches: ["Round 2 Battle 1", "Round 2 Battle 2"],
     },
     {
       label: "Grand Final",
@@ -824,7 +848,7 @@ function TournamentBracket() {
     },
     {
       label: "King of Liquidity",
-      detail: "Season One champion",
+      detail: "Season 1 champion",
       matches: ["Crowned"],
     },
   ];
@@ -833,17 +857,17 @@ function TournamentBracket() {
     <section className="content-section bracket-section" id="bracket" aria-labelledby="bracket-title">
       <SectionHeading
         eyebrow="Tournament Bracket"
-        title="32 enter. One survives."
-        copy="Round of 32 moves through eight opening races, into the Elite 8, then a 20-hour Grand Final for the crown."
+        title="Season 1: 32 enter. One survives."
+        copy="Round 1 has eight 8-hour races. Round 2 brings the eight winners into two 10-hour battles. The Grand Final is a 20-hour 1v1 for the crown."
       />
       <div className="league-format">
         <div className="format-stats">
           <MetricPill label="Season Field" value="32 KOLs" />
-          <MetricPill label="Opening Round" value="8 races" />
-          <MetricPill label="Elite 8" value="2 races" />
-          <MetricPill label="Grand Final" value="1v1" />
+          <MetricPill label="Round 1" value="8h races" />
+          <MetricPill label="Round 2" value="10h battles" />
+          <MetricPill label="Grand Final" value="20h 1v1" />
         </div>
-        <div className="bracket" aria-label="Season One tournament bracket">
+        <div className="bracket" aria-label="Season 1 tournament bracket">
           {rounds.map((round, index) => (
             <div className={`bracket-column bracket-column--${index + 1}`} key={round.label}>
               <div className="bracket-node">
@@ -868,7 +892,7 @@ function TournamentBracket() {
 }
 
 function Standings({
-  copy = "Top positions lead the field, contenders stay in the bracket, and eliminated KOLs fall out of Season One.",
+  copy = "Top positions lead the field, contenders stay in the bracket, and eliminated KOLs fall out of Season 1.",
   eyebrow = "Standings",
   limit = 32,
   standings,
@@ -962,7 +986,7 @@ function KolGrid({ field }: { field: LeagueKol[] }) {
       <SectionHeading
         eyebrow="Current KOLs"
         title="The field of 32."
-        copy="Portraits, records, average gain, next match, and profile links for every Season One competitor."
+        copy="Portraits, records, average gain, next match, and profile links for every Season 1 competitor."
       />
       <div className="kol-grid">
         {field.map((kol) => (
@@ -1027,7 +1051,7 @@ function SiteFooter() {
         <img className="brand-logo" src={kolLogo} alt="" aria-hidden="true" />
         <div>
           <strong>King of Liquidity</strong>
-          <span>32 KOLs. One tournament. One crown.</span>
+          <span>Season 1 live. Season 2 begins after the crown.</span>
         </div>
       </div>
       <div className="footer-links">
@@ -1048,12 +1072,12 @@ function SiteFooter() {
 
 function FinalCinematic() {
   return (
-    <section className="final-cinematic" aria-label="Season One closing statement">
+    <section className="final-cinematic" aria-label="Season 1 closing statement">
       <Crown size={34} aria-hidden="true" />
       <p>32 KOLs entered.</p>
       <p>One survived.</p>
       <p>One wears the crown.</p>
-      <strong>Season One is live. Season Two begins after the King is crowned.</strong>
+      <strong>Season 1 is live. Season 2 begins after the King is crowned.</strong>
     </section>
   );
 }
