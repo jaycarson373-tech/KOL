@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -9,6 +9,7 @@ import {
   Flame,
   HelpCircle,
   Medal,
+  Menu,
   Play,
   Radio,
   Route,
@@ -16,6 +17,7 @@ import {
   Trophy,
   Users,
   WalletCards,
+  X,
   Zap,
 } from "lucide-react";
 import {
@@ -49,16 +51,16 @@ interface LeagueKol extends KolProfile {
 }
 
 const resources = [
-  ["Live Race", "/track", Radio],
-  ["Standings", "#standings", Trophy],
-  ["Bracket", "#bracket", Route],
-  ["Schedule", "#schedule", CalendarDays],
-  ["Current KOLs", "#kols", Users],
+  ["Live Race", "/#track", Radio],
+  ["Standings", "/standings", Trophy],
+  ["Bracket", "/bracket", Route],
+  ["Schedule", "/schedule", CalendarDays],
+  ["Current KOLs", "/kols", Users],
   ["Buy $KOL", "#", CircleDollarSign],
   ["DexScreener", "#", BarChart3],
   ["Twitter", "https://x.com", ArrowUpRight],
   ["Telegram", "#", Zap],
-  ["FAQ", "#faq", HelpCircle],
+  ["FAQ", "/faq", HelpCircle],
 ] as const;
 
 const fallbackRaceFeed: RaceFeed = {
@@ -101,6 +103,21 @@ const faqs = [
     "After the King is crowned, Season Two begins with a fresh field and a new path to the title.",
   ],
 ] as const;
+
+const siteNavItems = [
+  ["track", "The Track", "#track"],
+  ["standings", "Standings", "/standings"],
+  ["bracket", "Bracket", "/bracket"],
+  ["schedule", "Schedule", "/schedule"],
+  ["kols", "KOLs", "/kols"],
+  ["faq", "FAQ", "/faq"],
+  ["buy", "Buy $KOL", "#"],
+  ["dex", "Dex", "#"],
+  ["twitter", "Twitter", "https://x.com"],
+  ["telegram", "Telegram", "#"],
+] as const;
+
+type SiteNavItem = (typeof siteNavItems)[number][0];
 
 function App() {
   const [camera, setCamera] = useState<CameraMode>("top");
@@ -225,22 +242,72 @@ function App() {
     );
   }
 
+  if (currentPath === "/standings") {
+    return (
+      <RoutedPage activeItem="standings" pageClassName="page-shell--standings" loading={shouldShowLoadingScreen}>
+        <Standings standings={standings} />
+      </RoutedPage>
+    );
+  }
+
+  if (currentPath === "/bracket") {
+    return (
+      <RoutedPage activeItem="bracket" pageClassName="page-shell--bracket" loading={shouldShowLoadingScreen}>
+        <TournamentBracket />
+      </RoutedPage>
+    );
+  }
+
+  if (currentPath === "/schedule") {
+    return (
+      <RoutedPage activeItem="schedule" pageClassName="page-shell--schedule" loading={shouldShowLoadingScreen}>
+        <RaceSchedule currentRace={currentRace} upcomingRaces={currentUpcomingRaces} />
+      </RoutedPage>
+    );
+  }
+
+  if (currentPath === "/kols") {
+    return (
+      <RoutedPage activeItem="kols" pageClassName="page-shell--kols" loading={shouldShowLoadingScreen}>
+        <KolGrid field={field} />
+      </RoutedPage>
+    );
+  }
+
+  if (currentPath === "/how-it-works") {
+    return (
+      <RoutedPage pageClassName="page-shell--how" loading={shouldShowLoadingScreen}>
+        <HowItWorks />
+      </RoutedPage>
+    );
+  }
+
+  if (currentPath === "/faq") {
+    return (
+      <RoutedPage activeItem="faq" pageClassName="page-shell--faq" loading={shouldShowLoadingScreen}>
+        <Faq />
+      </RoutedPage>
+    );
+  }
+
   return (
     <>
-      <main className="site-shell">
-        <SiteHeader />
-        <HeroSection
-          countdown={countdown}
-          entrants={entrants}
-          isLiveRaceActive={isLiveRaceActive}
-          race={currentRace}
-          splitAmounts={splitAmounts}
-        />
+      <main className="site-shell home-shell">
+        <SiteHeader activeItem="track" />
         <TrackSection
           countdown={countdown}
           entrants={entrants}
           isLiveRaceActive={isLiveRaceActive}
           race={currentRace}
+          splitAmounts={splitAmounts}
+          variant="hero"
+        />
+        <Standings
+          copy="Top KOLs by tournament position, record, average gain, and live trend."
+          eyebrow="Leaderboard"
+          limit={10}
+          standings={standings}
+          title="The board below the broadcast."
         />
         <section className="content-section reward-pots-section" aria-labelledby="rewards-title">
           <SectionHeading
@@ -256,36 +323,78 @@ function App() {
             splitAmounts={splitAmounts}
           />
         </section>
-        <HowItWorks />
-        <TournamentBracket />
-        <Standings standings={standings} />
         <RaceSchedule currentRace={currentRace} upcomingRaces={currentUpcomingRaces} />
         <KolGrid field={field} />
-        <Resources />
-        <Faq />
-        <FinalCinematic />
+        <SiteFooter />
       </main>
-      <KolOsNav />
       <LoadingScreen active={shouldShowLoadingScreen} />
     </>
   );
 }
 
-function SiteHeader() {
+function RoutedPage({
+  activeItem,
+  children,
+  loading,
+  pageClassName,
+}: {
+  activeItem?: SiteNavItem;
+  children: ReactNode;
+  loading: boolean;
+  pageClassName: string;
+}) {
+  return (
+    <>
+      <main className={`site-shell page-shell ${pageClassName}`}>
+        <SiteHeader activeItem={activeItem} />
+        {children}
+        <SiteFooter />
+      </main>
+      <LoadingScreen active={loading} />
+    </>
+  );
+}
+
+function SiteHeader({ activeItem }: { activeItem?: SiteNavItem }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isHomePath = window.location.pathname === "/";
+
   return (
     <header className="site-header">
       <a className="brand-lockup" href="/" aria-label="King of Liquidity home">
         <img className="brand-logo" src={kolLogo} alt="" aria-hidden="true" />
         <strong>King of Liquidity</strong>
       </a>
-      <nav className="site-nav" aria-label="Primary navigation">
-        <a href="#track">Track</a>
-        <a href="#standings">Standings</a>
-        <a href="#bracket">Bracket</a>
-        <a href="#schedule">Schedule</a>
-        <a href="#kols">KOLs</a>
+      <button
+        className="nav-menu-toggle"
+        type="button"
+        aria-controls="primary-nav"
+        aria-expanded={isMenuOpen}
+        aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
+        onClick={() => setIsMenuOpen((open) => !open)}
+      >
+        {isMenuOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
+      </button>
+      <nav className={`site-nav ${isMenuOpen ? "is-open" : ""}`} id="primary-nav" aria-label="Primary navigation">
+        {siteNavItems.map(([id, label, href]) => {
+          const resolvedHref = href.startsWith("#") && !isHomePath ? `/${href}` : href;
+          const isExternal = resolvedHref.startsWith("http");
+
+          return (
+          <a
+            aria-current={activeItem === id ? "page" : undefined}
+            href={resolvedHref}
+            key={id}
+            rel={isExternal ? "noreferrer" : undefined}
+            target={isExternal ? "_blank" : undefined}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            {label}
+          </a>
+          );
+        })}
       </nav>
-      <a className="nav-live" href="/track">
+      <a className="nav-live" href={isHomePath ? "#track" : "/#track"} aria-current={activeItem === "track" ? "page" : undefined}>
         <Radio size={16} aria-hidden="true" />
         The Track
       </a>
@@ -357,17 +466,21 @@ function TrackSection({
   countdown,
   isLiveRaceActive,
   race,
+  splitAmounts,
+  variant = "standard",
 }: {
   entrants: RaceEntrant[];
   countdown: ReturnType<typeof getCountdownParts>;
   isLiveRaceActive: boolean;
   race: RaceInterval;
+  splitAmounts?: ReturnType<typeof getSplitAmounts>;
+  variant?: "standard" | "hero";
 }) {
   return (
-    <section className="track-section" id="track" aria-labelledby="track-title">
+    <section className={`track-section track-section--${variant}`} id="track" aria-labelledby="track-title">
       <div className="track-header">
         <div>
-          <p className="eyebrow">The Track</p>
+          <p className="eyebrow">{race.label}</p>
           <h2 id="track-title">{isLiveRaceActive ? "Live tournament race" : "Next race begins soon"}</h2>
           <p className="track-subtitle">{race.label}</p>
         </div>
@@ -379,10 +492,69 @@ function TrackSection({
           </a>
         </div>
       </div>
-      <KingOfHillBanner entrants={entrants} isLiveRaceActive={isLiveRaceActive} race={race} />
       <RaceTrack entrants={entrants} camera="top" isLiveRaceActive={isLiveRaceActive} />
+      <KingOfHillBanner entrants={entrants} isLiveRaceActive={isLiveRaceActive} race={race} />
+      {splitAmounts ? (
+        <LiveRaceTelemetry
+          entrants={entrants}
+          isLiveRaceActive={isLiveRaceActive}
+          race={race}
+          splitAmounts={splitAmounts}
+        />
+      ) : null}
       {race.status === "final" ? <RaceResult entrants={entrants} race={race} /> : null}
     </section>
+  );
+}
+
+function LiveRaceTelemetry({
+  entrants,
+  isLiveRaceActive,
+  race,
+  splitAmounts,
+}: {
+  entrants: RaceEntrant[];
+  isLiveRaceActive: boolean;
+  race: RaceInterval;
+  splitAmounts: ReturnType<typeof getSplitAmounts>;
+}) {
+  const leader = entrants.find((entrant) => entrant.isLeader) ?? entrants[0];
+  const racePot = getRacePot(race);
+  const stats = [
+    ["Race Pot", formatSol(racePot)],
+    ["Winner Holders", formatSol(splitAmounts.winnerHolders)],
+    ["$KOL Holders", formatSol(splitAmounts.kolAirdrop)],
+    ["Championship Vault", formatSol(splitAmounts.finalsVault)],
+    ["Buyback", formatSol(splitAmounts.buybackBurn)],
+  ] as const;
+
+  return (
+    <div className="live-race-telemetry" aria-label="Live race status">
+      <div className="telemetry-racers">
+        <span className="card-label">Current four racers</span>
+        <div>
+          {entrants.map((entrant) => (
+            <span className={`telemetry-racer ${entrant.isLeader ? "is-leader" : ""}`} key={entrant.id}>
+              <Avatar entrant={entrant} />
+              <strong>{entrant.symbol}</strong>
+              <em>{formatPercentChange(entrant.percentChange)}</em>
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="telemetry-stats">
+        {stats.map(([label, value]) => (
+          <div className="telemetry-stat" key={label}>
+            <span>{label}</span>
+            <strong>{value}</strong>
+          </div>
+        ))}
+      </div>
+      <div className="telemetry-leader">
+        <span>{isLiveRaceActive ? "Current leader" : "Race status"}</span>
+        <strong>{isLiveRaceActive && leader ? leader.name : "Cars parked"}</strong>
+      </div>
+    </div>
   );
 }
 
@@ -644,18 +816,31 @@ function TournamentBracket() {
   );
 }
 
-function Standings({ standings }: { standings: LeagueKol[] }) {
+function Standings({
+  copy = "Top positions lead the field, contenders stay in the bracket, and eliminated KOLs fall out of Season One.",
+  eyebrow = "Standings",
+  limit = 32,
+  standings,
+  title = "Who is still alive?",
+}: {
+  copy?: string;
+  eyebrow?: string;
+  limit?: number;
+  standings: LeagueKol[];
+  title?: string;
+}) {
   return (
     <section className="content-section" id="standings" aria-labelledby="standings-title">
       <SectionHeading
-        eyebrow="Standings"
-        title="Who is still alive?"
-        copy="Top positions lead the field, contenders stay in the bracket, and eliminated KOLs fall out of Season One."
+        eyebrow={eyebrow}
+        title={title}
+        copy={copy}
       />
       <div className="standings-table" role="table" aria-label="Tournament standings">
-        {standings.slice(0, 32).map((kol, index) => {
+        {standings.slice(0, limit).map((kol, index) => {
           const isEliminated = kol.losses > 0 || index >= 24;
           const state = isEliminated ? "Eliminated" : index < 8 ? "Top Seed" : "Contender";
+          const trend = kol.averageGain > 0 ? "Up" : kol.averageGain < 0 ? "Down" : "Flat";
 
           return (
             <article
@@ -677,6 +862,10 @@ function Standings({ standings }: { standings: LeagueKol[] }) {
               <div className="standing-stat">
                 <span>Avg Gain</span>
                 <strong>{kol.averageGain.toFixed(1)}%</strong>
+              </div>
+              <div className={`standing-stat standing-trend standing-trend--${trend.toLowerCase()}`}>
+                <span>Trend</span>
+                <strong>{trend}</strong>
               </div>
               <div className="standing-state">{state}</div>
             </article>
@@ -770,6 +959,28 @@ function Resources() {
   );
 }
 
+function SiteFooter() {
+  return (
+    <footer className="site-footer" aria-label="King of Liquidity footer">
+      <div className="footer-brand">
+        <img className="brand-logo" src={kolLogo} alt="" aria-hidden="true" />
+        <div>
+          <strong>King of Liquidity</strong>
+          <span>32 KOLs. One tournament. One crown.</span>
+        </div>
+      </div>
+      <div className="footer-links">
+        {resources.map(([label, href, Icon]) => (
+          <a href={href} key={label}>
+            <Icon size={15} aria-hidden="true" />
+            <span>{label}</span>
+          </a>
+        ))}
+      </div>
+    </footer>
+  );
+}
+
 function FinalCinematic() {
   return (
     <section className="final-cinematic" aria-label="Season One closing statement">
@@ -852,20 +1063,7 @@ function LiveRacePage({
 }) {
   return (
     <main className="live-shell">
-      <header className="live-header">
-        <a className="brand-lockup" href="/" aria-label="Back to King of Liquidity home">
-          <img className="brand-logo" src={kolLogo} alt="" aria-hidden="true" />
-          <strong>King of Liquidity</strong>
-        </a>
-        <div className="live-header-center">
-          <span className="status-light" />
-          {isLiveRaceActive ? "The Track Feed" : "Next Race"}
-        </div>
-        <a className="secondary-cta compact" href="/">
-          Tournament Home
-          <ArrowRight size={16} aria-hidden="true" />
-        </a>
-      </header>
+      <SiteHeader activeItem="track" />
 
       <section className="live-stage" aria-label="Live race broadcast">
         <div className="live-titlebar">
