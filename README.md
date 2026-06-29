@@ -17,6 +17,14 @@ Copy `.env.example` to `.env` and fill in:
 VITE_HELIUS_API_KEY=your_key
 VITE_ENABLE_LIVE_MARKET_CAPS=true
 VITE_KOL_TOKEN_CA=your_kol_token_ca
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_BUY_KOL_URL=your_primary_buy_link
+VITE_PUMPFUN_URL=your_pump_fun_link
+VITE_X_URL=your_official_x_link
+VITE_DEXSCREENER_URL=your_dexscreener_link
+VITE_TELEGRAM_URL=your_telegram_link
+VITE_CA_URL=your_contract_address_link
 ```
 
 KOL profiles live in `src/data/kols.ts`. Replace the placeholder names, X URLs,
@@ -28,6 +36,8 @@ Market-cap ranking uses local placeholder caps by default. When
 market cap while keeping Helius wired for Solana token metadata lookups.
 
 The current UI uses a professional race-dashboard theme with Lambo-style KOL racers.
+When `VITE_KOL_TOKEN_CA` is empty, the header shows `CA Soon`. Once the mint is
+set, the header and footer link to `VITE_CA_URL` or Solscan by default.
 
 ## Railway Worker
 

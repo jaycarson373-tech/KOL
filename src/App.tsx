@@ -50,16 +50,48 @@ interface LeagueKol extends KolProfile {
   isPlaceholder?: boolean;
 }
 
+function publicEnv(key: string): string {
+  const env = import.meta.env as unknown as Record<string, string | undefined>;
+  return env[key]?.trim() ?? "";
+}
+
+function isExternalHref(href: string): boolean {
+  return href.startsWith("http://") || href.startsWith("https://");
+}
+
+function shortAddress(address: string): string {
+  return address.length > 10 ? `${address.slice(0, 4)}...${address.slice(-4)}` : address;
+}
+
+const kolContractAddress = publicEnv("VITE_KOL_TOKEN_CA") || publicEnv("VITE_KOL_MINT");
+const officialLinks = {
+  ca:
+    publicEnv("VITE_CA_URL") ||
+    (kolContractAddress ? `https://solscan.io/token/${kolContractAddress}` : "#"),
+  dex:
+    publicEnv("VITE_DEXSCREENER_URL") ||
+    (kolContractAddress ? `https://dexscreener.com/solana/${kolContractAddress}` : "#"),
+  pump:
+    publicEnv("VITE_PUMPFUN_URL") ||
+    (kolContractAddress ? `https://pump.fun/coin/${kolContractAddress}` : "#"),
+  telegram: publicEnv("VITE_TELEGRAM_URL") || "#",
+  x: publicEnv("VITE_X_URL") || "https://x.com",
+};
+
+const buyKolUrl = publicEnv("VITE_BUY_KOL_URL") || officialLinks.pump;
+
 const resources = [
   ["Live Race", "/#track", Radio],
   ["Standings", "/standings", Trophy],
   ["Bracket", "/bracket", Route],
   ["Schedule", "/schedule", CalendarDays],
   ["Current KOLs", "/kols", Users],
-  ["Buy $KOL", "#", CircleDollarSign],
-  ["DexScreener", "#", BarChart3],
-  ["Twitter", "https://x.com", ArrowUpRight],
-  ["Telegram", "#", Zap],
+  ["Pump.fun", officialLinks.pump, Flame],
+  ["Buy $KOL", buyKolUrl, CircleDollarSign],
+  ["X", officialLinks.x, ArrowUpRight],
+  ["CA", officialLinks.ca, Shield],
+  ["DexScreener", officialLinks.dex, BarChart3],
+  ["Telegram", officialLinks.telegram, Zap],
   ["FAQ", "/faq", HelpCircle],
 ] as const;
 
@@ -111,10 +143,10 @@ const siteNavItems = [
   ["schedule", "Schedule", "/schedule"],
   ["kols", "KOLs", "/kols"],
   ["faq", "FAQ", "/faq"],
-  ["buy", "Buy $KOL", "#"],
-  ["dex", "Dex", "#"],
-  ["twitter", "Twitter", "https://x.com"],
-  ["telegram", "Telegram", "#"],
+  ["buy", "Buy $KOL", buyKolUrl],
+  ["dex", "Dex", officialLinks.dex],
+  ["twitter", "X", officialLinks.x],
+  ["telegram", "Telegram", officialLinks.telegram],
 ] as const;
 
 type SiteNavItem = (typeof siteNavItems)[number][0];
@@ -378,19 +410,19 @@ function SiteHeader({ activeItem }: { activeItem?: SiteNavItem }) {
       <nav className={`site-nav ${isMenuOpen ? "is-open" : ""}`} id="primary-nav" aria-label="Primary navigation">
         {siteNavItems.map(([id, label, href]) => {
           const resolvedHref = href.startsWith("#") && !isHomePath ? `/${href}` : href;
-          const isExternal = resolvedHref.startsWith("http");
+          const isExternal = isExternalHref(resolvedHref);
 
           return (
-          <a
-            aria-current={activeItem === id ? "page" : undefined}
-            href={resolvedHref}
-            key={id}
-            rel={isExternal ? "noreferrer" : undefined}
-            target={isExternal ? "_blank" : undefined}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            {label}
-          </a>
+            <a
+              aria-current={activeItem === id ? "page" : undefined}
+              href={resolvedHref}
+              key={id}
+              rel={isExternal ? "noreferrer" : undefined}
+              target={isExternal ? "_blank" : undefined}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {label}
+            </a>
           );
         })}
       </nav>
@@ -398,7 +430,26 @@ function SiteHeader({ activeItem }: { activeItem?: SiteNavItem }) {
         <Radio size={16} aria-hidden="true" />
         The Track
       </a>
+      <ContractChip />
     </header>
+  );
+}
+
+function ContractChip() {
+  if (!kolContractAddress) {
+    return (
+      <span className="contract-chip is-pending" aria-label="KOL contract address coming soon">
+        <span>CA</span>
+        <strong>Soon</strong>
+      </span>
+    );
+  }
+
+  return (
+    <a className="contract-chip" href={officialLinks.ca} target="_blank" rel="noreferrer" aria-label="Open KOL contract address">
+      <span>CA</span>
+      <strong>{shortAddress(kolContractAddress)}</strong>
+    </a>
   );
 }
 
@@ -947,13 +998,23 @@ function Resources() {
         copy="The daily hub for watching, checking standings, buying, and following the tournament."
       />
       <div className="resource-grid">
-        {resources.map(([label, href, Icon]) => (
-          <a className="resource-card" href={href} key={label}>
-            <Icon size={18} aria-hidden="true" />
-            <span>{label}</span>
-            <ArrowRight size={15} aria-hidden="true" />
-          </a>
-        ))}
+        {resources.map(([label, href, Icon]) => {
+          const isExternal = isExternalHref(href);
+
+          return (
+            <a
+              className="resource-card"
+              href={href}
+              key={label}
+              rel={isExternal ? "noreferrer" : undefined}
+              target={isExternal ? "_blank" : undefined}
+            >
+              <Icon size={18} aria-hidden="true" />
+              <span>{label}</span>
+              <ArrowRight size={15} aria-hidden="true" />
+            </a>
+          );
+        })}
       </div>
     </section>
   );
@@ -970,12 +1031,16 @@ function SiteFooter() {
         </div>
       </div>
       <div className="footer-links">
-        {resources.map(([label, href, Icon]) => (
-          <a href={href} key={label}>
-            <Icon size={15} aria-hidden="true" />
-            <span>{label}</span>
-          </a>
-        ))}
+        {resources.map(([label, href, Icon]) => {
+          const isExternal = isExternalHref(href);
+
+          return (
+            <a href={href} key={label} rel={isExternal ? "noreferrer" : undefined} target={isExternal ? "_blank" : undefined}>
+              <Icon size={15} aria-hidden="true" />
+              <span>{label}</span>
+            </a>
+          );
+        })}
       </div>
     </footer>
   );
@@ -1021,22 +1086,26 @@ function KolOsNav() {
     ["KOLs", "#kols", Users],
     ["Links", "#resources", ArrowUpRight],
     ["FAQ", "#faq", HelpCircle],
-    ["Buy $KOL", "#", CircleDollarSign],
-    ["Dex", "#", BarChart3],
-    ["Twitter", "https://x.com", ArrowUpRight],
-    ["Telegram", "#", Zap],
+    ["Buy $KOL", buyKolUrl, CircleDollarSign],
+    ["Dex", officialLinks.dex, BarChart3],
+    ["X", officialLinks.x, ArrowUpRight],
+    ["Telegram", officialLinks.telegram, Zap],
   ] as const;
 
   return (
     <nav className="kol-os" aria-label="KOL OS">
       <span className="kol-os-brand">KOL OS</span>
       <div>
-        {nav.map(([label, href, Icon]) => (
-          <a href={href} key={label}>
-            <Icon size={15} aria-hidden="true" />
-            <span>{label}</span>
-          </a>
-        ))}
+        {nav.map(([label, href, Icon]) => {
+          const isExternal = isExternalHref(href);
+
+          return (
+            <a href={href} key={label} rel={isExternal ? "noreferrer" : undefined} target={isExternal ? "_blank" : undefined}>
+              <Icon size={15} aria-hidden="true" />
+              <span>{label}</span>
+            </a>
+          );
+        })}
       </div>
     </nav>
   );
