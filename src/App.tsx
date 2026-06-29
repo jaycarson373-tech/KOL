@@ -756,7 +756,7 @@ function PayoutTransactions({ payoutTransactions }: { payoutTransactions: Payout
       <SectionHeading
         eyebrow="Payout Transactions"
         title="Worker execution feed."
-        copy="Queued, ready, completed, and failed payout records from Supabase. No fake transaction data is shown."
+        copy="Real payout activity appears here after the worker creates a distribution."
       />
       <div className="payout-list">
         {payoutTransactions.length > 0 ? (
@@ -801,8 +801,8 @@ function PayoutTransactions({ payoutTransactions }: { payoutTransactions: Payout
         ) : (
           <div className="dashboard-card payout-empty">
             <span className="card-label">No payouts yet</span>
-            <strong>Transactions will appear after a race closes and the worker queues a distribution.</strong>
-            <p>Keep payout execution off during the first test run. The dashboard will still show queued and ready records when they exist.</p>
+            <strong>Transactions will appear after a race closes and the worker creates a distribution.</strong>
+            <p>Keep payout execution off during the first test run, then enable execution once the flow is verified.</p>
           </div>
         )}
       </div>
@@ -1064,7 +1064,7 @@ function RaceSchedule({
     <section className="content-section" id="schedule" aria-labelledby="schedule-title">
       <SectionHeading
         eyebrow="Upcoming Matches"
-        title="Current race plus the next six."
+        title="Upcoming Matches"
         copy="Future rounds stay hidden until the bracket earns them."
       />
       <div className="schedule-strip">

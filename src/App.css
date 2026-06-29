@@ -5774,13 +5774,22 @@ body {
   display: none;
 }
 
-.track-section--standard .track-header h2 {
+.home-shell .track-section--standard .track-header h2 {
   color: transparent;
   -webkit-text-fill-color: transparent;
   background:
-    linear-gradient(180deg, #ffe89a 0%, #ffba32 34%, #e95a08 72%, #7d1b00 100%);
+    linear-gradient(180deg, #fff0a8 0%, #ffd04a 18%, #ff9b1d 42%, #dc4b05 68%, #7a1900 100%);
   background-clip: text;
   -webkit-background-clip: text;
+  text-shadow:
+    1px 1px 0 #ffb13a,
+    3px 3px 0 #c94705,
+    7px 8px 0 #7b1d00,
+    12px 14px 0 #350800,
+    0 0 24px rgba(255, 174, 23, 0.34);
+  filter:
+    drop-shadow(0 16px 24px rgba(0, 0, 0, 0.82))
+    drop-shadow(0 0 22px rgba(255, 111, 26, 0.3));
 }
 
 .track-section--standard .race-track {
