@@ -1,6 +1,9 @@
 import type { KolProfile, RaceInterval, TournamentStats } from "../types";
 
-type OfficialKolSeed = Pick<KolProfile, "name" | "symbol" | "xHandle" | "xUrl" | "avatarUrl" | "color">;
+type OfficialKolSeed = Pick<
+  KolProfile,
+  "name" | "symbol" | "xHandle" | "xUrl" | "avatarUrl" | "color" | "contractAddress" | "marketUrl"
+>;
 
 const officialRoster: OfficialKolSeed[] = [
   {
@@ -10,6 +13,8 @@ const officialRoster: OfficialKolSeed[] = [
     xUrl: "https://x.com/blknoiz06",
     avatarUrl: "/kols/01-ansem.jpg",
     color: "#f0b13b",
+    contractAddress: "89TNLYNJbGfrryRhuVEjUx76M48MEQBZYL1DpWYepump",
+    marketUrl: "https://pump.fun/coin/89TNLYNJbGfrryRhuVEjUx76M48MEQBZYL1DpWYepump",
   },
   {
     name: "Murad",
@@ -18,6 +23,8 @@ const officialRoster: OfficialKolSeed[] = [
     xUrl: "https://x.com/muststopmurad",
     avatarUrl: "/kols/02-murad.jpg",
     color: "#63c7d7",
+    contractAddress: "DRZz24TPX2CgU9gyqYUwfW436d5ZczurupUhL1i3pump",
+    marketUrl: "https://pump.fun/coin/DRZz24TPX2CgU9gyqYUwfW436d5ZczurupUhL1i3pump",
   },
   {
     name: "Andrew Tate",
@@ -26,6 +33,8 @@ const officialRoster: OfficialKolSeed[] = [
     xUrl: "https://x.com/cobratate",
     avatarUrl: "/kols/03-andrew-tate.jpg",
     color: "#d09155",
+    contractAddress: "HrayKvigYXtTYF3WAC78niPDTbUwcHuCMm7mBpjNpump",
+    marketUrl: "https://pump.fun/coin/HrayKvigYXtTYF3WAC78niPDTbUwcHuCMm7mBpjNpump",
   },
   {
     name: "Cupsey",
@@ -34,6 +43,8 @@ const officialRoster: OfficialKolSeed[] = [
     xUrl: "https://x.com/cupseyy",
     avatarUrl: "/kols/04-cupsey.jpg",
     color: "#ffd24d",
+    contractAddress: "HhVsrWwwcRfRhQRa4Q3WxCT49QSQmBRLbjEPjiZXpump",
+    marketUrl: "https://pump.fun/coin/HhVsrWwwcRfRhQRa4Q3WxCT49QSQmBRLbjEPjiZXpump",
   },
   {
     name: "Quant Kid",
