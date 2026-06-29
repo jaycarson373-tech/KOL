@@ -3548,6 +3548,260 @@ body {
   }
 }
 
+/* Final KOL art direction pass: chunky pump-style titles and cinematic section art. */
+body {
+  background:
+    radial-gradient(circle at 50% -4%, rgba(255, 213, 112, 0.34), transparent 36rem),
+    radial-gradient(circle at 88% 16%, rgba(113, 255, 91, 0.12), transparent 24rem),
+    radial-gradient(circle at 9% 34%, rgba(255, 111, 26, 0.12), transparent 30rem),
+    linear-gradient(180deg, rgba(2, 2, 2, 0.1), rgba(2, 2, 2, 0.86) 720px, rgba(2, 2, 2, 0.98) 1320px),
+    repeating-linear-gradient(135deg, rgba(255, 213, 112, 0.035) 0 1px, transparent 1px 10px),
+    url("./assets/tournament-atmosphere.jpg") center top / cover no-repeat,
+    linear-gradient(180deg, #020202, #0b0804 56%, #030303);
+}
+
+.site-shell::before {
+  top: 560px;
+  right: -4vw;
+  bottom: -160px;
+  left: -4vw;
+  background:
+    linear-gradient(180deg, rgba(2, 2, 2, 0.94), rgba(2, 2, 2, 0.34) 10%, rgba(2, 2, 2, 0.56) 39%, rgba(2, 2, 2, 0.62) 70%, rgba(2, 2, 2, 0.94) 100%),
+    radial-gradient(circle at 17% 15%, rgba(255, 194, 67, 0.2), transparent 27rem),
+    radial-gradient(circle at 86% 32%, rgba(121, 255, 168, 0.11), transparent 23rem),
+    radial-gradient(circle at 74% 68%, rgba(255, 111, 26, 0.16), transparent 28rem),
+    url("./assets/league-atmosphere.jpg") center 2% / min(1780px, 132vw) auto no-repeat,
+    url("./assets/bracket-atmosphere.jpg") center 48% / min(1800px, 136vw) auto no-repeat,
+    url("./assets/finals-atmosphere.jpg") center bottom / min(1740px, 132vw) auto no-repeat;
+  opacity: 0.92;
+}
+
+.site-shell::after {
+  inset: 520px -2vw -130px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 194, 67, 0.16), transparent 32rem),
+    linear-gradient(90deg, transparent, rgba(255, 194, 67, 0.13), transparent),
+    repeating-linear-gradient(135deg, rgba(255, 194, 67, 0.04) 0 1px, transparent 1px 13px),
+    repeating-linear-gradient(90deg, rgba(255, 194, 67, 0.018) 0 1px, transparent 1px 68px);
+  opacity: 0.82;
+}
+
+.hero-section::before {
+  display: block;
+  z-index: -3;
+  top: -138px;
+  right: auto;
+  bottom: -92px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(90deg, rgba(2, 2, 2, 0.78), rgba(2, 2, 2, 0.42) 43%, rgba(2, 2, 2, 0.7)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.1) 42%, rgba(0, 0, 0, 0.88) 100%),
+    radial-gradient(circle at 62% 24%, rgba(255, 213, 112, 0.28), transparent 29rem),
+    radial-gradient(circle at 92% 36%, rgba(121, 255, 168, 0.13), transparent 25rem),
+    url("./assets/tournament-atmosphere.jpg") center top / cover no-repeat;
+  opacity: 0.9;
+  mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 100%);
+}
+
+.hero-section::after {
+  z-index: -2;
+  inset: -86px -24px -34px;
+  background:
+    linear-gradient(90deg, rgba(3, 3, 3, 0.5), rgba(3, 3, 3, 0.08) 48%, rgba(3, 3, 3, 0.5)),
+    radial-gradient(circle at 82% 34%, rgba(255, 194, 67, 0.2), transparent 25rem),
+    linear-gradient(135deg, transparent 0 54%, rgba(255, 174, 23, 0.15) 54% 55%, transparent 55%),
+    repeating-linear-gradient(115deg, rgba(255, 194, 67, 0.065) 0 1px, transparent 1px 30px);
+  opacity: 0.74;
+}
+
+.hero-broadcast,
+.dashboard-card,
+.hero-race-card,
+.mini-pot,
+.step-card,
+.format-card,
+.bracket-column,
+.standing-row,
+.schedule-card,
+.kol-card,
+.resource-card,
+.faq-card,
+.live-panel,
+.reward-card {
+  border-color: rgba(255, 194, 67, 0.34);
+  background:
+    linear-gradient(180deg, rgba(34, 22, 9, 0.72), rgba(3, 3, 3, 0.84)),
+    rgba(4, 4, 4, 0.7);
+  box-shadow:
+    0 26px 82px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 247, 219, 0.09),
+    inset 0 -1px 0 rgba(255, 174, 23, 0.08);
+  backdrop-filter: blur(18px) saturate(1.18);
+}
+
+.track-section {
+  background:
+    linear-gradient(180deg, rgba(2, 2, 2, 0.2), rgba(2, 2, 2, 0.74)),
+    radial-gradient(circle at 74% 0%, rgba(255, 194, 67, 0.32), transparent 30rem),
+    radial-gradient(circle at 12% 56%, rgba(255, 111, 26, 0.13), transparent 28rem),
+    linear-gradient(135deg, rgba(255, 174, 23, 0.2), rgba(0, 0, 0, 0.7) 50%),
+    url("./assets/league-atmosphere.jpg") center / cover no-repeat,
+    rgba(4, 4, 4, 0.9);
+}
+
+.race-summary-grid::before,
+.reward-pots-section::before,
+#how-it-works::before,
+.bracket-section::before,
+#standings::before,
+#schedule::before,
+#kols::before,
+#resources::before,
+.faq-section::before {
+  inset: -52px -28px -58px;
+  background:
+    linear-gradient(180deg, rgba(2, 2, 2, 0.78), rgba(2, 2, 2, 0.26) 45%, rgba(2, 2, 2, 0.86)),
+    radial-gradient(circle at 12% 25%, rgba(255, 194, 67, 0.2), transparent 26rem),
+    radial-gradient(circle at 88% 33%, rgba(121, 255, 168, 0.1), transparent 24rem),
+    radial-gradient(circle at 50% 100%, rgba(255, 111, 26, 0.14), transparent 30rem),
+    var(--section-bg, none);
+  background-position: center;
+  background-size: cover;
+  opacity: var(--section-bg-opacity, 0.9);
+  filter: saturate(1.16) contrast(1.08);
+}
+
+.reward-pots-section,
+.race-summary-grid {
+  --section-bg: url("./assets/tournament-atmosphere.jpg");
+  --section-bg-opacity: 0.9;
+}
+
+#how-it-works,
+#schedule,
+#kols {
+  --section-bg: url("./assets/league-atmosphere.jpg");
+  --section-bg-opacity: 0.9;
+}
+
+.bracket-section,
+#standings {
+  --section-bg: url("./assets/bracket-atmosphere.jpg");
+  --section-bg-opacity: 0.9;
+}
+
+#resources,
+.faq-section {
+  --section-bg: url("./assets/finals-atmosphere.jpg");
+  --section-bg-opacity: 0.9;
+}
+
+.pump-title,
+.section-heading h2,
+.track-header h2,
+.live-titlebar h1,
+.final-cinematic p,
+.king-hill-wordmark,
+.king-hill-panel .card-label,
+.race-result span {
+  color: #ffb10a;
+  font-family: var(--pump-title-font);
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  transform: skewX(-9deg) rotate(-0.8deg);
+  transform-origin: left bottom;
+  -webkit-text-stroke: 1.25px rgba(82, 22, 0, 0.88);
+  background: linear-gradient(180deg, #fff9a8 0%, #ffe338 18%, #ffc21b 42%, #ff8f0d 68%, #c94200 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(2px 2px 0 rgba(184, 58, 0, 0.98))
+    drop-shadow(5px 6px 0 rgba(124, 34, 0, 0.96))
+    drop-shadow(9px 11px 0 rgba(44, 9, 0, 0.84))
+    drop-shadow(0 0 24px rgba(255, 215, 80, 0.42));
+  text-shadow:
+    0 2px 0 rgba(255, 244, 168, 0.18),
+    0 0 26px rgba(255, 214, 77, 0.5),
+    0 10px 18px rgba(0, 0, 0, 0.58);
+}
+
+.pump-title {
+  width: max-content;
+  max-width: 100%;
+  font-size: clamp(5rem, 13.6vw, 11rem);
+  line-height: 0.7;
+}
+
+.section-heading h2,
+.track-header h2 {
+  max-width: 1040px;
+  font-size: clamp(3.45rem, 7.2vw, 7.65rem);
+  line-height: 0.76;
+}
+
+.live-titlebar h1 {
+  font-size: clamp(4.4rem, 8.5vw, 8.4rem);
+  line-height: 0.76;
+}
+
+.king-hill-wordmark {
+  width: max-content;
+  max-width: 100%;
+  font-size: clamp(2.65rem, 5.2vw, 4.55rem);
+  line-height: 0.76;
+  text-transform: lowercase;
+}
+
+.king-hill-panel .card-label,
+.race-result span {
+  display: inline-block;
+  font-size: clamp(1.35rem, 2.6vw, 2.25rem);
+  line-height: 0.82;
+}
+
+@media (max-width: 760px) {
+  .site-shell::before {
+    top: 520px;
+    right: -18px;
+    left: -18px;
+  }
+
+  .hero-section::before {
+    top: -92px;
+    bottom: -46px;
+    background-position: center top;
+  }
+
+  .hero-section::after {
+    inset: -16px -12px -18px;
+  }
+
+  .pump-title {
+    font-size: clamp(3.15rem, 14.2vw, 4.55rem);
+    line-height: 0.76;
+  }
+
+  .section-heading h2,
+  .track-header h2 {
+    max-width: calc(100vw - 34px);
+    font-size: clamp(2.75rem, 13.5vw, 5.15rem);
+    line-height: 0.8;
+  }
+
+  .live-titlebar h1 {
+    font-size: clamp(3rem, 13vw, 5.4rem);
+  }
+
+  .king-hill-wordmark {
+    font-size: clamp(1.9rem, 9.2vw, 2.7rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .loading-logo,
   .loading-race-line::before {
