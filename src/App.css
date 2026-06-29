@@ -5892,11 +5892,251 @@ body {
   border-color: rgba(255, 106, 79, 0.44);
 }
 
+/* Final polish: make the hero feed feel broadcast-size without restructuring the page. */
+.home-shell .hero-section {
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 475px);
+}
+
+.home-shell .hero-broadcast {
+  gap: 18px;
+  padding: 22px;
+  border-color: rgba(255, 205, 84, 0.52);
+  box-shadow:
+    0 34px 92px rgba(0, 0, 0, 0.62),
+    0 0 42px rgba(255, 174, 23, 0.12),
+    inset 0 1px 0 rgba(255, 247, 219, 0.1);
+}
+
+.home-shell .broadcast-status {
+  font-size: 0.94rem;
+}
+
+.home-shell .hero-race-card {
+  gap: 13px;
+  min-height: 212px;
+  padding: 22px;
+}
+
+.home-shell .hero-race-card > strong {
+  color: #fff0a8;
+  font-size: clamp(1.55rem, 2.6vw, 2.12rem);
+}
+
+.hero-racer-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.hero-racer-tile {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid color-mix(in srgb, var(--tile-color) 38%, rgba(255, 210, 87, 0.2));
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 225, 126, 0.09), rgba(0, 0, 0, 0.2)),
+    rgba(0, 0, 0, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 247, 219, 0.08),
+    0 0 18px color-mix(in srgb, var(--tile-color) 14%, transparent);
+}
+
+.hero-racer-tile .avatar {
+  width: 38px;
+  height: 38px;
+}
+
+.hero-racer-tile div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.home-shell .hero-racer-tile strong {
+  overflow: hidden;
+  color: #fff1b8;
+  font-family: var(--body-font);
+  font-size: 0.78rem;
+  font-weight: 950;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+.home-shell .hero-racer-tile span {
+  color: color-mix(in srgb, var(--tile-color) 72%, #ffe8a1);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+
+.hero-racer-tile em {
+  justify-self: end;
+  color: #ffd25a;
+  font-family: var(--number-font);
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 950;
+}
+
+/* Final polish: sharper low-profile F1 car silhouette. */
+.racer-marker {
+  width: 355px;
+  height: 88px;
+}
+
+.speed-trail {
+  top: 51px;
+  right: 282px;
+  width: 470px;
+  height: 4px;
+  background:
+    linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--car-color) 12%, transparent) 24%, color-mix(in srgb, var(--car-color) 82%, #fff2aa) 78%, rgba(255, 255, 255, 0.98) 100%),
+    linear-gradient(90deg, transparent, rgba(255, 213, 112, 0.2), transparent);
+}
+
+.racer-marker.is-leader .speed-trail {
+  width: 530px;
+}
+
+.race-car {
+  animation: engine-vibration 420ms ease-in-out infinite alternate;
+  filter:
+    drop-shadow(0 20px 12px rgba(0, 0, 0, 0.84))
+    drop-shadow(0 0 16px color-mix(in srgb, var(--car-color) 54%, transparent))
+    drop-shadow(0 0 42px color-mix(in srgb, var(--car-color) 18%, transparent));
+}
+
+.racer-marker.is-leader .race-car {
+  filter:
+    drop-shadow(0 20px 12px rgba(0, 0, 0, 0.84))
+    drop-shadow(0 0 22px rgba(255, 220, 92, 0.9))
+    drop-shadow(0 0 56px rgba(255, 174, 23, 0.44));
+}
+
+.race-car-trail-light {
+  left: 8px;
+  top: 50px;
+  width: 190px;
+  height: 5px;
+  background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--car-color) 72%, #fff4c7) 66%, rgba(255, 255, 255, 0.86) 100%);
+}
+
+.race-car-body {
+  left: 70px;
+  top: 41px;
+  width: 188px;
+  height: 18px;
+  border-radius: 40px 70px 18px 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 249, 214, 0.7) 0%, rgba(255, 249, 214, 0.2) 20%, transparent 48%),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 5px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.68) 0%, transparent 18%, rgba(255, 225, 126, 0.32) 48%, rgba(0, 0, 0, 0.36) 82%, rgba(255, 244, 194, 0.2) 100%),
+    color-mix(in srgb, var(--car-color) 86%, #070707);
+  clip-path: polygon(0 46%, 10% 20%, 56% 0, 84% 13%, 100% 44%, 93% 78%, 69% 98%, 14% 100%, 0 72%);
+}
+
+.race-car-body::before {
+  inset: 3px 16px 5px 20px;
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 247, 219, 0.14) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.34), transparent);
+}
+
+.race-car-body::after {
+  right: 16px;
+  bottom: 4px;
+  left: 26px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 231, 142, 0.78), rgba(255, 255, 255, 0.56), transparent);
+}
+
+.race-car-nose {
+  left: 240px;
+  top: 44px;
+  width: 98px;
+  height: 10px;
+  border-radius: 2px 42px 12px 2px;
+}
+
+.race-car-wing--rear {
+  left: 34px;
+  top: 36px;
+  width: 82px;
+  height: 7px;
+}
+
+.race-car-wing--front {
+  left: 286px;
+  top: 42px;
+  width: 50px;
+  height: 7px;
+}
+
+.race-car-cockpit {
+  left: 150px;
+  top: 11px;
+  width: 38px;
+  height: 38px;
+  border-color: rgba(255, 231, 139, 0.98);
+}
+
+.race-car-cockpit .avatar {
+  width: 30px;
+  height: 30px;
+}
+
+.race-car-halo {
+  left: 140px;
+  top: 23px;
+  width: 58px;
+  height: 24px;
+}
+
+.race-car-wheel {
+  top: 52px;
+  width: 32px;
+  height: 32px;
+  border-width: 5px;
+}
+
+.race-car-wheel--rear {
+  left: 76px;
+}
+
+.race-car-wheel--front {
+  left: 238px;
+}
+
 @media (max-width: 980px) {
   .dashboard-page-grid,
   .dashboard-page-grid .race-summary-grid,
   .payout-row {
     grid-template-columns: 1fr;
+  }
+
+  .home-shell .hero-section {
+    grid-template-columns: 1fr;
+  }
+
+  .home-shell .hero-broadcast {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-racer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-shell .hero-race-card {
+    min-height: 0;
   }
 }
 

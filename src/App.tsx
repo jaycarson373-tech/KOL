@@ -470,6 +470,7 @@ function HeroSection({
 }) {
   const leader = entrants.find((entrant) => entrant.isLeader);
   const racePot = getRacePot(race);
+  const heroRacers = entrants.slice(0, 4);
 
   return (
     <section className="hero-section" aria-labelledby="hero-title">
@@ -501,6 +502,20 @@ function HeroSection({
         <div className="hero-race-card">
           <span>{race.label}</span>
           <strong>{entrants.length > 0 ? entrants.map((entrant) => entrant.symbol).join("  ·  ") : "Awaiting racers"}</strong>
+          {heroRacers.length > 0 ? (
+            <div className="hero-racer-grid" aria-label="Current racers">
+              {heroRacers.map((entrant) => (
+                <div className="hero-racer-tile" key={entrant.id} style={{ "--tile-color": entrant.color } as CSSProperties}>
+                  <Avatar entrant={entrant} />
+                  <div>
+                    <strong>{entrant.name}</strong>
+                    <span>{entrant.symbol}</span>
+                  </div>
+                  <em>#{entrant.rank}</em>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
         <div className="hero-intel-grid">
           <MiniPot label="Current leader" value={isLiveRaceActive && leader ? leader.symbol : "Parked"} />
