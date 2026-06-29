@@ -10,7 +10,6 @@ import {
   HelpCircle,
   Medal,
   Menu,
-  Play,
   Radio,
   Route,
   Shield,
@@ -910,11 +909,34 @@ function RewardPots({ splitAmounts }: { splitAmounts: ReturnType<typeof getSplit
 
 function HowItWorks() {
   const steps = [
-    ["Step 1", "Hold 250K+ $KOL"],
-    ["Step 2", "4 KOLs enter each Season 1 race"],
-    ["Step 3", "Highest ending market cap performance wins"],
-    ["Step 4", "Creator fees split 30% / 40% / 10% / 10% / 10%"],
-    ["Step 5", "Winner advances. Losers are eliminated."],
+    {
+      label: "Step 1",
+      title: "Hold 250K+ $KOL",
+    },
+    {
+      label: "Step 2",
+      title: "4 KOLs enter each Season 1 race",
+    },
+    {
+      label: "Step 3",
+      title: "Highest market cap gain wins the race.",
+      copy: "When the timer ends, the KOL coin with the highest percentage market cap increase advances to the next round.",
+    },
+    {
+      label: "Step 4",
+      title: "Creator fees are distributed after every race.",
+      split: [
+        "30% -> Holders of the winning KOL coin",
+        "40% -> All $KOL holders",
+        "10% -> Championship Fund",
+        "10% -> Buyback & Burn",
+        "10% -> Tournament Treasury",
+      ],
+    },
+    {
+      label: "Step 5",
+      title: "Winner advances. Losers are eliminated.",
+    },
   ];
 
   return (
@@ -925,10 +947,18 @@ function HowItWorks() {
         copy="Every match is a market-cap race with visible pots and an immediate tournament consequence."
       />
       <div className="step-grid">
-        {steps.map(([label, text]) => (
-          <article className="step-card" key={label}>
-            <span>{label}</span>
-            <strong>{text}</strong>
+        {steps.map((step) => (
+          <article className="step-card" key={step.label}>
+            <span>{step.label}</span>
+            <strong>{step.title}</strong>
+            {"copy" in step ? <p>{step.copy}</p> : null}
+            {"split" in step && step.split ? (
+              <ul className="step-split">
+                {step.split.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            ) : null}
           </article>
         ))}
       </div>
