@@ -271,7 +271,7 @@ export const kols: KolProfile[] = officialRoster.map((kol, index) => ({
   marketCapUsd: 0,
 }));
 
-const defaultSeasonOneStartsAt = "2026-07-01T16:00:00.000Z";
+const defaultSeasonOneStartsAt = "2026-06-29T21:01:51.000Z";
 const importMetaEnv = (import.meta as { env?: Record<string, string | undefined> }).env;
 const configuredSeasonOneStartsAt =
   (typeof process !== "undefined" ? process.env.SEASON_ONE_START_AT : undefined) ||

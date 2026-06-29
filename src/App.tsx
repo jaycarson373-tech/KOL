@@ -63,7 +63,9 @@ function shortAddress(address: string): string {
   return address.length > 10 ? `${address.slice(0, 4)}...${address.slice(-4)}` : address;
 }
 
-const kolContractAddress = publicEnv("VITE_KOL_TOKEN_CA") || publicEnv("VITE_KOL_MINT");
+const defaultKolContractAddress = "3RTq8nnsRG4CfcQa1BYaXHx638AKY6o1zzXUgcsqpump";
+const kolContractAddress =
+  publicEnv("VITE_KOL_TOKEN_CA") || publicEnv("VITE_KOL_MINT") || defaultKolContractAddress;
 const officialLinks = {
   ca:
     publicEnv("VITE_CA_URL") ||
@@ -482,16 +484,6 @@ function HeroSection({
           Four KOLs enter The Track. Market cap performance decides who
           advances. Every race pays holders. One King of Liquidity remains.
         </p>
-        <div className="hero-actions">
-          <a className="primary-cta" href="#track">
-            <Play size={18} aria-hidden="true" />
-            View The Track
-          </a>
-          <a className="secondary-cta" href="#how-it-works">
-            How It Works
-            <ArrowRight size={18} aria-hidden="true" />
-          </a>
-        </div>
       </div>
 
       <aside className="hero-broadcast" aria-label="Current tournament snapshot">
