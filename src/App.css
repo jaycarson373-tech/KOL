@@ -2240,7 +2240,7 @@ body {
     linear-gradient(180deg, rgba(3, 3, 3, 0.96), rgba(3, 3, 3, 0.46) 12%, rgba(3, 3, 3, 0.76) 46%, rgba(3, 3, 3, 0.92) 100%),
     radial-gradient(circle at 14% 18%, rgba(255, 174, 23, 0.18), transparent 27rem),
     radial-gradient(circle at 88% 32%, rgba(255, 203, 77, 0.15), transparent 31rem),
-    url("./assets/kol-cinematic-benchmark.jpg") center 3% / min(1540px, 128vw) auto no-repeat,
+    url("./assets/league-atmosphere.jpg") center 3% / min(1580px, 126vw) auto no-repeat,
     url("./assets/bracket-atmosphere.jpg") center 45% / min(1640px, 126vw) auto no-repeat,
     url("./assets/finals-atmosphere.jpg") center bottom / min(1600px, 124vw) auto no-repeat;
   opacity: 0.85;
@@ -2320,7 +2320,7 @@ body {
   background:
     linear-gradient(90deg, rgba(3, 3, 3, 0.92) 0%, rgba(3, 3, 3, 0.72) 48%, rgba(3, 3, 3, 0.9) 100%),
     radial-gradient(circle at 28% 42%, rgba(255, 174, 23, 0.22), transparent 27rem),
-    url("./assets/kol-cinematic-benchmark.jpg") center top / cover no-repeat;
+    url("./assets/tournament-atmosphere.jpg") center top / cover no-repeat;
   opacity: 0.85;
   mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
 }
@@ -2646,7 +2646,7 @@ body {
 .race-summary-grid,
 .reward-pots-section,
 #how-it-works {
-  --section-bg: url("./assets/kol-cinematic-benchmark.jpg");
+  --section-bg: url("./assets/league-atmosphere.jpg");
   --section-bg-opacity: 0.85;
 }
 
@@ -2811,7 +2811,7 @@ body {
     linear-gradient(180deg, rgba(3, 3, 3, 0.86), rgba(3, 3, 3, 0.36) 48%, rgba(3, 3, 3, 0.9)),
     radial-gradient(circle at 44% 46%, rgba(255, 174, 23, 0.32), transparent 29rem),
     linear-gradient(90deg, transparent, rgba(255, 174, 23, 0.16), transparent),
-    url("./assets/kol-cinematic-benchmark.jpg") center / cover no-repeat,
+    url("./assets/finals-atmosphere.jpg") center / cover no-repeat,
     rgba(3, 3, 3, 0.9);
   border-color: rgba(255, 194, 67, 0.32);
 }
@@ -2829,7 +2829,7 @@ body {
   background:
     linear-gradient(180deg, rgba(3, 3, 3, 0.74), #030303 80%),
     radial-gradient(circle at 52% 0%, rgba(255, 174, 23, 0.2), transparent 30rem),
-    url("./assets/kol-cinematic-benchmark.jpg") center / cover no-repeat,
+    url("./assets/tournament-atmosphere.jpg") center / cover no-repeat,
     var(--bg);
 }
 
