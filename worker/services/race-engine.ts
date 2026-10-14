@@ -2,7 +2,7 @@ import { config } from "../config.js";
 import type { Kol, RaceIntervalRecord } from "../types.js";
 import { getRepository, type SupabaseRepository } from "../repositories/supabase-repository.js";
 import { markReadyDistributions, queueDistribution } from "./distributions.js";
-import { getMarketCapSnapshot, getWinnerFromSnapshot } from "./market-caps.js";
+import { getMarketCapSnapshot, getWinnerFromSnapshot, hasCompleteLiveSnapshot } from "./market-caps.js";
 import { captureRaceHolderSnapshots, executeReadyDistributions } from "./payouts.js";
 
 function kolsForRace(race: RaceIntervalRecord, kols: Kol[]): Kol[] {
@@ -12,7 +12,18 @@ function kolsForRace(race: RaceIntervalRecord, kols: Kol[]): Kol[] {
 
 async function startRace(repo: SupabaseRepository, race: RaceIntervalRecord, entrants: Kol[]): Promise<void> {
   const snapshotStart = race.snapshotStart ?? (await getMarketCapSnapshot(entrants, race));
-  const liveMarketCaps = await getMarketCapSnapshot(entrants, race);
+  if (!hasCompleteLiveSnapshot(race.entrantIds, snapshotStart)) {
+    await repo.appendLog("warn", "Race start delayed: live market-cap baseline is incomplete", {
+      raceId: race.id,
+      entrantIds: race.entrantIds,
+    });
+    return;
+  }
+
+  const currentSnapshot = await getMarketCapSnapshot(entrants, race);
+  const liveMarketCaps = hasCompleteLiveSnapshot(race.entrantIds, currentSnapshot)
+    ? currentSnapshot
+    : snapshotStart;
 
   await repo.upsertRace({
     ...race,
@@ -32,9 +43,18 @@ async function updateLiveRace(repo: SupabaseRepository, race: RaceIntervalRecord
     return;
   }
 
+  const liveMarketCaps = await getMarketCapSnapshot(entrants, race);
+  if (!hasCompleteLiveSnapshot(race.entrantIds, liveMarketCaps)) {
+    await repo.appendLog("warn", "Live race snapshot skipped: market-cap data is incomplete", {
+      raceId: race.id,
+      entrantIds: race.entrantIds,
+    });
+    return;
+  }
+
   await repo.upsertRace({
     ...race,
-    liveMarketCaps: await getMarketCapSnapshot(entrants, race),
+    liveMarketCaps,
     status: "live",
   });
 }
@@ -45,8 +65,19 @@ async function completeRace(repo: SupabaseRepository, race: RaceIntervalRecord, 
   }
 
   const snapshotStart = race.snapshotStart ?? (await getMarketCapSnapshot(entrants, race));
-  const snapshotEnd = race.snapshotEnd ?? (await getMarketCapSnapshot(entrants, race));
-  const winnerKolId = race.winnerKolId ?? getWinnerFromSnapshot({ ...race, snapshotStart }, snapshotEnd);
+  const snapshotEnd = await getMarketCapSnapshot(entrants, race);
+  const calculatedWinner = getWinnerFromSnapshot({ ...race, snapshotStart }, snapshotEnd);
+  const winnerKolId = calculatedWinner ?? race.winnerKolId;
+  if (!calculatedWinner || !winnerKolId) {
+    await repo.appendLog("error", "Race not finalized: complete live market-cap snapshots are required", {
+      raceId: race.id,
+      entrantIds: race.entrantIds,
+      startSnapshotComplete: hasCompleteLiveSnapshot(race.entrantIds, snapshotStart),
+      endSnapshotComplete: hasCompleteLiveSnapshot(race.entrantIds, snapshotEnd),
+    });
+    return;
+  }
+
   const next: RaceIntervalRecord = {
     ...race,
     snapshotStart,

@@ -8,6 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck:worker": "tsc -p tsconfig.worker.json --noEmit",
+    "test:worker": "tsx --test worker/**/*.test.ts",
     "worker": "tsx worker/index.ts",
     "worker:tick": "tsx worker/tick.ts",
     "seed:worker": "tsx scripts/seed-worker.ts",
