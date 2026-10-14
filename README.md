@@ -15,7 +15,7 @@ Copy `.env.example` to `.env` and fill in:
 
 ```bash
 VITE_HELIUS_API_KEY=your_key
-VITE_ENABLE_LIVE_MARKET_CAPS=true
+VITE_DISABLE_LIVE_MARKET_CAPS=false
 VITE_KOL_TOKEN_CA=your_kol_token_ca
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -32,9 +32,11 @@ with profile images stored under `public/kols` and referenced as stable
 `/kols/...jpg` paths. Add token contract addresses, trade links, wins, losses,
 and starting market caps there as they become available.
 
-Market-cap ranking uses local placeholder caps by default. When
-`VITE_ENABLE_LIVE_MARKET_CAPS=true`, the app checks Dexscreener by token CA for
-market cap while keeping Helius wired for Solana token metadata lookups.
+The app requests live market caps from DexScreener by token CA by default.
+`VITE_DISABLE_LIVE_MARKET_CAPS=true` disables those requests. Profiles without
+a token CA cannot receive live prices, and the page must not be treated as a
+scored race until all entrants have usable market data. Helius is used for
+Solana token metadata in the browser and for worker-side holder snapshots.
 
 The current UI uses a professional race-dashboard theme with KOL race cars.
 When `VITE_KOL_TOKEN_CA` is empty, the header shows `CA Soon`. Once the mint is
@@ -74,6 +76,12 @@ The default payout delay is five minutes after race end
 then the payout plan is generated after the delay from the current
 `race_intervals.winner_kol_id`, so an incorrect winner can be manually corrected
 in Supabase before funds move.
+
+Race start and settlement require positive live market-cap data from an
+upstream provider for every entrant. If any entrant is missing live data or
+only has a fallback value, the worker leaves the race unfinalized and does not
+queue a distribution. Configure real token mints for every scheduled entrant
+before opening a race.
 
 ## Test Race
 

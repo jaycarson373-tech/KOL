@@ -168,7 +168,30 @@ export async function getMarketCapSnapshot(kols: Kol[], race: RaceIntervalRecord
   return Object.fromEntries(entries);
 }
 
+export function hasCompleteLiveSnapshot(entrantIds: string[], snapshot: RaceSnapshot | null): boolean {
+  if (!snapshot || entrantIds.length === 0) {
+    return false;
+  }
+
+  return entrantIds.every((id) => {
+    const entry = snapshot[id];
+    return Boolean(
+      entry &&
+        entry.source !== "fallback" &&
+        Number.isFinite(entry.marketCapUsd) &&
+        entry.marketCapUsd > 0,
+    );
+  });
+}
+
 export function getWinnerFromSnapshot(race: RaceIntervalRecord, snapshot: RaceSnapshot): string | null {
+  if (
+    !hasCompleteLiveSnapshot(race.entrantIds, race.snapshotStart) ||
+    !hasCompleteLiveSnapshot(race.entrantIds, snapshot)
+  ) {
+    return null;
+  }
+
   return race.entrantIds
     .map((id) => {
       const startMarketCap = race.snapshotStart?.[id]?.marketCapUsd ?? 0;
